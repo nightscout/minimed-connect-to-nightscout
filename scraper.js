@@ -66,7 +66,7 @@ function transformForNightscout(data) {
   var activeEntry = entries.filter(function(e) { return e['type'] === 'reported_active_insulin'; })[0];
   var activeIns = activeEntry ? activeEntry['activeInsulin'] + ' at ' + activeEntry['dateString'] : 'unknown';
   var sgvEntries = entries.filter(function(e) { return e['type'] === 'sgv'; });
-  var recentSgv = sgvEntries.length ? sgvEntries[sgvEntries.length - 1] + ' at ' + activeEntry['dateString'] : 'unknown';
+  var recentSgv = sgvEntries.length ? sgvEntries[sgvEntries.length - 1]['sgv'] + ' at ' + activeEntry['dateString'] : 'unknown';
   casper.log('active insulin ' + activeIns, 'info');
   casper.log('sensor glucose ' + recentSgv, 'info');
 
