@@ -18,32 +18,78 @@ var isNewData = (function() {
   };
 })();
 
+function addTimeToEntry(pumpTimeString, entry) {
+  var timeUTC = Date.parse(pumpTimeString + ' ' + config.PUMP_TIMEZONE);
+  entry['date'] = timeUTC;
+  entry['dateString'] = new Date(timeUTC).toISOString();
+  return entry;
+}
+
+function transformForNightscout(data) {
+  var entries = [];
+
+  if(data['activeInsulin']) {
+    entries.push(
+      addTimeToEntry(
+        data['activeInsulin']['datetime'],
+        {
+          'type': 'reported_active_insulin',
+          'activeInsulin': data['activeInsulin']['amount']
+        }
+      )
+    );
+  }
+
+  if(data['sgs'] && data['sgs'].length) {
+    var sgvs = data['sgs'].filter(function(entry) {
+      return entry['kind'] === 'SG' && entry['sg'] !== 0;
+    });
+    // TODO: don't assume minimed will continue giving sensor glucose values ordered by date ascending
+    for(var i = Math.max(0, sgvs.length - config.NUM_RECORDS_TO_SUBMIT); i < sgvs.length; i++) {
+      var sgv = sgvs[i];
+      entries.push(
+        addTimeToEntry(
+          sgv['datetime'],
+          {
+            'type': 'sgv',
+            'sgv': sgv['sg'],
+          }
+        )
+      );
+    }
+  }
+
+  entries.forEach(function(entry) {
+    entry['device'] = 'MiniMed Connect ' + data['medicalDeviceFamily'] + ' ' + data['medicalDeviceSerialNumber'];
+  });
+
+  var activeEntry = entries.filter(function(e) { return e['type'] === 'reported_active_insulin'; })[0];
+  var activeIns = activeEntry ? activeEntry['activeInsulin'] + ' at ' + activeEntry['dateString'] : 'unknown';
+  var sgvEntries = entries.filter(function(e) { return e['type'] === 'sgv'; });
+  var recentSgv = sgvEntries.length ? sgvEntries[sgvEntries.length - 1] + ' at ' + activeEntry['dateString'] : 'unknown';
+  casper.log('active insulin ' + activeIns, 'info');
+  casper.log('sensor glucose ' + recentSgv, 'info');
+
+  return entries;
+}
+
 function sendToNightscout(data, callback) {
-  var activeIns, timeReportedUTC;
-  try {
-    activeIns = data['activeInsulin']['amount'];
-    timeReportedUTC = Date.parse(data['activeInsulin']['datetime'] + ' ' + config.PUMP_TIMEZONE);
-  } catch(e) {
-    casper.log('Error parsing JSON data: ' + e.message + ' ' + JSON.stringify(data), 'error');
+  var endpoint = config.NIGHTSCOUT_HOST + '/api/v1/entries.json';
+  var entries = transformForNightscout(data);
+  if(entries.length === 0) {
+    casper.log('No data found in CareLink JSON: ' + JSON.stringify(data), 'error');
     return callback.apply(casper);
   }
 
-  casper.log('SENDING TO NIGHTSCOUT: active insulin ' + activeIns + ', reported at ' + new Date(timeReportedUTC).toString(), 'info');
-
-  casper.open(config.NIGHTSCOUT_HOST + '/api/v1/entries.json', {
+  casper.log('POST ' + endpoint + ' ' + JSON.stringify(entries), 'info');
+  casper.open(endpoint, {
     method: 'post',
+    data: JSON.stringify(entries),
     headers: {
       'api-secret': new Rusha().digest(config.NIGHTSCOUT_API_SECRET),
       'Accept': 'application/json',
       'Content-Type': 'application/json'
-    },
-    data: JSON.stringify({
-      'type': 'reported_active_insulin',
-      'device': 'MiniMed Connect ' + data['medicalDeviceFamily'] + ' ' + data['medicalDeviceSerialNumber'],
-      'date': timeReportedUTC,
-      'dateString': new Date(timeReportedUTC).toISOString(),
-      'activeInsulin': activeIns
-    })
+    }
   }).then(function(response) {
     if(!response.status) {
       casper.log("Error uploading to Nightscout: can't connect to Nightscout host", 'error');
