@@ -25,7 +25,7 @@
 ## Currently supported data
 
 * Sensor glucose values
-* Active insulin (sent to Nightscout as entries of type `reported_active_insulin`)
+* Active insulin (sent to Nightscout as entries of type `reported_active_bolus`)
 * Pump model and serial number (included in all Nightscout entries)
 
 **Potential future data**: See [this gist] for sample data provided by CareLink Connect. In particular, I'd love to include BG trend (up/down arrows) based on `lastSGTrend`. Please [get in touch] if you use an Enlite sensor and would like to help.
@@ -38,7 +38,7 @@ Besides PhantomJS, there are dependencies on [CasperJS][casper] (for nicer inter
 
 ## Disclaimer
 
-This project is intended for educational and informational purposes only. It relies on a series of fragile components and assumptions, any of which may break at any time. It is not FDA approved and should not be used to make medical decisions. It is neither affiliated with nor endorsed by Medtronic, and may violate their Terms of Service agreement.
+This project is intended for educational and informational purposes only. It relies on a series of fragile components and assumptions, any of which may break at any time. It is not FDA approved and should not be used to make medical decisions. It is neither affiliated with nor endorsed by Medtronic, and may violate their Terms of Service.
 
 [MiniMed Connect]: http://www.medtronicdiabetes.com/products/minimed-connect
 [connect-app]: https://itunes.apple.com/us/app/minimed-connect/id999836914

@@ -8,6 +8,8 @@ phantom.injectJs('./vendor/casperjs/bin/bootstrap.js');
 
 var Rusha = require('./vendor/rusha.js');
 
+var NIGHTSCOUT_ENTRY_TYPE = 'reported_active_bolus';
+
 var isNewData = (function() {
   var lastUpdateTime;
 
@@ -33,8 +35,8 @@ function transformForNightscout(data) {
       addTimeToEntry(
         data['activeInsulin']['datetime'],
         {
-          'type': 'reported_active_insulin',
-          'activeInsulin': data['activeInsulin']['amount']
+          'type': NIGHTSCOUT_ENTRY_TYPE,
+          'insulin': data['activeInsulin']['amount']
         }
       )
     );
@@ -63,7 +65,7 @@ function transformForNightscout(data) {
     entry['device'] = 'MiniMed Connect ' + data['medicalDeviceFamily'] + ' ' + data['medicalDeviceSerialNumber'];
   });
 
-  var activeEntry = entries.filter(function(e) { return e['type'] === 'reported_active_insulin'; })[0];
+  var activeEntry = entries.filter(function(e) { return e['type'] === NIGHTSCOUT_ENTRY_TYPE; })[0];
   var activeIns = activeEntry ? activeEntry['activeInsulin'] + ' at ' + activeEntry['dateString'] : 'unknown';
   var sgvEntries = entries.filter(function(e) { return e['type'] === 'sgv'; });
   var recentSgv = sgvEntries.length ? sgvEntries[sgvEntries.length - 1]['sgv'] + ' at ' + activeEntry['dateString'] : 'unknown';
