@@ -28,7 +28,7 @@
 * Active insulin (sent to Nightscout as entries of type `reported_active_bolus`)
 * Pump model and serial number (included in all Nightscout entries)
 
-**Potential future data**: See [this gist] for sample data provided by CareLink Connect. In particular, I'd love to include BG trend (up/down arrows) based on `lastSGTrend`. Please [get in touch] if you use an Enlite sensor and would like to help.
+**Potential future data**: See [this sensor-disabled gist] and [this sensor-enabled gist] for sample data provided by CareLink Connect. In particular, I'd love to include BG trend (up/down arrows) based on `lastSGTrend`. Please [get in touch] if you use an Enlite sensor and would like to help.
 
 ## Notes
 
@@ -47,7 +47,8 @@ This project is intended for educational and informational purposes only. It rel
 [cgm-remote-monitor]: https://github.com/nightscout/cgm-remote-monitor
 [PhantomJS]: http://phantomjs.org/
 [download a zip]: https://github.com/mddub/minimed-connect-to-nightscout/archive/master.zip
-[this gist]: https://gist.github.com/mddub/b033ec0c800deec02471
+[this sensor-disabled gist]: https://gist.github.com/mddub/b033ec0c800deec02471
+[this sensor-enabled gist]: https://gist.github.com/mddub/dc1baf74eda772dcb164
 [get in touch]: mailto:mark@warkmilson.com
 [File an issue]: https://github.com/mddub/minimed-connect-to-nightscout/issues
 [casper]: http://casperjs.org/
