@@ -25,7 +25,8 @@
 ## Currently supported data
 
 * Sensor glucose values
-* Active insulin (sent to Nightscout as entries of type `reported_active_bolus`)
+* Pump: active insulin, reservoir level in units, reservoir level as percentage
+* MiniMed Connect: battery level, connection status to phone, connection status to pump
 * Pump model and serial number (included in all Nightscout entries)
 
 **Potential future data**: See [this sensor-disabled gist] and [this sensor-enabled gist] for sample data provided by CareLink Connect. In particular, I'd love to include BG trend (up/down arrows) based on `lastSGTrend`. Please [get in touch] if you use an Enlite sensor and would like to help.

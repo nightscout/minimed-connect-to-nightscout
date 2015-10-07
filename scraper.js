@@ -8,7 +8,7 @@ phantom.injectJs('./vendor/casperjs/bin/bootstrap.js');
 
 var Rusha = require('./vendor/rusha.js');
 
-var ACTIVE_INSULIN_ENTRY_TYPE = 'reported_active_bolus';
+var PUMP_STATUS_ENTRY_TYPE = 'pump_status';
 var SENSOR_GLUCOSE_ENTRY_TYPE = 'sgv';
 
 var isNewData = (function() {
@@ -31,15 +31,18 @@ function addTimeToEntry(pumpTimeString, entry) {
 function transformForNightscout(data) {
   var entries = [];
 
-  if(data['activeInsulin'] && data['activeInsulin']['datetime'] && data['activeInsulin']['amount'] >= 0) {
+  if(data['sMedicalDeviceTime']) {
+    var entry = {'type': PUMP_STATUS_ENTRY_TYPE};
+    ['conduitBatteryLevel', 'conduitInRange', 'conduitMedicalDeviceInRange', 'reservoirLevelPercent', 'reservoirAmount', 'medicalDeviceBatteryLevelPercent'].forEach(function(key) {
+      if(data[key] !== undefined) {
+        entry[key] = data[key];
+      }
+    });
+    if(data['activeInsulin'] && data['activeInsulin']['datetime'] && data['activeInsulin']['amount'] >= 0) {
+      entry['activeInsulin'] = data['activeInsulin']['amount'];
+    }
     entries.push(
-      addTimeToEntry(
-        data['activeInsulin']['datetime'],
-        {
-          'type': ACTIVE_INSULIN_ENTRY_TYPE,
-          'insulin': data['activeInsulin']['amount']
-        }
-      )
+      addTimeToEntry(data['sMedicalDeviceTime'], entry)
     );
   }
 
@@ -66,8 +69,8 @@ function transformForNightscout(data) {
     entry['device'] = 'MiniMed Connect ' + data['medicalDeviceFamily'] + ' ' + data['medicalDeviceSerialNumber'];
   });
 
-  var activeEntry = entries.filter(function(e) { return e['type'] === ACTIVE_INSULIN_ENTRY_TYPE; })[0];
-  var activeIns = activeEntry ? activeEntry['insulin'] + ' at ' + activeEntry['dateString'] : 'unknown';
+  var statusEntry = entries.filter(function(e) { return e['type'] === PUMP_STATUS_ENTRY_TYPE; })[0];
+  var activeIns = statusEntry && statusEntry['activeInsulin'] ? statusEntry['activeInsulin'] + ' at ' + statusEntry['dateString'] : 'unknown';
   var sgvEntries = entries.filter(function(e) { return e['type'] === SENSOR_GLUCOSE_ENTRY_TYPE; });
   var recentSgv = sgvEntries.length ? sgvEntries[sgvEntries.length - 1]['sgv'] + ' at ' + sgvEntries[sgvEntries.length - 1]['dateString'] : 'unknown';
   casper.log('active insulin ' + activeIns, 'info');
