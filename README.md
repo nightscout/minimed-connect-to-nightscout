@@ -25,7 +25,7 @@
 ## Currently supported data
 
 * Sensor glucose values
-* Pump: active insulin, reservoir level in units, reservoir level as percentage
+* Pump: active insulin, reservoir level in units, reservoir level as percentage, battery level
 * MiniMed Connect: battery level, connection status to phone, connection status to pump
 * Pump model and serial number (included in all Nightscout entries)
 
