@@ -8,7 +8,8 @@ phantom.injectJs('./vendor/casperjs/bin/bootstrap.js');
 
 var Rusha = require('./vendor/rusha.js');
 
-var NIGHTSCOUT_ENTRY_TYPE = 'reported_active_bolus';
+var ACTIVE_INSULIN_ENTRY_TYPE = 'reported_active_bolus';
+var SENSOR_GLUCOSE_ENTRY_TYPE = 'sgv';
 
 var isNewData = (function() {
   var lastUpdateTime;
@@ -30,12 +31,12 @@ function addTimeToEntry(pumpTimeString, entry) {
 function transformForNightscout(data) {
   var entries = [];
 
-  if(data['activeInsulin']) {
+  if(data['activeInsulin'] && data['activeInsulin']['datetime'] && data['activeInsulin']['amount'] >= 0) {
     entries.push(
       addTimeToEntry(
         data['activeInsulin']['datetime'],
         {
-          'type': NIGHTSCOUT_ENTRY_TYPE,
+          'type': ACTIVE_INSULIN_ENTRY_TYPE,
           'insulin': data['activeInsulin']['amount']
         }
       )
@@ -53,7 +54,7 @@ function transformForNightscout(data) {
         addTimeToEntry(
           sgv['datetime'],
           {
-            'type': 'sgv',
+            'type': SENSOR_GLUCOSE_ENTRY_TYPE,
             'sgv': sgv['sg'],
           }
         )
@@ -65,10 +66,10 @@ function transformForNightscout(data) {
     entry['device'] = 'MiniMed Connect ' + data['medicalDeviceFamily'] + ' ' + data['medicalDeviceSerialNumber'];
   });
 
-  var activeEntry = entries.filter(function(e) { return e['type'] === NIGHTSCOUT_ENTRY_TYPE; })[0];
-  var activeIns = activeEntry ? activeEntry['activeInsulin'] + ' at ' + activeEntry['dateString'] : 'unknown';
-  var sgvEntries = entries.filter(function(e) { return e['type'] === 'sgv'; });
-  var recentSgv = sgvEntries.length ? sgvEntries[sgvEntries.length - 1]['sgv'] + ' at ' + activeEntry['dateString'] : 'unknown';
+  var activeEntry = entries.filter(function(e) { return e['type'] === ACTIVE_INSULIN_ENTRY_TYPE; })[0];
+  var activeIns = activeEntry ? activeEntry['insulin'] + ' at ' + activeEntry['dateString'] : 'unknown';
+  var sgvEntries = entries.filter(function(e) { return e['type'] === SENSOR_GLUCOSE_ENTRY_TYPE; });
+  var recentSgv = sgvEntries.length ? sgvEntries[sgvEntries.length - 1]['sgv'] + ' at ' + sgvEntries[sgvEntries.length - 1]['dateString'] : 'unknown';
   casper.log('active insulin ' + activeIns, 'info');
   casper.log('sensor glucose ' + recentSgv, 'info');
 
