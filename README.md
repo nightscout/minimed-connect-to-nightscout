@@ -15,10 +15,10 @@
 
 ## Install
 
-1. Install [PhantomJS].
+1. Install [Node].
 1. Clone this repository or [download a zip] with the latest version.
 1. Create a `config.js` file based on the provided `config.js.example`.
-1. Run `phantomjs scraper.js` and leave it running.
+1. Run `npm start` and leave it running.
 
 **Coming soon:** Deploy instructions for Heroku
 
@@ -33,8 +33,6 @@
 
 ## Notes
 
-Besides PhantomJS, there are dependencies on [CasperJS][casper] (for nicer interaction with PhantomJS) and [Rusha][rusha] (for crypto to authenticate with Nightscout). Since this is neither a Node module nor runnable with Node, they are included in the repo under `vendor` instead of adding a dependency on npm.
-
 [File an issue] if you'd like to give feedback, request an enhancement, or report a bug. Pull requests are welcome.
 
 ## Disclaimer
@@ -46,7 +44,7 @@ This project is intended for educational and informational purposes only. It rel
 [carelink]: https://carelink.minimed.com/
 [Nightscout]: http://www.nightscout.info/
 [cgm-remote-monitor]: https://github.com/nightscout/cgm-remote-monitor
-[PhantomJS]: http://phantomjs.org/
+[Node]: https://nodejs.org
 [download a zip]: https://github.com/mddub/minimed-connect-to-nightscout/archive/master.zip
 [this sensor-disabled gist]: https://gist.github.com/mddub/b033ec0c800deec02471
 [this sensor-enabled gist]: https://gist.github.com/mddub/dc1baf74eda772dcb164
