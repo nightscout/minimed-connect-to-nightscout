@@ -12,7 +12,7 @@
   },
   "main": "index.js",
   "scripts": {
-    "start": "node run.js"
+    "start": "MINIMED_CONNECT_VERBOSE=true node run.js"
   },
   "license": "MIT",
   "dependencies": {
