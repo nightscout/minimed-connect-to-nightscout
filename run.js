@@ -1,10 +1,18 @@
+/* jshint node: true */
+"use strict";
+
 var config = require('./config'),
-  fetch = require('./carelink'),
+  carelink = require('./carelink'),
   nightscout = require('./nightscout');
 
+var client = carelink.Client({username: config.CARELINK_USERNAME, password: config.CARELINK_PASSWORD}),
+  endpoint = config.NIGHTSCOUT_HOST + '/api/v1/entries.json',
+  secret = config.NIGHTSCOUT_API_SECRET;
+
 (function requestLoop() {
-  fetch(function(data) {
-    nightscout.transformAndUpload(data, function(entries) {
+  client.fetch(function(data) {
+    var entries = nightscout.transform(data, config.PUMP_TIMEZONE, config.NUM_RECORDS_TO_SUBMIT);
+    nightscout.upload(entries, endpoint, secret, function(response) {
       setTimeout(requestLoop, config.CARELINK_REQUEST_INTERVAL);
     });
   });
