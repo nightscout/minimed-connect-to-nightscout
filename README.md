@@ -35,6 +35,8 @@
 
 [File an issue] if you'd like to give feedback, request an enhancement, or report a bug. Pull requests are welcome.
 
+Much of the Medtronic HTTP interaction is based on the excellent work by @bewest and @ianjorgensen on [mmcsv].
+
 ## Disclaimer
 
 This project is intended for educational and informational purposes only. It relies on a series of fragile components and assumptions, any of which may break at any time. It is not FDA approved and should not be used to make medical decisions. It is neither affiliated with nor endorsed by Medtronic, and may violate their Terms of Service.
@@ -50,5 +52,4 @@ This project is intended for educational and informational purposes only. It rel
 [this sensor-enabled gist]: https://gist.github.com/mddub/dc1baf74eda772dcb164
 [get in touch]: mailto:mark@warkmilson.com
 [File an issue]: https://github.com/mddub/minimed-connect-to-nightscout/issues
-[casper]: http://casperjs.org/
-[rusha]: https://www.npmjs.com/package/rusha
+[mmcsv]: https://github.com/bewest/mmcsv
