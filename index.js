@@ -1,4 +1,4 @@
 module.exports = {
-  fetch: require('./fetch'),
+  carelink: require('./carelink'),
   nightscout: require('./nightscout')
 };

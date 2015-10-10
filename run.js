@@ -1,5 +1,5 @@
 var config = require('./config'),
-  fetch = require('./fetch'),
+  fetch = require('./carelink'),
   nightscout = require('./nightscout');
 
 (function requestLoop() {
