@@ -2,7 +2,7 @@
 "use strict";
 
 module.exports.log = function(str) {
-  if (process.env['MINIMED_CONNECT_VERBOSE']) {
+  if (process.env['CARELINK_VERBOSE']) {
     console.log(new Date() + ' ' + str);
   }
 };

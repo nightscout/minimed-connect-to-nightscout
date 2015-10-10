@@ -1,19 +1,38 @@
 /* jshint node: true */
 "use strict";
 
-var config = require('./config'),
-  carelink = require('./carelink'),
+var carelink = require('./carelink'),
   nightscout = require('./nightscout');
 
-var client = carelink.Client({username: config.CARELINK_USERNAME, password: config.CARELINK_PASSWORD}),
-  endpoint = config.NIGHTSCOUT_HOST + '/api/v1/entries.json',
-  secret = config.NIGHTSCOUT_API_SECRET;
+function readEnv(key, defaultVal) {
+  var val = process.env[key] ||
+    process.env[key.toLowerCase()] ||
+    // Azure prefixes environment variables with this
+    process.env['CUSTOMCONNSTR_' + key] ||
+    process.env['CUSTOMCONNSTR_' + key.toLowerCase()];
+  return val !== undefined ? val : defaultVal;
+}
+
+var config = {
+  username: readEnv('CARELINK_USERNAME'),
+  password: readEnv('CARELINK_PASSWORD'),
+  pumpTimezone: readEnv('CARELINK_PUMP_TIMEZONE'),
+  nsHost: readEnv('WEBSITE_HOSTNAME'),
+  nsBaseUrl: readEnv('NS'),
+  nsSecret: readEnv('API_SECRET'),
+  interval: parseInt(readEnv('CARELINK_REQUEST_INTERVAL', 60 * 1000)),
+  sgvLimit: parseInt(readEnv('CARELINK_SGV_LIMIT', 24))
+};
+
+var client = carelink.Client({username: config.username, password: config.password});
+
+var endpoint = (config.nsBaseUrl ? config.nsBaseUrl : 'https://' + config.nsHost) + '/api/v1/entries.json';
 
 (function requestLoop() {
   client.fetch(function(data) {
-    var entries = nightscout.transform(data, config.PUMP_TIMEZONE, config.NUM_RECORDS_TO_SUBMIT);
-    nightscout.upload(entries, endpoint, secret, function(response) {
-      setTimeout(requestLoop, config.CARELINK_REQUEST_INTERVAL);
+    var entries = nightscout.transform(data, config.pumpTimezone, config.sgvLimit);
+    nightscout.upload(entries, endpoint, config.nsSecret, function(response) {
+      setTimeout(requestLoop, config.interval);
     });
   });
 })();

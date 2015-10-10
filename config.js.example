@@ -1,8 +1,0 @@
-exports.CARELINK_USERNAME = 'username';
-exports.CARELINK_PASSWORD = 'password';
-exports.PUMP_TIMEZONE = '-0700'; // UTC time offset
-exports.CARELINK_REQUEST_INTERVAL = 60 * 1000; // milliseconds
-exports.NUM_RECORDS_TO_SUBMIT = 20; // carelink gives ~300 sgv records at a time, but there's no need to send them all to nightscout
-
-exports.NIGHTSCOUT_HOST = 'https://yoursitename.azurewebsites.net';
-exports.NIGHTSCOUT_API_SECRET = 'your api secret';

@@ -17,11 +17,25 @@
 
 1. Install [Node].
 1. Clone this repository or [download a zip] with the latest version.
-1. Create a `config.js` file based on the provided `config.js.example`.
 1. `npm install` to install dependencies.
+1. Set environment variables (see below).
 1. `npm start` and leave it running.
 
 **Coming soon:** Deploy instructions for Heroku
+
+### Required environment variables
+
+* `CARELINK_USERNAME` - your username for [CareLink][carelink]
+* `CARELINK_PASSWORD` - your password for [CareLink][carelink]
+* `CARELINK_PUMP_TIMEZONE` - a timezone offset string like `"-0700"` which represents the pump's offset from UTC (**TODO:** use time zone names like `America/Los_Angeles` instead, since offsets vary depending on DST)
+* `API_SECRET` - the value you use for `API_SECRET` on your Nightscout website
+* `WEBSITE_HOSTNAME` - the hostname for your Nightscout instance, which looks like `your.host.com`. If you are running this script in the same Azure environment as Nightscout, there is no need to set this, as it will [already be set by Azure][azure-environment]. If you set `NS` (see below), you do not need to set this.
+
+### Optional environment variables
+
+* `CARELINK_REQUEST_INTERVAL` - number of milliseconds to wait between requests to the CareLink server (default: 60000)
+* `CARELINK_SGV_LIMIT` - maximum number of recent sensor glucose values to send to Nightscout (default: 24)
+* `NS` - a fully-qualified Nightscout URL (e.g. `https://sitename.azurewebsites.net`) which overrides `WEBSITE_HOSTNAME`
 
 ## Currently supported data
 
@@ -49,6 +63,7 @@ This project is intended for educational and informational purposes only. It rel
 [cgm-remote-monitor]: https://github.com/nightscout/cgm-remote-monitor
 [Node]: https://nodejs.org
 [download a zip]: https://github.com/mddub/minimed-connect-to-nightscout/archive/master.zip
+[azure-environment]: https://github.com/projectkudu/kudu/wiki/Azure-runtime-environment
 [this sensor-disabled gist]: https://gist.github.com/mddub/b033ec0c800deec02471
 [this sensor-enabled gist]: https://gist.github.com/mddub/dc1baf74eda772dcb164
 [get in touch]: mailto:mark@warkmilson.com
