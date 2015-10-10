@@ -95,7 +95,7 @@ var upload = module.exports.upload = function(entries, endpoint, secret, callbac
       if(err) {
         throw new Error("Error uploading to Nightscout: can't connect to Nightscout host");
       } else if(response.statusCode !== 200) {
-        throw new Error("Error uploading to Nightscout: " + JSON.stringify(response.body));
+        throw new Error("Error uploading to Nightscout: " + JSON.stringify(response));
       } else {
         callback(response);
       }
