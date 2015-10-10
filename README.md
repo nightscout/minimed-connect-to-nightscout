@@ -18,7 +18,8 @@
 1. Install [Node].
 1. Clone this repository or [download a zip] with the latest version.
 1. Create a `config.js` file based on the provided `config.js.example`.
-1. Run `npm start` and leave it running.
+1. `npm install` to install dependencies.
+1. `npm start` and leave it running.
 
 **Coming soon:** Deploy instructions for Heroku
 
