@@ -29,8 +29,12 @@ var endpoint = (config.nsBaseUrl ? config.nsBaseUrl : 'https://' + config.nsHost
 (function requestLoop() {
   client.fetch(function(data) {
     var entries = nightscout.transform(data, config.sgvLimit);
-    nightscout.upload(entries, endpoint, config.nsSecret, function(response) {
+    if (entries.length > 0) {
+      nightscout.upload(entries, endpoint, config.nsSecret, function(response) {
+        setTimeout(requestLoop, config.interval);
+      });
+    } else {
       setTimeout(requestLoop, config.interval);
-    });
+    }
   });
 })();
