@@ -27,7 +27,6 @@
 
 * `CARELINK_USERNAME` - your username for [CareLink][carelink]
 * `CARELINK_PASSWORD` - your password for [CareLink][carelink]
-* `CARELINK_PUMP_TIMEZONE` - a timezone offset string like `"-0700"` which represents the pump's offset from UTC (**TODO:** use time zone names like `America/Los_Angeles` instead, since offsets vary depending on DST)
 * `API_SECRET` - the value you use for `API_SECRET` on your Nightscout website
 * `WEBSITE_HOSTNAME` - the hostname for your Nightscout instance, which looks like `your.host.com`. If you are running this script in the same Azure environment as Nightscout, there is no need to set this, as it will [already be set by Azure][azure-environment]. If you set `NS` (see below), you do not need to set this.
 

@@ -16,7 +16,6 @@ function readEnv(key, defaultVal) {
 var config = {
   username: readEnv('CARELINK_USERNAME'),
   password: readEnv('CARELINK_PASSWORD'),
-  pumpTimezone: readEnv('CARELINK_PUMP_TIMEZONE'),
   nsHost: readEnv('WEBSITE_HOSTNAME'),
   nsBaseUrl: readEnv('NS'),
   nsSecret: readEnv('API_SECRET'),
@@ -25,12 +24,11 @@ var config = {
 };
 
 var client = carelink.Client({username: config.username, password: config.password});
-
 var endpoint = (config.nsBaseUrl ? config.nsBaseUrl : 'https://' + config.nsHost) + '/api/v1/entries.json';
 
 (function requestLoop() {
   client.fetch(function(data) {
-    var entries = nightscout.transform(data, config.pumpTimezone, config.sgvLimit);
+    var entries = nightscout.transform(data, config.sgvLimit);
     nightscout.upload(entries, endpoint, config.nsSecret, function(response) {
       setTimeout(requestLoop, config.interval);
     });
