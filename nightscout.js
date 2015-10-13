@@ -20,17 +20,17 @@ function addTimeToEntry(utc, entry) {
   return entry;
 }
 
-var guessPumpTimezone = (function() {
+var guessPumpOffset = (function() {
   var lastGuess;
 
   // From my observations, sMedicalDeviceTime is advanced by the server even when the app is
   // not reporting data or the pump is not connected, so its difference from server time is
   // always close to a whole number of hours, and can be used to guess the pump's timezone:
   // https://gist.github.com/mddub/f673570e6427c93784bf
-  return function guessPumpTimezone(data) {
-    var timezoneNaivePumpTime = Date.parse(data['sMedicalDeviceTime'] + ' +0');
+  return function(data) {
+    var pumpTimeAsIfUTC = Date.parse(data['sMedicalDeviceTime'] + ' +0');
     var serverTimeUTC = data['currentServerTime'];
-    var hours = Math.round((timezoneNaivePumpTime - serverTimeUTC) / (60*60*1000));
+    var hours = Math.round((pumpTimeAsIfUTC - serverTimeUTC) / (60*60*1000));
     var offset = (hours >= 0 ? '+' : '-') + (Math.abs(hours) < 10 ? '0' : '') + Math.abs(hours) + '00';
     if (offset !== lastGuess) {
       logger.log('Guessed pump timezone ' + offset + ' (pump time: "' + data['sMedicalDeviceTime'] + '"; server time: ' + new Date(data['currentServerTime']) + ')');
@@ -64,7 +64,7 @@ function pumpStatusEntry(data) {
 }
 
 function sgvEntries(data) {
-  var offset = guessPumpTimezone(data);
+  var offset = guessPumpOffset(data);
 
   if(data['sgs'] && data['sgs'].length) {
     return data['sgs'].filter(function(entry) {
