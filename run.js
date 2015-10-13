@@ -23,6 +23,12 @@ var config = {
   sgvLimit: parseInt(readEnv('CARELINK_SGV_LIMIT', 24))
 };
 
+if (!config.username) {
+  throw new Error('Missing CareLink username');
+} else if(!config.password) {
+  throw new Error('Missing CareLink password');
+}
+
 var client = carelink.Client({username: config.username, password: config.password});
 var endpoint = (config.nsBaseUrl ? config.nsBaseUrl : 'https://' + config.nsHost) + '/api/v1/entries.json';
 

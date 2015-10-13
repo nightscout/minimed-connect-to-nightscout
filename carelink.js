@@ -60,12 +60,6 @@ var Client = exports.Client = function (options) {
     return new Client(arguments[0]);
   }
 
-  if (!options.username) {
-    throw new Error('Missing CareLink username');
-  } else if(!options.password) {
-    throw new Error('Missing CareLink password');
-  }
-
   var jar = request.jar();
 
   function doLogin(next) {
