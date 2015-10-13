@@ -14,9 +14,9 @@ function parsePumpTime(pumpTimeString, offset) {
   return Date.parse(pumpTimeString + ' ' + offset);
 }
 
-function addTimeToEntry(utc, entry) {
-  entry['date'] = utc;
-  entry['dateString'] = new Date(utc).toISOString();
+function addTimeToEntry(timestamp, entry) {
+  entry['date'] = timestamp;
+  entry['dateString'] = new Date(timestamp).toISOString();
   return entry;
 }
 
