@@ -11,6 +11,7 @@ var logger = require('./logger');
 var CARELINK_SECURITY_URL = 'https://carelink.minimed.com/patient/j_security_check';
 var CARELINK_AFTER_LOGIN_URL = 'https://carelink.minimed.com/patient/main/login.do';
 var CARELINK_LOGIN_COOKIE = '_WL_AUTHCOOKIE_JSESSIONID';
+var MAX_RETRY_COUNT = 10;
 
 var carelinkJsonUrlNow = function() {
   return 'https://carelink.minimed.com/patient/connect/ConnectViewerServlet?cpSerialNumber=NONE&msgType=last24hours&requestTime=' + Date.now();
@@ -36,10 +37,22 @@ function haveLoginCookie(jar) {
   return jar.getCookies(CARELINK_SECURITY_URL).filter(function(c) { return c.key == CARELINK_LOGIN_COOKIE; }).length > 0;
 }
 
-function assertNotBadResponse(response) {
-  if (response !== undefined && !(response.statusCode >= 200 && response.statusCode < 400)) {
-    throw new Error("Bad response from CareLink: " + JSON.stringify(extend(true, response, {'body': '<redacted>'})));
+function responseAsError(response) {
+  if (!(response.statusCode >= 200 && response.statusCode < 400)) {
+    return new Error(
+      "Bad response from CareLink: " +
+      JSON.stringify(extend(true, response, {'body': '<redacted>'}))
+    );
+  } else {
+    return null;
   }
+}
+
+function checkResponseThen(fn) {
+  return function(err, response) {
+    err = err || responseAsError(response);
+    fn.apply(this, [err].concat(Array.prototype.slice.call(arguments, 1)));
+  };
 }
 
 var Client = exports.Client = function (options) {
@@ -56,40 +69,56 @@ var Client = exports.Client = function (options) {
   var jar = request.jar();
 
   function doLogin(next) {
+    logger.log('POST ' + CARELINK_SECURITY_URL);
     request.post(
       CARELINK_SECURITY_URL,
       reqOptions({
         jar: jar,
         qs: {j_username: options.username, j_password: options.password}
       }),
-      next
+      checkResponseThen(next)
     );
   }
 
   function doFetchCookie(response, next) {
-    assertNotBadResponse(response);
+    logger.log('GET ' + CARELINK_AFTER_LOGIN_URL);
     request.get(
       CARELINK_AFTER_LOGIN_URL,
       reqOptions({jar: jar}),
-      next
+      checkResponseThen(next)
     );
   }
 
-  function getConnectData(response, next) {
-    assertNotBadResponse(response);
+  function getConnectData(response, next, retryCount) {
     var url = carelinkJsonUrlNow();
     logger.log('GET ' + url);
     var resp = request.get(
       url,
       reqOptions({jar: jar, gzip: true}),
-      next
+      checkResponseThen(function(err, response) {
+        if (err) {
+          logger.log(err);
+          if (retryCount === undefined ) {
+            retryCount = 0;
+          } else if (retryCount >= MAX_RETRY_COUNT) {
+            logger.log('Retried too many times.');
+            next(err);
+          }
+          var timeout = Math.pow(2, retryCount);
+          logger.log('Trying again in ' + timeout + ' second(s)...');
+          setTimeout(function() {
+            getConnectData(response, next, retryCount + 1);
+          }, 1000 * timeout);
+        } else {
+          next(null, response);
+        }
+      })
     );
   }
 
   function parseData(response, next) {
-    assertNotBadResponse(response);
     try {
-      next(undefined, JSON.parse(response.body));
+      next(null, JSON.parse(response.body));
     } catch (e) {
       next(e);
     }
@@ -102,12 +131,9 @@ var Client = exports.Client = function (options) {
         doFetchCookie,
         getConnectData,
         parseData,
-        callback
+        callback.bind(null, null),
       ],
-      function onError(err) {
-        console.log(err);
-        process.exit(1);
-      }
+      callback
     );
   }
 
@@ -116,7 +142,7 @@ var Client = exports.Client = function (options) {
       [
         getConnectData,
         parseData,
-        callback
+        callback.bind(null, null),
       ],
       function onError(err) {
         logger.log('Fetch JSON failed; logging in again');

@@ -27,14 +27,22 @@ var client = carelink.Client({username: config.username, password: config.passwo
 var endpoint = (config.nsBaseUrl ? config.nsBaseUrl : 'https://' + config.nsHost) + '/api/v1/entries.json';
 
 (function requestLoop() {
-  client.fetch(function(data) {
-    var entries = nightscout.transform(data, config.sgvLimit);
-    if (entries.length > 0) {
-      nightscout.upload(entries, endpoint, config.nsSecret, function(response) {
-        setTimeout(requestLoop, config.interval);
-      });
+  client.fetch(function(err, data) {
+    if (err) {
+      throw new Error(err);
     } else {
-      setTimeout(requestLoop, config.interval);
+      var entries = nightscout.transform(data, config.sgvLimit);
+      if (entries.length > 0) {
+        nightscout.upload(entries, endpoint, config.nsSecret, function(err, response) {
+          if (err) {
+            // Continue gathering data from CareLink even if Nightscout can't be reached
+            console.log(err);
+          }
+          setTimeout(requestLoop, config.interval);
+        });
+      } else {
+        setTimeout(requestLoop, config.interval);
+      }
     }
   });
 })();
