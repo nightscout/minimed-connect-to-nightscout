@@ -20,8 +20,9 @@ var config = {
   nsHost: readEnv('WEBSITE_HOSTNAME'),
   nsBaseUrl: readEnv('NS'),
   nsSecret: readEnv('API_SECRET'),
-  interval: parseInt(readEnv('CARELINK_REQUEST_INTERVAL', 60 * 1000)),
-  sgvLimit: parseInt(readEnv('CARELINK_SGV_LIMIT', 24))
+  interval: parseInt(readEnv('CARELINK_REQUEST_INTERVAL', 60 * 1000), 10),
+  sgvLimit: parseInt(readEnv('CARELINK_SGV_LIMIT', 24), 10),
+  maxRetryDuration: parseInt(readEnv('CARELINK_MAX_RETRY_DURATION', carelink.defaultMaxRetryDuration), 10)
 };
 
 if (!config.username) {
@@ -30,7 +31,11 @@ if (!config.username) {
   throw new Error('Missing CareLink password');
 }
 
-var client = carelink.Client({username: config.username, password: config.password});
+var client = carelink.Client({
+  username: config.username,
+  password: config.password,
+  maxRetryDuration: config.maxRetryDuration
+});
 var endpoint = (config.nsBaseUrl ? config.nsBaseUrl : 'https://' + config.nsHost) + '/api/v1/entries.json';
 
 (function requestLoop() {

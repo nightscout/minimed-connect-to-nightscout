@@ -8,13 +8,15 @@ var common = require('common'),
 
 var logger = require('./logger');
 
+var DEFAULT_MAX_RETRY_DURATION = module.exports.defaultMaxRetryDuration = 512;
+
 var CARELINK_SECURITY_URL = 'https://carelink.minimed.com/patient/j_security_check';
 var CARELINK_AFTER_LOGIN_URL = 'https://carelink.minimed.com/patient/main/login.do';
+var CARELINK_JSON_BASE_URL = 'https://carelink.minimed.com/patient/connect/ConnectViewerServlet?cpSerialNumber=NONE&msgType=last24hours&requestTime=';
 var CARELINK_LOGIN_COOKIE = '_WL_AUTHCOOKIE_JSESSIONID';
-var MAX_RETRY_COUNT = 10;
 
 var carelinkJsonUrlNow = function() {
-  return 'https://carelink.minimed.com/patient/connect/ConnectViewerServlet?cpSerialNumber=NONE&msgType=last24hours&requestTime=' + Date.now();
+  return CARELINK_JSON_BASE_URL + Date.now();
 };
 
 function reqOptions(extra) {
@@ -55,12 +57,28 @@ function checkResponseThen(fn) {
   };
 }
 
+function retryDurationOnAttempt(n) {
+  return Math.pow(2, n);
+}
+
+function totalDurationAfterNextRetry(n) {
+  var sum = 0;
+  for(var i = 0; i <= n; i++) {
+    sum += retryDurationOnAttempt(i);
+  }
+  return sum;
+}
+
 var Client = exports.Client = function (options) {
   if (!(this instanceof Client)) {
     return new Client(arguments[0]);
   }
 
   var jar = request.jar();
+
+  if (options.maxRetryDuration === undefined) {
+    options.maxRetryDuration = DEFAULT_MAX_RETRY_DURATION;
+  }
 
   function doLogin(next) {
     logger.log('POST ' + CARELINK_SECURITY_URL);
@@ -94,11 +112,11 @@ var Client = exports.Client = function (options) {
           logger.log(err);
           if (retryCount === undefined ) {
             retryCount = 0;
-          } else if (retryCount >= MAX_RETRY_COUNT) {
-            logger.log('Retried too many times.');
+          } else if (totalDurationAfterNextRetry(retryCount) >= options.maxRetryDuration) {
+            logger.log('Retried for too long (' + totalDurationAfterNextRetry(retryCount - 1) + ' seconds).');
             next(err);
           }
-          var timeout = Math.pow(2, retryCount);
+          var timeout = retryDurationOnAttempt(retryCount);
           logger.log('Trying again in ' + timeout + ' second(s)...');
           setTimeout(function() {
             getConnectData(response, next, retryCount + 1);
