@@ -2,7 +2,8 @@
 "use strict";
 
 var carelink = require('./carelink'),
-  nightscout = require('./nightscout');
+  nightscout = require('./nightscout'),
+  transform = require('./transform');
 
 function readEnv(key, defaultVal) {
   var val = process.env[key] ||
@@ -37,7 +38,7 @@ var endpoint = (config.nsBaseUrl ? config.nsBaseUrl : 'https://' + config.nsHost
     if (err) {
       throw new Error(err);
     } else {
-      var entries = nightscout.transform(data, config.sgvLimit);
+      var entries = transform(data, config.sgvLimit);
       if (entries.length > 0) {
         nightscout.upload(entries, endpoint, config.nsSecret, function(err, response) {
           if (err) {
