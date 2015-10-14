@@ -102,7 +102,7 @@ var transform = module.exports = function(data, sgvLimit) {
   }
 
   entries.forEach(function(entry) {
-    entry['device'] = 'MiniMed Connect ' + data['medicalDeviceFamily'] + ' ' + data['medicalDeviceSerialNumber'];
+    entry['device'] = 'connect://' + data['medicalDeviceFamily'].toLowerCase();
   });
 
   return entries;
