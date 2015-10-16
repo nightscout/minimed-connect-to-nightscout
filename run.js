@@ -2,6 +2,7 @@
 "use strict";
 
 var carelink = require('./carelink'),
+  logger = require('./logger'),
   nightscout = require('./nightscout'),
   transform = require('./transform');
 
@@ -22,7 +23,8 @@ var config = {
   nsSecret: readEnv('API_SECRET'),
   interval: parseInt(readEnv('CARELINK_REQUEST_INTERVAL', 60 * 1000), 10),
   sgvLimit: parseInt(readEnv('CARELINK_SGV_LIMIT', 24), 10),
-  maxRetryDuration: parseInt(readEnv('CARELINK_MAX_RETRY_DURATION', carelink.defaultMaxRetryDuration), 10)
+  maxRetryDuration: parseInt(readEnv('CARELINK_MAX_RETRY_DURATION', carelink.defaultMaxRetryDuration), 10),
+  verbose: !!readEnv('CARELINK_VERBOSE')
 };
 
 if (!config.username) {
@@ -37,6 +39,8 @@ var client = carelink.Client({
   maxRetryDuration: config.maxRetryDuration
 });
 var endpoint = (config.nsBaseUrl ? config.nsBaseUrl : 'https://' + config.nsHost) + '/api/v1/entries.json';
+
+logger.setVerbose(config.verbose);
 
 (function requestLoop() {
   client.fetch(function(err, data) {

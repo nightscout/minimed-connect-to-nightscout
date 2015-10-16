@@ -1,8 +1,17 @@
 /* jshint node: true */
 "use strict";
 
-module.exports.log = function(str) {
-  if (process.env['CARELINK_VERBOSE']) {
-    console.log(new Date() + ' ' + str);
-  }
-};
+module.exports = (function() {
+  var verbose_ = false;
+
+  return {
+    setVerbose: function(v) {
+      verbose_ = v;
+    },
+    log: function(str) {
+      if(verbose_) {
+        console.log(new Date() + ' ' + str);
+      }
+    }
+  };
+})();
