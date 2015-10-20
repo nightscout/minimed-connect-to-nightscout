@@ -24,7 +24,7 @@ var config = {
   interval: parseInt(readEnv('CARELINK_REQUEST_INTERVAL', 60 * 1000), 10),
   sgvLimit: parseInt(readEnv('CARELINK_SGV_LIMIT', 24), 10),
   maxRetryDuration: parseInt(readEnv('CARELINK_MAX_RETRY_DURATION', carelink.defaultMaxRetryDuration), 10),
-  verbose: !!readEnv('CARELINK_VERBOSE')
+  verbose: !readEnv('CARELINK_QUIET')
 };
 
 if (!config.username) {

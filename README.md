@@ -35,6 +35,7 @@
 * `CARELINK_REQUEST_INTERVAL` - number of milliseconds to wait between requests to the CareLink server (default: 60000)
 * `CARELINK_SGV_LIMIT` - maximum number of recent sensor glucose values to send to Nightscout (default: 24)
 * `CARELINK_MAX_RETRY_DURATION` - maximum number of seconds to spend retrying failed requests to CareLink, ideally a power of 2 (default: 512)
+* `CARELINK_QUIET` - set to a truthy value to not output details of CareLink and Nightscout requests to the console (default: empty)
 * `NS` - a fully-qualified Nightscout URL (e.g. `https://sitename.azurewebsites.net`) which overrides `WEBSITE_HOSTNAME`
 
 ## Currently supported data
