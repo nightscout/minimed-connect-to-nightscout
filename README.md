@@ -40,16 +40,19 @@
 
 ## Currently supported data
 
-* Sensor glucose values
-* Pump: active insulin, reservoir level in units, reservoir level as percentage, battery level
+* Sensor glucose values and trend (single/double arrow up/down)
+* Pump: active insulin, reservoir level, battery level
 * MiniMed Connect: battery level, connection status to phone, connection status to pump
-* Pump model and serial number (included in all Nightscout entries)
+* Sensor: calibration state, time until next calibration, sensor duration, connection status to pump
+* Pump model
 
-**Potential future data**: See [this sensor-disabled gist] and [this sensor-enabled gist] for sample data provided by CareLink Connect. In particular, I'd love to include BG trend (up/down arrows) based on `lastSGTrend`. Please [get in touch] if you use an Enlite sensor and would like to help.
+Understanding of the current data is based mostly on [this analysis].
 
-## Notes
+## Contributing
 
-[File an issue] if you'd like to give feedback, request an enhancement, or report a bug. Pull requests are welcome.
+[File an issue] if you'd like to give feedback, request an enhancement, or report a bug.
+
+Pull requests are welcome, provided they include tests. See `test/` for examples. Run `npm test` to run the suite.
 
 Much of the Medtronic HTTP interaction is based on the excellent work by @bewest and @ianjorgensen on [mmcsv].
 
@@ -65,8 +68,6 @@ This project is intended for educational and informational purposes only. It rel
 [Node]: https://nodejs.org
 [download a zip]: https://github.com/mddub/minimed-connect-to-nightscout/archive/master.zip
 [azure-environment]: https://github.com/projectkudu/kudu/wiki/Azure-runtime-environment
-[this sensor-disabled gist]: https://gist.github.com/mddub/b033ec0c800deec02471
-[this sensor-enabled gist]: https://gist.github.com/mddub/dc1baf74eda772dcb164
-[get in touch]: mailto:mark@warkmilson.com
+[this analysis]: https://gist.github.com/mddub/5e4a585508c93249eb51
 [File an issue]: https://github.com/mddub/minimed-connect-to-nightscout/issues
 [mmcsv]: https://github.com/bewest/mmcsv
