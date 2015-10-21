@@ -38,15 +38,15 @@ describe('integration test: missingLastSgv', function() {
     expect(_.uniq(_.pluck(sgvs, 'direction'))).to.eql([undefined]);
   });
 
-  it('should include pump status data, including iob', function() {
+  it('should include pump status data, including active insulin', function() {
     _.forEach({
+      activeInsulin: 4.85,
       calibStatus: 'LESS_THAN_TWELVE_HRS',
       conduitBatteryLevel: 29,
       conduitInRange: true,
       conduitMedicalDeviceInRange: true,
       conduitSensorInRange: true,
       device: 'connect://paradigm',
-      iob: 4.85,
       medicalDeviceBatteryLevelPercent: 75,
       reservoirAmount: 60,
       reservoirLevelPercent: 25,
@@ -95,15 +95,15 @@ describe('integration test: withTrend', function() {
     expect(sgvs[sgvs.length - 1]['trend']).to.be(6);
   });
 
-  it('should include pump status data, including iob', function() {
+  it('should include pump status data, including active insulin', function() {
     _.forEach({
+      activeInsulin: 1.35,
       calibStatus: 'LESS_THAN_NINE_HRS',
       conduitBatteryLevel: 86,
       conduitInRange: true,
       conduitMedicalDeviceInRange: true,
       conduitSensorInRange: true,
       device: 'connect://paradigm',
-      iob: 1.35,
       medicalDeviceBatteryLevelPercent: 50,
       reservoirAmount: 67,
       reservoirLevelPercent: 50,

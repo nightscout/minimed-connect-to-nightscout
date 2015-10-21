@@ -47,7 +47,7 @@ describe('transform()', function() {
   });
 
   describe('active insulin', function() {
-    it('should include active insulin as "iob"', function() {
+    it('should include active insulin', function() {
       var pumpStatus = _.filter(
         transform(
           f.data({'activeInsulin': {
@@ -60,7 +60,7 @@ describe('transform()', function() {
         {type: 'pump_status'}
       )[0];
 
-      expect(pumpStatus['iob']).to.be(1.275);
+      expect(pumpStatus['activeInsulin']).to.be(1.275);
     });
 
     it('should ignore activeInsulin values of -1', function() {
@@ -76,7 +76,7 @@ describe('transform()', function() {
         {type: 'pump_status'}
       )[0];
 
-      expect(pumpStatus['iob']).to.be(undefined);
+      expect(pumpStatus['activeInsulin']).to.be(undefined);
     });
   });
 

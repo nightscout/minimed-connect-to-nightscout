@@ -73,7 +73,7 @@ function pumpStatusEntry(data) {
   });
 
   if(data['activeInsulin'] && data['activeInsulin']['amount'] >= 0) {
-    entry['iob'] = data['activeInsulin']['amount'];
+    entry['activeInsulin'] = data['activeInsulin']['amount'];
   }
 
   return addTimeToEntry(data['lastMedicalDeviceDataUpdateServerTime'], entry);
