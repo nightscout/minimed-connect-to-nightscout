@@ -1,7 +1,7 @@
 /* jshint node: true */
 "use strict";
 
-var extend = require('extend');
+var _ = require('lodash');
 
 var logger = require('./logger');
 
@@ -100,8 +100,7 @@ function sgvEntries(data) {
   });
 
   if(data['sgs'][data['sgs'].length - 1]['sg'] !== 0) {
-    sgvs[sgvs.length - 1] = extend(
-      true,
+    sgvs[sgvs.length - 1] = _.merge(
       sgvs[sgvs.length - 1],
       CARELINK_TREND_TO_NIGHTSCOUT_TREND[data['lastSGTrend']]
     );

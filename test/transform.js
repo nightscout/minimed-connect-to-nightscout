@@ -2,7 +2,8 @@
 /* globals describe, it */
 "use strict";
 
-var expect = require('expect.js');
+var _ = require('lodash'),
+  expect = require('expect.js');
 
 var f = require('./fixtures.js'),
   transform = require('../transform.js');
@@ -12,15 +13,11 @@ describe('transform()', function() {
     var data = f.data();
 
     expect(
-      transform(data)
-        .filter(function(e) { return e['type'] === 'sgv'; })
-        .length
+      _.filter(transform(data), {type: 'sgv'}).length
     ).to.eql(data['sgs'].length);
 
     expect(
-      transform(data, 4)
-        .filter(function(e) { return e['type'] === 'sgv'; })
-        .length
+      _.filter(transform(data, 4), {type: 'sgv'}).length
     ).to.be(4);
   });
 
@@ -51,27 +48,33 @@ describe('transform()', function() {
 
   describe('active insulin', function() {
     it('should include active insulin as "iob"', function() {
-      var pumpStatus = transform(
-        f.data({'activeInsulin': {
-          'datetime' : 'Oct 17, 2015 09:09:14',
-          'version' : 1,
-          'amount' : 1.275,
-          'kind' : 'Insulin'
-        }})
-      ).filter(function(e) { return e['type'] === 'pump_status'; })[0];
+      var pumpStatus = _.filter(
+        transform(
+          f.data({'activeInsulin': {
+            'datetime' : 'Oct 17, 2015 09:09:14',
+            'version' : 1,
+            'amount' : 1.275,
+            'kind' : 'Insulin'
+          }})
+        ),
+        {type: 'pump_status'}
+      )[0];
 
       expect(pumpStatus['iob']).to.be(1.275);
     });
 
     it('should ignore activeInsulin values of -1', function() {
-      var pumpStatus = transform(
-        f.data({'activeInsulin': {
-          'datetime' : 'Oct 17, 2015 09:09:14',
-          'version' : 1,
-          'amount' : -1,
-          'kind' : 'Insulin'
-        }})
-      ).filter(function(e) { return e['type'] === 'pump_status'; })[0];
+      var pumpStatus = _.filter(
+        transform(
+          f.data({'activeInsulin': {
+            'datetime' : 'Oct 17, 2015 09:09:14',
+            'version' : 1,
+            'amount' : -1,
+            'kind' : 'Insulin'
+          }})
+        ),
+        {type: 'pump_status'}
+      )[0];
 
       expect(pumpStatus['iob']).to.be(undefined);
     });
@@ -85,12 +88,15 @@ describe('transform()', function() {
     ];
 
     function transformedSGs(valDatePairs) {
-      return transform(
-        f.data({
-          'lastSGTrend': 'UP_DOUBLE',
-          'sgs': valDatePairs.map(Function.prototype.apply.bind(f.makeSG, null))
-        })
-      ).filter(function(e) { return e['type'] === 'sgv'; });
+      return _.filter(
+        transform(
+          f.data({
+            'lastSGTrend': 'UP_DOUBLE',
+            'sgs': valDatePairs.map(Function.prototype.apply.bind(f.makeSG, null))
+          })
+        ),
+        {type: 'sgv'}
+      );
     }
 
     it('should add the trend to the last sgv', function() {

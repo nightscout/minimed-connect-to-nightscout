@@ -21,12 +21,11 @@
   },
   "dependencies": {
     "common": "0.2.x",
-    "extend": "3.0.x",
+    "lodash": "3.10.x",
     "request": "2.64.x"
   },
   "devDependencies": {
     "expect.js": "0.3.x",
-    "lodash": "3.10.x",
     "mocha": "2.3.x"
   },
   "keywords": [

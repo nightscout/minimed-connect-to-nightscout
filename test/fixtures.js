@@ -12,11 +12,7 @@ var makeSG = module.exports.makeSG = function(sg, time) {
 };
 
 var makeSGs = module.exports.makeSGs = function(count) {
-  var out = [];
-  for(var i = 0; i < count; i++) {
-    out.push(makeSG(100 + i));
-  }
-  return out;
+  return _.range(70, 70 + count).map(_.ary(makeSG, 1));
 };
 
 var data = module.exports.data = function(overrides) {

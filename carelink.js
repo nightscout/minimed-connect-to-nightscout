@@ -1,8 +1,8 @@
 /* jshint node: true */
 "use strict";
 
-var common = require('common'),
-  extend = require('extend'),
+var _ = require('lodash'),
+  common = require('common'),
   request = require('request'),
   zlib = require('zlib');
 
@@ -32,18 +32,18 @@ function reqOptions(extra) {
       'Accept-Language': 'en-US,en;q=0.8'
     }
   };
-  return extend(true, defaults, extra);
+  return _.merge(defaults, extra);
 }
 
 function haveLoginCookie(jar) {
-  return jar.getCookies(CARELINK_SECURITY_URL).filter(function(c) { return c.key == CARELINK_LOGIN_COOKIE; }).length > 0;
+  return _.some(jar.getCookies(CARELINK_SECURITY_URL), {key: CARELINK_LOGIN_COOKIE});
 }
 
 function responseAsError(response) {
   if (!(response.statusCode >= 200 && response.statusCode < 400)) {
     return new Error(
       "Bad response from CareLink: " +
-      JSON.stringify(extend(true, response, {'body': '<redacted>'}))
+      JSON.stringify(_.merge(response, {'body': '<redacted>'}))
     );
   } else {
     return null;
