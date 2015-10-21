@@ -56,7 +56,6 @@ function pumpStatusEntry(data) {
     'conduitInRange',
     'conduitMedicalDeviceInRange',
     'conduitSensorInRange',
-    'medicalDeviceSuspended',
     // numbers
     'conduitBatteryLevel',
     'reservoirLevelPercent',
