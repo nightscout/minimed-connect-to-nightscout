@@ -42,14 +42,39 @@ var endpoint = (config.nsBaseUrl ? config.nsBaseUrl : 'https://' + config.nsHost
 
 logger.setVerbose(config.verbose);
 
+var filterRecentSgvs = (function() {
+  var lastSgvDate = 0;
+
+  return function(entries) {
+    var out = [];
+    entries.forEach(function(entry) {
+      if (entry['type'] !== 'sgv' || entry['date'] > lastSgvDate) {
+        out.push(entry);
+      }
+    });
+    out.filter(function(e) { return e['type'] === 'sgv'; })
+      .forEach(function(e) {
+        lastSgvDate = Math.max(lastSgvDate, e['date']);
+      });
+
+    return out;
+  };
+})();
+
 (function requestLoop() {
   client.fetch(function(err, data) {
     if (err) {
       throw new Error(err);
     } else {
-      var entries = transform(data, config.sgvLimit);
-      if (entries.length > 0) {
-        nightscout.upload(entries, endpoint, config.nsSecret, function(err, response) {
+      var allEntries = transform(data, config.sgvLimit);
+
+      // Because of Nightscout's upsert semantics and the fact that CareLink provides trend
+      // data only for the most recent sgv, we need to filter out sgvs we've already sent.
+      // Otherwise we'll overwrite existing sgv entries and remove their trend data.
+      var newEntries = filterRecentSgvs(allEntries);
+
+      if (newEntries.length > 0) {
+        nightscout.upload(newEntries, endpoint, config.nsSecret, function(err, response) {
           if (err) {
             // Continue gathering data from CareLink even if Nightscout can't be reached
             console.log(err);
