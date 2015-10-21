@@ -1,11 +1,20 @@
 /* jshint node: true */
 "use strict";
 
+var extend = require('extend');
+
 var logger = require('./logger');
 
 var STALE_DATA_THRESHOLD_MINUTES = 20;
 var PUMP_STATUS_ENTRY_TYPE = 'pump_status';
 var SENSOR_GLUCOSE_ENTRY_TYPE = 'sgv';
+var CARELINK_TREND_TO_NIGHTSCOUT_TREND = {
+  'NONE': {'trend': 0, 'direction': 'NONE'},
+  'UP_DOUBLE': {'trend': 1, 'direction': 'DoubleUp'},
+  'UP': {'trend': 2, 'direction': 'SingleUp'},
+  'DOWN': {'trend': 6, 'direction': 'SingleDown'},
+  'DOWN_DOUBLE': {'trend': 7, 'direction': 'DoubleDown'}
+};
 
 function parsePumpTime(pumpTimeString, offset) {
   return Date.parse(pumpTimeString + ' ' + offset);
@@ -74,21 +83,31 @@ function pumpStatusEntry(data) {
 function sgvEntries(data) {
   var offset = guessPumpOffset(data);
 
-  if(data['sgs'] && data['sgs'].length) {
-    return data['sgs'].filter(function(entry) {
-      return entry['kind'] === 'SG' && entry['sg'] !== 0;
-    }).map(function(sgv) {
-      return addTimeToEntry(
-        parsePumpTime(sgv['datetime'], offset),
-        {
-          'type': SENSOR_GLUCOSE_ENTRY_TYPE,
-          'sgv': sgv['sg'],
-        }
-      );
-    });
-  } else {
+  if (!data['sgs'] || !data['sgs'].length) {
     return [];
   }
+
+  var sgvs = data['sgs'].filter(function(entry) {
+    return entry['kind'] === 'SG' && entry['sg'] !== 0;
+  }).map(function(sgv) {
+    return addTimeToEntry(
+      parsePumpTime(sgv['datetime'], offset),
+      {
+        'type': SENSOR_GLUCOSE_ENTRY_TYPE,
+        'sgv': sgv['sg'],
+      }
+    );
+  });
+
+  if(data['sgs'][data['sgs'].length - 1]['sg'] !== 0) {
+    sgvs[sgvs.length - 1] = extend(
+      true,
+      sgvs[sgvs.length - 1],
+      CARELINK_TREND_TO_NIGHTSCOUT_TREND[data['lastSGTrend']]
+    );
+  }
+
+  return sgvs;
 }
 
 var transform = module.exports = function(data, sgvLimit) {

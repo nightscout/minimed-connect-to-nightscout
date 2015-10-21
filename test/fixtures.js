@@ -1,4 +1,4 @@
-var extend = require('extend');
+var _ = require('lodash');
 
 var makeSG = module.exports.makeSG = function(sg, time) {
   time = time || "Oct 20, 2015 11:09:00";
@@ -22,7 +22,9 @@ var makeSGs = module.exports.makeSGs = function(count) {
 var data = module.exports.data = function(overrides) {
   overrides = overrides || {};
   var sgs = makeSGs(288);
-  return extend(true, {
+  return _.defaults(
+    overrides,
+    {
       "sgs" : sgs,
       "lastSG" : sgs[sgs.length - 1],
       "conduitSerialNumber" : "0",
@@ -83,5 +85,6 @@ var data = module.exports.data = function(overrides) {
       "medicalDeviceTimeAsString" : "Oct 17, 2015 09:09:14",
       "lastSGTrend" : "UP_DOUBLE",
       "lastSensorTime" : 0
-  }, overrides);
+    }
+  );
 };
