@@ -21,8 +21,10 @@ var makeSGs = module.exports.makeSGs = function(count) {
 
 var data = module.exports.data = function(overrides) {
   overrides = overrides || {};
+  var sgs = makeSGs(288);
   return extend(true, {
-      "sgs" : makeSGs(300),
+      "sgs" : sgs,
+      "lastSG" : sgs[sgs.length - 1],
       "conduitSerialNumber" : "0",
       "conduitMedicalDeviceInRange" : true,
       "version" : 1,
@@ -56,14 +58,6 @@ var data = module.exports.data = function(overrides) {
       "lastConduitTime" : 0,
       "medicalDeviceBatteryLevelPercent" : 100,
       "reservoirLevelPercent" : 50,
-      // We don't look at this; otherwise it should match "sgs"
-      "lastSG" : {
-         "kind" : "SG",
-         "datetime" : "Oct 17, 2015 09:08:00",
-         "version" : 1,
-         "timeChange" : false,
-         "sg" : 180
-      },
       "lastSensorTSAsString" : "Oct 17, 2015 09:08:00",
       "lastName" : "<redacted>",
       "activeInsulin" : {

@@ -40,13 +40,24 @@ var guessPumpOffset = (function() {
 function pumpStatusEntry(data) {
   var entry = {'type': PUMP_STATUS_ENTRY_TYPE};
 
+  // For the values these can take, see:
+  // https://gist.github.com/mddub/5e4a585508c93249eb51
   [
-    'conduitBatteryLevel',
+    // booleans
     'conduitInRange',
     'conduitMedicalDeviceInRange',
+    'conduitSensorInRange',
+    'medicalDeviceSuspended',
+    // numbers
+    'conduitBatteryLevel',
     'reservoirLevelPercent',
     'reservoirAmount',
-    'medicalDeviceBatteryLevelPercent'
+    'medicalDeviceBatteryLevelPercent',
+    'sensorDurationHours',
+    'timeToNextCalibHours',
+    // strings
+    'sensorState',
+    'calibStatus'
   ].forEach(function(key) {
     if(data[key] !== undefined) {
       entry[key] = data[key];
@@ -54,7 +65,7 @@ function pumpStatusEntry(data) {
   });
 
   if(data['activeInsulin'] && data['activeInsulin']['amount'] >= 0) {
-    entry['activeInsulin'] = data['activeInsulin']['amount'];
+    entry['iob'] = data['activeInsulin']['amount'];
   }
 
   return addTimeToEntry(data['lastMedicalDeviceDataUpdateServerTime'], entry);

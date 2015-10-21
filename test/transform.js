@@ -48,4 +48,30 @@ describe('transform()', function() {
       ).length
     ).to.be(0);
   });
+
+  it('should include active insulin as "iob"', function() {
+    var pumpStatus = transform(
+      f.data({'activeInsulin': {
+        'datetime' : 'Oct 17, 2015 09:09:14',
+        'version' : 1,
+        'amount' : 1.275,
+        'kind' : 'Insulin'
+      }})
+    ).filter(function(e) { return e['type'] === 'pump_status'; })[0];
+
+    expect(pumpStatus['iob']).to.be(1.275);
+  });
+
+  it('should ignore activeInsulin values of -1', function() {
+    var pumpStatus = transform(
+      f.data({'activeInsulin': {
+        'datetime' : 'Oct 17, 2015 09:09:14',
+        'version' : 1,
+        'amount' : -1,
+        'kind' : 'Insulin'
+      }})
+    ).filter(function(e) { return e['type'] === 'pump_status'; })[0];
+
+    expect(pumpStatus['iob']).to.be(undefined);
+  });
 });
