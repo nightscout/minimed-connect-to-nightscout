@@ -5,7 +5,7 @@
 var _ = require('lodash'),
   expect = require('expect.js');
 
-var samples = require('./samples'),
+var samples = require('./_samples'),
   transform = require('../transform');
 
 describe('integration test: missingLastSgv', function() {

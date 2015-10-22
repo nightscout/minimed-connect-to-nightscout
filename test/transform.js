@@ -5,7 +5,7 @@
 var _ = require('lodash'),
   expect = require('expect.js');
 
-var f = require('./fixtures.js'),
+var f = require('./_fixtures.js'),
   transform = require('../transform.js');
 
 describe('transform()', function() {
