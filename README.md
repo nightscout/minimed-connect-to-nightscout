@@ -13,15 +13,17 @@
 * Username and password for a [CareLink][carelink] account linked to the Connect
 * A working Nightscout website and Mongo database
 
-## Install
+## Installation on Azure
+
+The easiest installation mode is to set up an instance of Nightscout [cgm-remote-monitor] on Azure and enable the `mmconnect` plugin. This module is packaged with Nightscout 0.8.2+ and can pull data from CareLink Connect as part of the web server process. Follow [this guide][azure-install].
+
+## Installation in general
 
 1. Install [Node].
 1. Clone this repository or [download a zip] with the latest version.
 1. `npm install` to install dependencies.
 1. Set environment variables (see below).
 1. `npm start` and leave it running.
-
-**Coming soon:** Deploy instructions for Heroku
 
 ### Required environment variables
 
@@ -48,6 +50,22 @@
 
 Understanding of the current data is based mostly on [this analysis].
 
+## API
+
+[run.js] demonstrates how to use the key API features in production. A minimal example would look like:
+
+```js
+var mmcns = require('minimed-connect-to-nightscout');
+var client = mmcns.carelink.Client({username: 'username', password: 'password'});
+client.fetch(function(err, data) {
+  if (!err) {
+    var transformed = mmcns.transform(data);
+    mmcns.nightscout.upload(transformed, 'https://your.ns.host/api/v1/entries.json', 'api-secret', callback);
+    // ...or use `transformed` directly
+  }
+});
+```
+
 ## Contributing
 
 [File an issue] if you'd like to give feedback, request an enhancement, or report a bug.
@@ -65,9 +83,11 @@ This project is intended for educational and informational purposes only. It rel
 [carelink]: https://carelink.minimed.com/
 [Nightscout]: http://www.nightscout.info/
 [cgm-remote-monitor]: https://github.com/nightscout/cgm-remote-monitor
+[azure-install]: http://www.nightscout.info/wiki/welcome/website-features/funnel-cake-0-8-features/minimed-connect-and-nightscout
 [Node]: https://nodejs.org
 [download a zip]: https://github.com/mddub/minimed-connect-to-nightscout/archive/master.zip
 [azure-environment]: https://github.com/projectkudu/kudu/wiki/Azure-runtime-environment
 [this analysis]: https://gist.github.com/mddub/5e4a585508c93249eb51
+[run.js]: https://github.com/mddub/minimed-connect-to-nightscout/blob/master/run.js
 [File an issue]: https://github.com/mddub/minimed-connect-to-nightscout/issues
 [mmcsv]: https://github.com/bewest/mmcsv
