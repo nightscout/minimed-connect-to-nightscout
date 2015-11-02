@@ -17,6 +17,12 @@
 
 The easiest installation mode is to set up an instance of Nightscout [cgm-remote-monitor] on Azure and enable the `mmconnect` plugin. This module is packaged with Nightscout 0.8.2+ and can pull data from CareLink Connect as part of the web server process. Follow [this guide][azure-install].
 
+## Installation on Heroku
+
+Another turnkey installation option is to run this on a Heroku worker dyno. You may find this more affordable than Azure. Follow the [Share2 Bridge instructions for Heroku], substituting this repo for `share2nightscout-bridge`.
+
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
+
 ## Installation in general
 
 1. Install [Node].
@@ -84,6 +90,7 @@ This project is intended for educational and informational purposes only. It rel
 [Nightscout]: http://www.nightscout.info/
 [cgm-remote-monitor]: https://github.com/nightscout/cgm-remote-monitor
 [azure-install]: http://www.nightscout.info/wiki/welcome/website-features/funnel-cake-0-8-features/minimed-connect-and-nightscout
+[Share2 Bridge instructions for Heroku]: https://github.com/bewest/share2nightscout-bridge/wiki/Deploy-to-Heroku
 [Node]: https://nodejs.org
 [download a zip]: https://github.com/mddub/minimed-connect-to-nightscout/archive/master.zip
 [azure-environment]: https://github.com/projectkudu/kudu/wiki/Azure-runtime-environment
