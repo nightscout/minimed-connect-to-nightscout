@@ -2,7 +2,7 @@
   "name": "MiniMed Connect to Nightscout",
   "repository": "https://github.com/mddub/minimed-connect-to-nightscout",
   "env": {
-    "CARELINK_USER_NAME": {
+    "CARELINK_USERNAME": {
       "description": "Your username for CareLink (https://carelink.minimed.com)",
       "value": "",
       "required": true
