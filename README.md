@@ -1,5 +1,7 @@
 # minimed-connect-to-nightscout
 
+[![Circle CI](https://circleci.com/gh/mddub/minimed-connect-to-nightscout.svg?style=shield)](https://circleci.com/gh/mddub/minimed-connect-to-nightscout)
+
 [MiniMed Connect] is a device which communicates with a Medtronic insulin pump over 916MHz radio to gather data about pump status. This data may include readings from an Enlite continuous glucose monitor (CGM). The Connect forwards pump data via Bluetooth LE to a [proprietary app][connect-app] running on an iPhone. The iPhone app uploads the data to Medtronic's servers, enabling authorized users to view it on the [Medtronic CareLink Connect][carelink] website.
 
 [Nightscout] is an open source, DIY project that allows real-time access to CGM data on any platform. The core of the Nightscout project is [cgm-remote-monitor], a web service which can receive and broadcast CGM data using a Mongo database. Various other software projects communicate with an instance of `cgm-remote-monitor`, either to transmit data from a CGM device, or to display that CGM data on a computer, smartphone/tablet, or smartwatch.
