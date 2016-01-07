@@ -6,7 +6,6 @@ var _ = require('lodash');
 var logger = require('./logger');
 
 var STALE_DATA_THRESHOLD_MINUTES = 20;
-var PUMP_STATUS_ENTRY_TYPE = 'pump_status';
 var SENSOR_GLUCOSE_ENTRY_TYPE = 'sgv';
 var CARELINK_TREND_TO_NIGHTSCOUT_TREND = {
   'NONE': {'trend': 0, 'direction': 'NONE'},
@@ -20,10 +19,12 @@ function parsePumpTime(pumpTimeString, offset) {
   return Date.parse(pumpTimeString + ' ' + offset);
 }
 
-function addTimeToEntry(timestamp, entry) {
-  entry['date'] = timestamp;
-  entry['dateString'] = new Date(timestamp).toISOString();
-  return entry;
+function timestampAsString(timestamp) {
+  return new Date(timestamp).toISOString();
+}
+
+function deviceName(data) {
+  return 'connect://' + data['medicalDeviceFamily'].toLowerCase();
 }
 
 var guessPumpOffset = (function() {
@@ -46,37 +47,37 @@ var guessPumpOffset = (function() {
   };
 })();
 
-function pumpStatusEntry(data) {
-  var entry = {'type': PUMP_STATUS_ENTRY_TYPE};
-
-  // For the values these can take, see:
-  // https://gist.github.com/mddub/5e4a585508c93249eb51
-  [
-    // booleans
-    'conduitInRange',
-    'conduitMedicalDeviceInRange',
-    'conduitSensorInRange',
-    // numbers
-    'conduitBatteryLevel',
-    'reservoirLevelPercent',
-    'reservoirAmount',
-    'medicalDeviceBatteryLevelPercent',
-    'sensorDurationHours',
-    'timeToNextCalibHours',
-    // strings
-    'sensorState',
-    'calibStatus'
-  ].forEach(function(key) {
-    if(data[key] !== undefined) {
-      entry[key] = data[key];
+function deviceStatusEntry(data) {
+  return {
+    'created_at': timestampAsString(data['lastMedicalDeviceDataUpdateServerTime']),
+    'device': deviceName(data),
+    'uploader': {
+      'battery': data['conduitBatteryLevel'],
+    },
+    'pump': {
+      'battery': {
+        'percent': data['medicalDeviceBatteryLevelPercent'],
+      },
+      'reservoir': data['reservoirAmount'],
+      'iob': {
+        'timestamp': timestampAsString(data['lastMedicalDeviceDataUpdateServerTime']),
+        'bolusiob': _.get(data, 'activeInsulin.amount') >= 0 ? _.get(data, 'activeInsulin.amount') : undefined,
+      },
+      // TODO: add last alarm from data['lastAlarm']['code'] and data['lastAlarm']['datetime']
+      // https://gist.github.com/mddub/a95dc120d9d1414a433d#file-minimed-connect-codes-js-L79
+    },
+    'connect': {
+      // For the values these can take, see:
+      // https://gist.github.com/mddub/5e4a585508c93249eb51
+      'sensorState': data['sensorState'],
+      'calibStatus': data['calibStatus'],
+      'sensorDurationHours': data['sensorDurationHours'],
+      'timeToNextCalibHours': data['timeToNextCalibHours'],
+      'conduitInRange': data['conduitInRange'],
+      'conduitMedicalDeviceInRange': data['conduitMedicalDeviceInRange'],
+      'conduitSensorInRange': data['conduitSensorInRange'],
     }
-  });
-
-  if(data['activeInsulin'] && data['activeInsulin']['amount'] >= 0) {
-    entry['activeInsulin'] = data['activeInsulin']['amount'];
-  }
-
-  return addTimeToEntry(data['lastMedicalDeviceDataUpdateServerTime'], entry);
+  };
 }
 
 function sgvEntries(data) {
@@ -89,13 +90,14 @@ function sgvEntries(data) {
   var sgvs = data['sgs'].filter(function(entry) {
     return entry['kind'] === 'SG' && entry['sg'] !== 0;
   }).map(function(sgv) {
-    return addTimeToEntry(
-      parsePumpTime(sgv['datetime'], offset),
-      {
-        'type': SENSOR_GLUCOSE_ENTRY_TYPE,
-        'sgv': sgv['sg'],
-      }
-    );
+    var timestamp = parsePumpTime(sgv['datetime'], offset);
+    return {
+      'type': SENSOR_GLUCOSE_ENTRY_TYPE,
+      'sgv': sgv['sg'],
+      'date': timestamp,
+      'dateString': timestampAsString(timestamp),
+      'device': deviceName(data),
+    };
   });
 
   if(data['sgs'][data['sgs'].length - 1]['sg'] !== 0) {
@@ -108,7 +110,7 @@ function sgvEntries(data) {
   return sgvs;
 }
 
-var transform = module.exports = function(data, sgvLimit) {
+module.exports = function(data, sgvLimit) {
   var recency = (data['currentServerTime'] - data['lastMedicalDeviceDataUpdateServerTime']) / (60 * 1000);
   if (recency > STALE_DATA_THRESHOLD_MINUTES) {
     logger.log('Stale CareLink data: ' + recency.toFixed(2) + ' minutes old');
@@ -119,19 +121,9 @@ var transform = module.exports = function(data, sgvLimit) {
     sgvLimit = Infinity;
   }
 
-  var entries = [];
-
-  entries.push(pumpStatusEntry(data));
-
-  var sgvs = sgvEntries(data);
-  // TODO: this assumes sgvs are ordered by date ascending
-  for(var i = Math.max(0, sgvs.length - sgvLimit); i < sgvs.length; i++) {
-    entries.push(sgvs[i]);
-  }
-
-  entries.forEach(function(entry) {
-    entry['device'] = 'connect://' + data['medicalDeviceFamily'].toLowerCase();
-  });
-
-  return entries;
+  return {
+    // XXX: lower-case and singular for consistency with cgm-remote-monitor collection name
+    devicestatus: [deviceStatusEntry(data)],
+    entries: _.takeRight(sgvEntries(data), sgvLimit),
+  };
 };
