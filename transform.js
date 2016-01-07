@@ -114,7 +114,10 @@ module.exports = function(data, sgvLimit) {
   var recency = (data['currentServerTime'] - data['lastMedicalDeviceDataUpdateServerTime']) / (60 * 1000);
   if (recency > STALE_DATA_THRESHOLD_MINUTES) {
     logger.log('Stale CareLink data: ' + recency.toFixed(2) + ' minutes old');
-    return [];
+    return {
+      devicestatus: [],
+      entries: [],
+    };
   }
 
   if (sgvLimit === undefined) {
