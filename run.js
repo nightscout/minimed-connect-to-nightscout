@@ -2,6 +2,7 @@
 "use strict";
 
 var carelink = require('./carelink'),
+  filter = require('./filter'),
   logger = require('./logger'),
   nightscout = require('./nightscout'),
   transform = require('./transform');
@@ -43,29 +44,11 @@ var devicestatusUrl = (config.nsBaseUrl ? config.nsBaseUrl : 'https://' + config
 
 logger.setVerbose(config.verbose);
 
-function makeRecencyFilter(timeFn) {
-  var lastTime = 0;
-
-  return function(items) {
-    var out = [];
-    items.forEach(function(item) {
-      if (timeFn(item) > lastTime) {
-        out.push(item);
-      }
-    });
-    out.forEach(function(item) {
-      lastTime = Math.max(lastTime, timeFn(item));
-    });
-
-    return out;
-  };
-}
-
-var filterSgvs = makeRecencyFilter(function(item) {
+var filterSgvs = filter.makeRecencyFilter(function(item) {
   return item['date'];
 });
 
-var filterDeviceStatus = makeRecencyFilter(function(item) {
+var filterDeviceStatus = filter.makeRecencyFilter(function(item) {
   return new Date(item['created_at']).getTime();
 });
 
