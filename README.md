@@ -19,7 +19,7 @@ The easiest installation mode is to set up an instance of Nightscout [cgm-remote
 
 ## Installation on Heroku
 
-Another turnkey installation option is to run this on a Heroku worker dyno. You may find this more affordable than Azure. Follow the [Share2 Bridge instructions for Heroku], substituting this repo for `share2nightscout-bridge`.
+Another turnkey installation option is to run this on a Heroku worker dyno. You may find this more reliable than Azure. Follow the [Share2 Bridge instructions for Heroku], substituting this repo for `share2nightscout-bridge`.
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
 
@@ -66,8 +66,10 @@ var client = mmcns.carelink.Client({username: 'username', password: 'password'})
 client.fetch(function(err, data) {
   if (!err) {
     var transformed = mmcns.transform(data);
-    mmcns.nightscout.upload(transformed, 'https://your.ns.host/api/v1/entries.json', 'api-secret', callback);
-    // ...or use `transformed` directly
+    mmcns.nightscout.upload(transformed.entries, 'https://your.ns.host/api/v1/entries.json', 'api-secret', callback);
+    // ...or:
+    mmcns.nightscout.upload(transformed.devicestatus, 'https://your.ns.host/api/v1/devicestatus.json', 'api-secret', callback);
+    // ...or use `transformed.entries` and `transformed.devicestatus` directly
   }
 });
 ```
