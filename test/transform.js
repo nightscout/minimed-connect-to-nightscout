@@ -13,11 +13,11 @@ describe('transform()', function() {
     var data = f.data();
 
     expect(
-      _.filter(transform(data), {type: 'sgv'}).length
+      transform(data).entries.length
     ).to.eql(data['sgs'].length);
 
     expect(
-      _.filter(transform(data, 4), {type: 'sgv'}).length
+      transform(data, 4).entries.length
     ).to.be(4);
   });
 
@@ -25,7 +25,7 @@ describe('transform()', function() {
     expect(
       transform(
         f.data({'medicalDeviceFamily': 'foo'})
-      )[0]['device']
+      ).entries[0]['device']
     ).to.be('connect://foo');
   });
 
@@ -36,47 +36,41 @@ describe('transform()', function() {
     expect(
       transform(
         f.data({'currentServerTime': now, 'lastMedicalDeviceDataUpdateServerTime': boundary})
-      ).length
+      ).entries.length
     ).to.be.greaterThan(0);
 
     expect(
       transform(
         f.data({'currentServerTime': now, 'lastMedicalDeviceDataUpdateServerTime': boundary - 1})
-      ).length
+      ).entries.length
     ).to.be(0);
   });
 
   describe('active insulin', function() {
     it('should include active insulin', function() {
-      var pumpStatus = _.filter(
-        transform(
-          f.data({'activeInsulin': {
-            'datetime' : 'Oct 17, 2015 09:09:14',
-            'version' : 1,
-            'amount' : 1.275,
-            'kind' : 'Insulin'
-          }})
-        ),
-        {type: 'pump_status'}
-      )[0];
+      var pumpStatus = transform(
+        f.data({'activeInsulin': {
+          'datetime' : 'Oct 17, 2015 09:09:14',
+          'version' : 1,
+          'amount' : 1.275,
+          'kind' : 'Insulin'
+        }})
+      ).devicestatus[0];
 
-      expect(pumpStatus['activeInsulin']).to.be(1.275);
+      expect(_.get(pumpStatus, 'pump.iob.bolusiob')).to.be(1.275);
     });
 
     it('should ignore activeInsulin values of -1', function() {
-      var pumpStatus = _.filter(
-        transform(
-          f.data({'activeInsulin': {
-            'datetime' : 'Oct 17, 2015 09:09:14',
-            'version' : 1,
-            'amount' : -1,
-            'kind' : 'Insulin'
-          }})
-        ),
-        {type: 'pump_status'}
-      )[0];
+      var pumpStatus = transform(
+        f.data({'activeInsulin': {
+          'datetime' : 'Oct 17, 2015 09:09:14',
+          'version' : 1,
+          'amount' : -1,
+          'kind' : 'Insulin'
+        }})
+      ).devicestatus[0];
 
-      expect(pumpStatus['activeInsulin']).to.be(undefined);
+      expect(_.get(pumpStatus, 'pump.iob.bolusiob')).to.be(undefined);
     });
   });
 
@@ -88,15 +82,12 @@ describe('transform()', function() {
     ];
 
     function transformedSGs(valDatePairs) {
-      return _.filter(
-        transform(
-          f.data({
-            'lastSGTrend': 'UP_DOUBLE',
-            'sgs': valDatePairs.map(Function.prototype.apply.bind(f.makeSG, null))
-          })
-        ),
-        {type: 'sgv'}
-      );
+      return transform(
+        f.data({
+          'lastSGTrend': 'UP_DOUBLE',
+          'sgs': valDatePairs.map(Function.prototype.apply.bind(f.makeSG, null))
+        })
+      ).entries;
     }
 
     it('should add the trend to the last sgv', function() {
@@ -113,6 +104,15 @@ describe('transform()', function() {
       expect(sgvs[sgvs.length - 1]['sgv']).to.be(108);
       expect(sgvs[sgvs.length - 1]['direction']).to.be(undefined);
       expect(sgvs[sgvs.length - 1]['trend']).to.be(undefined);
+    });
+  });
+
+  describe('uploader battery', function() {
+    it('should use the Connect battery level as uploader.battery', function() {
+      var pumpStatus = transform(
+        f.data({'conduitBatteryLevel': 76})
+      ).devicestatus[0];
+      expect(pumpStatus.uploader.battery).to.be(76);
     });
   });
 });

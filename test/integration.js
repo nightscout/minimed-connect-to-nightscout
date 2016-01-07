@@ -11,12 +11,11 @@ var samples = require('./_samples'),
 describe('integration test: missingLastSgv', function() {
   var sample = samples.missingLastSgv;
   var transformed = transform(sample);
-  var pumpStatuses = _.filter(transformed, {type: 'pump_status'});
-  var sgvs = _.filter(transformed, {type: 'sgv'});
+  var pumpStatuses = transformed.devicestatus;
+  var sgvs = transformed.entries;
 
   it('should set the pump status time based on the "last device data update time"', function() {
-    expect(pumpStatuses[0]['date']).to.equal(sample['lastMedicalDeviceDataUpdateServerTime']);
-    expect(pumpStatuses[0]['dateString']).to.equal(new Date(sample['lastMedicalDeviceDataUpdateServerTime']).toISOString());
+    expect(pumpStatuses[0]['created_at']).to.equal(new Date(sample['lastMedicalDeviceDataUpdateServerTime']).toISOString());
   });
 
   it('should have one pump_status and 5 sgv entries', function() {
@@ -40,21 +39,21 @@ describe('integration test: missingLastSgv', function() {
 
   it('should include pump status data, including active insulin', function() {
     _.forEach({
-      activeInsulin: 4.85,
-      calibStatus: 'LESS_THAN_TWELVE_HRS',
-      conduitBatteryLevel: 29,
-      conduitInRange: true,
-      conduitMedicalDeviceInRange: true,
-      conduitSensorInRange: true,
-      device: 'connect://paradigm',
-      medicalDeviceBatteryLevelPercent: 75,
-      reservoirAmount: 60,
-      reservoirLevelPercent: 25,
-      sensorDurationHours: 73,
-      sensorState: 'NORMAL',
-      timeToNextCalibHours: 10
+      'uploader.battery': 29,
+      'pump.battery.percent': 75,
+      'pump.reservoir': 60,
+      'pump.iob.bolusiob': 4.85,
+      'pump.iob.timestamp': new Date(sample['lastMedicalDeviceDataUpdateServerTime']).toISOString(),
+      'connect.calibStatus': 'LESS_THAN_TWELVE_HRS',
+      'connect.conduitInRange': true,
+      'connect.conduitMedicalDeviceInRange': true,
+      'connect.conduitSensorInRange': true,
+      'connect.sensorDurationHours': 73,
+      'connect.sensorState': 'NORMAL',
+      'connect.timeToNextCalibHours': 10,
+      'device': 'connect://paradigm',
     }, function(val, key) {
-      expect(pumpStatuses[0][key]).to.be(val);
+      expect(_.get(pumpStatuses[0], key)).to.be(val);
     });
   });
 });
@@ -62,9 +61,8 @@ describe('integration test: missingLastSgv', function() {
 describe('integration test: withTrend', function() {
   var sample = samples.withTrend;
   var transformed = transform(sample);
-  var pumpStatuses = _.filter(transformed, {type: 'pump_status'});
-
-  var sgvs = _.filter(transformed, {type: 'sgv'});
+  var pumpStatuses = transformed.devicestatus;
+  var sgvs = transformed.entries;
 
   it('should have one pump_status and 6 sgv entries', function() {
     expect(pumpStatuses.length).to.be(1);
@@ -97,21 +95,21 @@ describe('integration test: withTrend', function() {
 
   it('should include pump status data, including active insulin', function() {
     _.forEach({
-      activeInsulin: 1.35,
-      calibStatus: 'LESS_THAN_NINE_HRS',
-      conduitBatteryLevel: 86,
-      conduitInRange: true,
-      conduitMedicalDeviceInRange: true,
-      conduitSensorInRange: true,
-      device: 'connect://paradigm',
-      medicalDeviceBatteryLevelPercent: 50,
-      reservoirAmount: 67,
-      reservoirLevelPercent: 50,
-      sensorDurationHours: 137,
-      sensorState: 'NORMAL',
-      timeToNextCalibHours: 6
+      'uploader.battery': 86,
+      'pump.battery.percent': 50,
+      'pump.reservoir': 67,
+      'pump.iob.bolusiob': 1.35,
+      'pump.iob.timestamp': new Date(sample['lastMedicalDeviceDataUpdateServerTime']).toISOString(),
+      'connect.calibStatus': 'LESS_THAN_NINE_HRS',
+      'connect.conduitInRange': true,
+      'connect.conduitMedicalDeviceInRange': true,
+      'connect.conduitSensorInRange': true,
+      'connect.sensorDurationHours': 137,
+      'connect.sensorState': 'NORMAL',
+      'connect.timeToNextCalibHours': 6,
+      'device': 'connect://paradigm',
     }, function(val, key) {
-      expect(pumpStatuses[0][key]).to.be(val);
+      expect(_.get(pumpStatuses[0], key)).to.be(val);
     });
   });
 });

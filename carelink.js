@@ -3,8 +3,7 @@
 
 var _ = require('lodash'),
   common = require('common'),
-  request = require('request'),
-  zlib = require('zlib');
+  request = require('request');
 
 var logger = require('./logger');
 
@@ -129,11 +128,13 @@ var Client = exports.Client = function (options) {
   }
 
   function parseData(response, next) {
+    var parsed;
     try {
-      next(null, JSON.parse(response.body));
+      parsed = JSON.parse(response.body);
     } catch (e) {
       next(e);
     }
+    next(null, parsed);
   }
 
   function firstFetch(callback) {

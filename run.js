@@ -2,6 +2,7 @@
 "use strict";
 
 var carelink = require('./carelink'),
+  filter = require('./filter'),
   logger = require('./logger'),
   nightscout = require('./nightscout'),
   transform = require('./transform');
@@ -38,52 +39,55 @@ var client = carelink.Client({
   password: config.password,
   maxRetryDuration: config.maxRetryDuration
 });
-var endpoint = (config.nsBaseUrl ? config.nsBaseUrl : 'https://' + config.nsHost) + '/api/v1/entries.json';
+var entriesUrl = (config.nsBaseUrl ? config.nsBaseUrl : 'https://' + config.nsHost) + '/api/v1/entries.json';
+var devicestatusUrl = (config.nsBaseUrl ? config.nsBaseUrl : 'https://' + config.nsHost) + '/api/v1/devicestatus.json';
 
 logger.setVerbose(config.verbose);
 
-var filterRecentSgvs = (function() {
-  var lastSgvDate = 0;
+var filterSgvs = filter.makeRecencyFilter(function(item) {
+  return item['date'];
+});
 
-  return function(entries) {
-    var out = [];
-    entries.forEach(function(entry) {
-      if (entry['type'] !== 'sgv' || entry['date'] > lastSgvDate) {
-        out.push(entry);
+var filterDeviceStatus = filter.makeRecencyFilter(function(item) {
+  return new Date(item['created_at']).getTime();
+});
+
+function uploadMaybe(items, endpoint, callback) {
+  if (items.length === 0) {
+    logger.log('No new items for ' + endpoint);
+    callback();
+  } else {
+    nightscout.upload(items, endpoint, config.nsSecret, function(err, response) {
+      if (err) {
+        // Continue gathering data from CareLink even if Nightscout can't be reached
+        console.log(err);
       }
+      callback();
     });
-    out.filter(function(e) { return e['type'] === 'sgv'; })
-      .forEach(function(e) {
-        lastSgvDate = Math.max(lastSgvDate, e['date']);
-      });
-
-    return out;
-  };
-})();
+  }
+}
 
 (function requestLoop() {
   client.fetch(function(err, data) {
     if (err) {
       throw new Error(err);
     } else {
-      var allEntries = transform(data, config.sgvLimit);
+      var transformed = transform(data, config.sgvLimit);
 
       // Because of Nightscout's upsert semantics and the fact that CareLink provides trend
       // data only for the most recent sgv, we need to filter out sgvs we've already sent.
       // Otherwise we'll overwrite existing sgv entries and remove their trend data.
-      var newEntries = filterRecentSgvs(allEntries);
+      var newSgvs = filterSgvs(transformed.entries);
 
-      if (newEntries.length > 0) {
-        nightscout.upload(newEntries, endpoint, config.nsSecret, function(err, response) {
-          if (err) {
-            // Continue gathering data from CareLink even if Nightscout can't be reached
-            console.log(err);
-          }
+      // Nightscout's entries collection upserts based on date, but the devicestatus collection
+      // does not do the same for created_at, so we need to de-dupe them here.
+      var newDeviceStatuses = filterDeviceStatus(transformed.devicestatus);
+
+      uploadMaybe(newSgvs, entriesUrl, function() {
+        uploadMaybe(newDeviceStatuses, devicestatusUrl, function() {
           setTimeout(requestLoop, config.interval);
         });
-      } else {
-        setTimeout(requestLoop, config.interval);
-      }
+      });
     }
   });
 })();
