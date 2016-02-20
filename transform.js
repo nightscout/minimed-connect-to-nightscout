@@ -47,7 +47,7 @@ var guessPumpOffset = (function() {
   };
 })();
 
-function deviceStatusEntry(data) {
+function deviceStatusEntry(data, offset) {
   return {
     'created_at': timestampAsString(data['lastMedicalDeviceDataUpdateServerTime']),
     'device': deviceName(data),
@@ -63,6 +63,7 @@ function deviceStatusEntry(data) {
         'timestamp': timestampAsString(data['lastMedicalDeviceDataUpdateServerTime']),
         'bolusiob': _.get(data, 'activeInsulin.amount') >= 0 ? _.get(data, 'activeInsulin.amount') : undefined,
       },
+      'clock': timestampAsString(parsePumpTime(data['sMedicalDeviceTime'], offset)),
       // TODO: add last alarm from data['lastAlarm']['code'] and data['lastAlarm']['datetime']
       // https://gist.github.com/mddub/a95dc120d9d1414a433d#file-minimed-connect-codes-js-L79
     },
@@ -80,9 +81,7 @@ function deviceStatusEntry(data) {
   };
 }
 
-function sgvEntries(data) {
-  var offset = guessPumpOffset(data);
-
+function sgvEntries(data, offset) {
   if (!data['sgs'] || !data['sgs'].length) {
     return [];
   }
@@ -120,13 +119,14 @@ module.exports = function(data, sgvLimit) {
     };
   }
 
+  var offset = guessPumpOffset(data);
   if (sgvLimit === undefined) {
     sgvLimit = Infinity;
   }
 
   return {
     // XXX: lower-case and singular for consistency with cgm-remote-monitor collection name
-    devicestatus: [deviceStatusEntry(data)],
-    entries: _.takeRight(sgvEntries(data), sgvLimit),
+    devicestatus: [deviceStatusEntry(data, offset)],
+    entries: _.takeRight(sgvEntries(data, offset), sgvLimit),
   };
 };
