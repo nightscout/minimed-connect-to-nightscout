@@ -30,18 +30,27 @@ describe('transform()', function() {
   });
 
   it('should discard data more than 20 minutes old', function() {
-    var now = Date.now();
+    var pumpTimeString = 'Oct 17, 2015 09:06:33';
+    var now = Date.parse('Oct 17, 2015 09:09:14');
     var THRESHOLD = 20;
     var boundary = now - THRESHOLD * 60 * 1000;
     expect(
       transform(
-        f.data({'currentServerTime': now, 'lastMedicalDeviceDataUpdateServerTime': boundary})
+        f.data({
+          'sMedicalDeviceTime': pumpTimeString,
+          'currentServerTime': now,
+          'lastMedicalDeviceDataUpdateServerTime': boundary,
+        })
       ).entries.length
     ).to.be.greaterThan(0);
 
     expect(
       transform(
-        f.data({'currentServerTime': now, 'lastMedicalDeviceDataUpdateServerTime': boundary - 1})
+        f.data({
+          'sMedicalDeviceTime': pumpTimeString,
+          'currentServerTime': now,
+          'lastMedicalDeviceDataUpdateServerTime': boundary - 1,
+        })
       ).entries.length
     ).to.be(0);
   });
