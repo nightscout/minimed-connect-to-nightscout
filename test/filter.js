@@ -24,7 +24,7 @@ describe('makeRecencyFilter()', function() {
     var filtered = filter([2, 3, 4, 8, 6, 7, 5].map(sgv));
     expect(filtered).to.have.length(4);
     [5, 6, 7, 8].forEach(function(val) {
-      expect(_.pluck(filtered, 'someDateKey')).to.contain(val);
+      expect(_.map(filtered, 'someDateKey')).to.contain(val);
     });
   });
 });

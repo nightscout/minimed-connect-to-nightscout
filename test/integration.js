@@ -24,17 +24,17 @@ describe('integration test: missingLastSgv', function() {
   });
 
   it('should pull the right sgvs', function() {
-    expect(_.pluck(sgvs, 'sgv')).to.eql([70, 69, 68, 65, 66]);
+    expect(_.map(sgvs, 'sgv')).to.eql([70, 69, 68, 65, 66]);
   });
 
   it('should correctly deduce that the pump time offset is -0700', function() {
-    expect(_.pluck(sgvs, 'date')).to.eql(
+    expect(_.map(sgvs, 'date')).to.eql(
       [1445266500000, 1445266800000, 1445267100000, 1445267400000, 1445267700000]
     );
   });
 
   it('should not include a trend for any sgv', function() {
-    expect(_.uniq(_.pluck(sgvs, 'direction'))).to.eql([undefined]);
+    expect(_.uniq(_.map(sgvs, 'direction'))).to.eql([undefined]);
   });
 
   it('should include pump status data, including active insulin', function() {
@@ -70,11 +70,11 @@ describe('integration test: withTrend', function() {
   });
 
   it('should pull the right sgvs', function() {
-    expect(_.pluck(sgvs, 'sgv')).to.eql([191, 185, 179, 175, 168, 163]);
+    expect(_.map(sgvs, 'sgv')).to.eql([191, 185, 179, 175, 168, 163]);
   });
 
   it('should correctly deduce that the pump time offset is -0500', function() {
-    expect(_.pluck(sgvs, 'date')).to.eql(
+    expect(_.map(sgvs, 'date')).to.eql(
       [1445365260000, 1445365560000, 1445365860000, 1445366160000, 1445366460000, 1445366760000]
     );
   });
