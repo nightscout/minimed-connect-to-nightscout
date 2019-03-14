@@ -46,6 +46,7 @@ Another turnkey installation option is to run this on a Heroku worker dyno. You 
 * `CARELINK_SGV_LIMIT` - maximum number of recent sensor glucose values to send to Nightscout (default: 24)
 * `CARELINK_MAX_RETRY_DURATION` - maximum number of seconds to spend retrying failed requests to CareLink, ideally a power of 2 (default: 512)
 * `CARELINK_QUIET` - set to a truthy value to not output details of CareLink and Nightscout requests to the console (default: empty)
+* `MMCONNECT_SERVER` - set to `EU` if you are based in Europe / using Guardian Connect
 * `NS` - a fully-qualified Nightscout URL (e.g. `https://sitename.azurewebsites.net`) which overrides `WEBSITE_HOSTNAME`
 
 ## Currently supported data

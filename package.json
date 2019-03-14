@@ -1,6 +1,6 @@
 {
   "name": "minimed-connect-to-nightscout",
-  "version": "1.1.2-dev",
+  "version": "1.2.0",
   "description": "Send Medtronic pump and CGM data to Nightscout.",
   "author": "Mark Wilson <mark@warkmilson.com>",
   "repository": {
