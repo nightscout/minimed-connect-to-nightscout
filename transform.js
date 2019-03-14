@@ -8,15 +8,42 @@ var logger = require('./logger');
 var STALE_DATA_THRESHOLD_MINUTES = 20;
 var SENSOR_GLUCOSE_ENTRY_TYPE = 'sgv';
 var CARELINK_TREND_TO_NIGHTSCOUT_TREND = {
-  'NONE': {'trend': 0, 'direction': 'NONE'},
-  'UP_DOUBLE': {'trend': 1, 'direction': 'DoubleUp'},
-  'UP': {'trend': 2, 'direction': 'SingleUp'},
-  'DOWN': {'trend': 6, 'direction': 'SingleDown'},
-  'DOWN_DOUBLE': {'trend': 7, 'direction': 'DoubleDown'}
+  'NONE': {
+    'trend': 0,
+    'direction': 'NONE'
+  },
+  'UP_TRIPLE': {
+    'trend': 1,
+    'direction': 'TripleUp'
+  },
+  'UP_DOUBLE': {
+    'trend': 1,
+    'direction': 'DoubleUp'
+  },
+  'UP': {
+    'trend': 2,
+    'direction': 'SingleUp'
+  },
+  'DOWN': {
+    'trend': 6,
+    'direction': 'SingleDown'
+  },
+  'DOWN_DOUBLE': {
+    'trend': 7,
+    'direction': 'DoubleDown'
+  },
+  'DOWN_TRIPLE': {
+    'trend': 7,
+    'direction': 'TripleDown'
+  }
 };
 
 function parsePumpTime(pumpTimeString, offset) {
-  return Date.parse(pumpTimeString + ' ' + offset);
+  if (process.env['MMCONNECT_SERVER'] === 'EU') {
+    return Date.parse(pumpTimeString);
+  } else {
+    return Date.parse(pumpTimeString + ' ' + offset);
+  }
 }
 
 function timestampAsString(timestamp) {
@@ -27,17 +54,16 @@ function deviceName(data) {
   return 'connect://' + data['medicalDeviceFamily'].toLowerCase();
 }
 
-var guessPumpOffset = (function() {
+var guessPumpOffset = (function () {
   var lastGuess;
-
   // From my observations, sMedicalDeviceTime is advanced by the server even when the app is
   // not reporting data or the pump is not connected, so its difference from server time is
   // always close to a whole number of hours, and can be used to guess the pump's timezone:
   // https://gist.github.com/mddub/f673570e6427c93784bf
-  return function(data) {
+  return function (data) {
     var pumpTimeAsIfUTC = Date.parse(data['sMedicalDeviceTime'] + ' +0');
     var serverTimeUTC = data['currentServerTime'];
-    var hours = Math.round((pumpTimeAsIfUTC - serverTimeUTC) / (60*60*1000));
+    var hours = Math.round((pumpTimeAsIfUTC - serverTimeUTC) / (60 * 60 * 1000));
     var offset = (hours >= 0 ? '+' : '-') + (Math.abs(hours) < 10 ? '0' : '') + Math.abs(hours) + '00';
     if (offset !== lastGuess) {
       logger.log('Guessed pump timezone ' + offset + ' (pump time: "' + data['sMedicalDeviceTime'] + '"; server time: ' + new Date(data['currentServerTime']) + ')');
@@ -48,37 +74,58 @@ var guessPumpOffset = (function() {
 })();
 
 function deviceStatusEntry(data, offset) {
-  return {
-    'created_at': timestampAsString(data['lastMedicalDeviceDataUpdateServerTime']),
-    'device': deviceName(data),
-    'uploader': {
-      'battery': data['conduitBatteryLevel'],
-    },
-    'pump': {
-      'battery': {
-        'percent': data['medicalDeviceBatteryLevelPercent'],
+  if (data['medicalDeviceFamily'] === 'GUARDIAN') {
+    return {
+      'created_at': timestampAsString(data['lastMedicalDeviceDataUpdateServerTime']),
+      'device': deviceName(data),
+      'uploader': {
+        'battery': data['medicalDeviceBatteryLevelPercent'],
       },
-      'reservoir': data['reservoirAmount'],
-      'iob': {
-        'timestamp': timestampAsString(data['lastMedicalDeviceDataUpdateServerTime']),
-        'bolusiob': _.get(data, 'activeInsulin.amount') >= 0 ? _.get(data, 'activeInsulin.amount') : undefined,
+      'connect': {
+        'sensorState': data['sensorState'],
+        'calibStatus': data['calibStatus'],
+        'sensorDurationHours': data['sensorDurationHours'],
+        'timeToNextCalibHours': data['timeToNextCalibHours'],
+        'conduitInRange': data['conduitInRange'],
+        'conduitMedicalDeviceInRange': data['conduitMedicalDeviceInRange'],
+        'conduitSensorInRange': data['conduitSensorInRange'],
+        'medicalDeviceBatteryLevelPercent': data['medicalDeviceBatteryLevelPercent'],
+        'medicalDeviceFamily': data['medicalDeviceFamily']
+      }
+    };
+  } else {
+    return {
+      'created_at': timestampAsString(data['lastMedicalDeviceDataUpdateServerTime']),
+      'device': deviceName(data),
+      'uploader': {
+        'battery': data['conduitBatteryLevel'],
       },
-      'clock': timestampAsString(parsePumpTime(data['sMedicalDeviceTime'], offset)),
-      // TODO: add last alarm from data['lastAlarm']['code'] and data['lastAlarm']['datetime']
-      // https://gist.github.com/mddub/a95dc120d9d1414a433d#file-minimed-connect-codes-js-L79
-    },
-    'connect': {
-      // For the values these can take, see:
-      // https://gist.github.com/mddub/5e4a585508c93249eb51
-      'sensorState': data['sensorState'],
-      'calibStatus': data['calibStatus'],
-      'sensorDurationHours': data['sensorDurationHours'],
-      'timeToNextCalibHours': data['timeToNextCalibHours'],
-      'conduitInRange': data['conduitInRange'],
-      'conduitMedicalDeviceInRange': data['conduitMedicalDeviceInRange'],
-      'conduitSensorInRange': data['conduitSensorInRange'],
-    }
-  };
+      'pump': {
+        'battery': {
+          'percent': data['medicalDeviceBatteryLevelPercent'],
+        },
+        'reservoir': data['reservoirAmount'],
+        'iob': {
+          'timestamp': timestampAsString(data['lastMedicalDeviceDataUpdateServerTime']),
+          'bolusiob': _.get(data, 'activeInsulin.amount') >= 0 ? _.get(data, 'activeInsulin.amount') : undefined,
+        },
+        'clock': timestampAsString(parsePumpTime(data['sMedicalDeviceTime'], offset)),
+        // TODO: add last alarm from data['lastAlarm']['code'] and data['lastAlarm']['datetime']
+        // https://gist.github.com/mddub/a95dc120d9d1414a433d#file-minimed-connect-codes-js-L79
+      },
+      'connect': {
+        // For the values these can take, see:
+        // https://gist.github.com/mddub/5e4a585508c93249eb51
+        'sensorState': data['sensorState'],
+        'calibStatus': data['calibStatus'],
+        'sensorDurationHours': data['sensorDurationHours'],
+        'timeToNextCalibHours': data['timeToNextCalibHours'],
+        'conduitInRange': data['conduitInRange'],
+        'conduitMedicalDeviceInRange': data['conduitMedicalDeviceInRange'],
+        'conduitSensorInRange': data['conduitSensorInRange'],
+      }
+    };
+  }
 }
 
 function sgvEntries(data, offset) {
@@ -86,9 +133,9 @@ function sgvEntries(data, offset) {
     return [];
   }
 
-  var sgvs = data['sgs'].filter(function(entry) {
+  var sgvs = data['sgs'].filter(function (entry) {
     return entry['kind'] === 'SG' && entry['sg'] !== 0;
-  }).map(function(sgv) {
+  }).map(function (sgv) {
     var timestamp = parsePumpTime(sgv['datetime'], offset);
     return {
       'type': SENSOR_GLUCOSE_ENTRY_TYPE,
@@ -99,7 +146,7 @@ function sgvEntries(data, offset) {
     };
   });
 
-  if(data['sgs'][data['sgs'].length - 1]['sg'] !== 0) {
+  if (data['sgs'][data['sgs'].length - 1]['sg'] !== 0) {
     sgvs[sgvs.length - 1] = _.merge(
       sgvs[sgvs.length - 1],
       CARELINK_TREND_TO_NIGHTSCOUT_TREND[data['lastSGTrend']]
@@ -109,7 +156,7 @@ function sgvEntries(data, offset) {
   return sgvs;
 }
 
-module.exports = function(data, sgvLimit) {
+module.exports = function (data, sgvLimit) {
   var recency = (data['currentServerTime'] - data['lastMedicalDeviceDataUpdateServerTime']) / (60 * 1000);
   if (recency > STALE_DATA_THRESHOLD_MINUTES) {
     logger.log('Stale CareLink data: ' + recency.toFixed(2) + ' minutes old');
@@ -123,7 +170,6 @@ module.exports = function(data, sgvLimit) {
   if (sgvLimit === undefined) {
     sgvLimit = Infinity;
   }
-
   return {
     // XXX: lower-case and singular for consistency with cgm-remote-monitor collection name
     devicestatus: [deviceStatusEntry(data, offset)],
