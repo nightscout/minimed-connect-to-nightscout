@@ -38,8 +38,8 @@ var CARELINK_TREND_TO_NIGHTSCOUT_TREND = {
   }
 };
 
-function parsePumpTime(pumpTimeString, offset) {
-  if (process.env['MMCONNECT_SERVER'] === 'EU') {
+function parsePumpTime(pumpTimeString, offset, medicalDeviceFamily) {
+  if (process.env['MMCONNECT_SERVER'] === 'EU' || medicalDeviceFamily === 'GUARDIAN') {
     return Date.parse(pumpTimeString);
   } else {
     return Date.parse(pumpTimeString + ' ' + offset);
@@ -109,7 +109,7 @@ function deviceStatusEntry(data, offset) {
           'timestamp': timestampAsString(data['lastMedicalDeviceDataUpdateServerTime']),
           'bolusiob': _.get(data, 'activeInsulin.amount') >= 0 ? _.get(data, 'activeInsulin.amount') : undefined,
         },
-        'clock': timestampAsString(parsePumpTime(data['sMedicalDeviceTime'], offset)),
+        'clock': timestampAsString(parsePumpTime(data['sMedicalDeviceTime'], offset, data['medicalDeviceFamily'])),
         // TODO: add last alarm from data['lastAlarm']['code'] and data['lastAlarm']['datetime']
         // https://gist.github.com/mddub/a95dc120d9d1414a433d#file-minimed-connect-codes-js-L79
       },
@@ -136,7 +136,7 @@ function sgvEntries(data, offset) {
   var sgvs = data['sgs'].filter(function (entry) {
     return entry['kind'] === 'SG' && entry['sg'] !== 0;
   }).map(function (sgv) {
-    var timestamp = parsePumpTime(sgv['datetime'], offset);
+    var timestamp = parsePumpTime(sgv['datetime'], offset, data['medicalDeviceFamily']);
     return {
       'type': SENSOR_GLUCOSE_ENTRY_TYPE,
       'sgv': sgv['sg'],
