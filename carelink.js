@@ -8,6 +8,7 @@ var _ = require('lodash'),
 var logger = require('./logger');
 
 var DEFAULT_MAX_RETRY_DURATION = module.exports.defaultMaxRetryDuration = 512;
+var USE_EU = process.env['MMCONNECT_SERVER'] === 'EU' ? true : false;
 if (process.env['MMCONNECT_SERVER'] === 'EU') {
   var carelinkServerAddress = "carelink.minimed.eu";
 } else {
@@ -18,6 +19,12 @@ var CARELINK_SECURITY_URL = 'https://' + carelinkServerAddress + '/patient/j_sec
 var CARELINK_AFTER_LOGIN_URL = 'https://' + carelinkServerAddress + '/patient/main/login.do';
 var CARELINK_JSON_BASE_URL = 'https://' + carelinkServerAddress + '/patient/connect/ConnectViewerServlet?cpSerialNumber=NONE&msgType=last24hours&requestTime=';
 var CARELINK_LOGIN_COOKIE = '_WL_AUTHCOOKIE_JSESSIONID';
+
+var DEFAULT_OAUTH = process.env['USE_PRE_2020_OAUTH_EU'] == '1' ? false : true;
+if (DEFAULT_OAUTH && USE_EU) {
+  CARELINK_SECURITY_URL = 'https://mdtlogin.medtronic.com/mmcl/auth/oauth/v2/authorize/login';
+  CARELINK_JSON_BASE_URL = 'https://carelink.minimed.eu/patient/connect/data?cpSerialNumber=NONE&msgType=last24hours&requestTime';
+}
 
 var carelinkJsonUrlNow = function() {
   return CARELINK_JSON_BASE_URL + Date.now();
