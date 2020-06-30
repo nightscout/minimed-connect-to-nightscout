@@ -183,10 +183,10 @@ var Client = exports.Client = function (options) {
     }
 
     function doLoginEu3(response, next) {
-        let uri = new URL(response.headers.location);
-        let uriParam = uri.searchParams;
-
-        let url = `${uri.origin}${uri.pathname}?locale=${uriParam.get('locale')}&countrycode=${uriParam.get('countrycode')}`;
+        let uri = response.headers.location;
+        let url = urllib.parse(uri);
+        let query = qs.parse(url.query);
+        url = urllib.format(_.merge(url, {search: null, query: CARELINKEU_LOGIN_LOCALE}));
         logger.log('POST ' + url);
 
         request.post(
@@ -195,8 +195,8 @@ var Client = exports.Client = function (options) {
                 jar: jar,
                 gzip: true,
                 form: {
-                    sessionID: uriParam.get('sessionID'),
-                    sessionData: uriParam.get('sessionData'),
+                    sessionID: query.sessionID,
+                    sessionData: query.sessionData,
                     locale: "en",
                     action: "login",
                     username: options.username,
