@@ -14,8 +14,6 @@ var carelinkServerAddress = CARELINK_EU ? "carelink.minimed.eu" : "carelink.mini
 
 var CARELINKEU_SERVER_ADDRESS = 'https://' + carelinkServerAddress;
 var CARELINKEU_LOGIN1_URL = 'https://' + carelinkServerAddress + '/patient/sso/login?country=gb&lang=en';
-var CARELINKEU_LOGIN3_URL = 'https://mdtlogin.medtronic.com/mmcl/auth/oauth/v2/authorize/login?country=gb&lang=en';
-var CARELINKEU_LOGIN4_URL = 'https://mdtlogin.medtronic.com/mmcl/auth/oauth/v2/authorize/consent';
 var CARELINKEU_REFRESH_TOKEN_URL = 'https://' + carelinkServerAddress + '/patient/sso/reauth';
 var CARELINKEU_JSON_BASE_URL = 'https://' + carelinkServerAddress + '/patient/connect/data?cpSerialNumber=NONE&msgType=last24hours&requestTime=';
 var CARELINKEU_TOKEN_COOKIE = 'auth_tmp_token';
@@ -172,18 +170,20 @@ var Client = exports.Client = function (options) {
     }
 
     function doLoginEu3(response, next) {
-        logger.log('POST ' + CARELINKEU_LOGIN3_URL);
+        let uri = new URL(response.headers.location);
+        let uriParam = uri.searchParams;
 
-        let ps = params(response.headers.location);
+        let url = `${uri.origin}${uri.pathname}?locale=${uriParam.get('locale')}&countrycode=${uriParam.get('countrycode')}`;
+        logger.log('POST ' + url);
 
         request.post(
-            CARELINKEU_LOGIN3_URL,
+            url,
             reqOptions({
                 jar: jar,
                 gzip: true,
                 form: {
-                    sessionID: ps.sessionID,
-                    sessionData: ps.sessionData,
+                    sessionID: uriParam.get('sessionID'),
+                    sessionData: uriParam.get('sessionData'),
                     locale: "en",
                     action: "login",
                     username: options.username,
@@ -196,15 +196,18 @@ var Client = exports.Client = function (options) {
     }
 
     function doLoginEu4(response, next) {
-        logger.log('GET ' + CARELINKEU_LOGIN4_URL);
+        const regexUrl = /(<form action=")(.*)" method="POST"/gm;
+        let url = regexUrl.exec(response.body)[2] || '';
 
+        logger.log('GET ' + url);
+
+        // Session data is changed, need to get it from the html body form
         let ps = params(response.request.body);
-
         const regex = /(<input type="hidden" name="sessionData" value=")(.*)"/gm;
         ps.sessionData = regex.exec(response.body)[2] || '';
 
         request.post(
-            CARELINKEU_LOGIN4_URL,
+            url,
             reqOptions({
                 jar: jar,
                 form: {
