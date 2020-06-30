@@ -16,8 +16,10 @@ var CARELINKEU_SERVER_ADDRESS = 'https://' + carelinkServerAddress;
 var CARELINKEU_LOGIN1_URL = 'https://' + carelinkServerAddress + '/patient/sso/login?country=gb&lang=en';
 var CARELINKEU_LOGIN3_URL = 'https://mdtlogin.medtronic.com/mmcl/auth/oauth/v2/authorize/login?country=gb&lang=en';
 var CARELINKEU_LOGIN4_URL = 'https://mdtlogin.medtronic.com/mmcl/auth/oauth/v2/authorize/consent';
+var CARELINKEU_REFRESH_TOKEN_URL = 'https://' + carelinkServerAddress + '/patient/sso/reauth';
 var CARELINKEU_JSON_BASE_URL = 'https://' + carelinkServerAddress + '/patient/connect/data?cpSerialNumber=NONE&msgType=last24hours&requestTime=';
-var CARELINKEU_LOGIN_COOKIE = 'auth_tmp_token';
+var CARELINKEU_TOKEN_COOKIE = 'auth_tmp_token';
+var CARELINKEU_TOKENEXPIRE_COOKIE = 'c_token_valid_to';
 
 var CARELINK_SECURITY_URL = 'https://' + carelinkServerAddress + '/patient/j_security_check';
 var CARELINK_AFTER_LOGIN_URL = 'https://' + carelinkServerAddress + '/patient/main/login.do';
@@ -44,12 +46,12 @@ function reqOptions(extra) {
     return _.merge(defaults, extra);
 }
 
-function haveLoginCookie(jar) {
+/*function haveLoginCookie(jar) {
     if (CARELINK_EU)
-        return _.some(jar.getCookies(CARELINKEU_SERVER_ADDRESS), {key: CARELINKEU_LOGIN_COOKIE});
+        return _.some(jar.getCookies(CARELINKEU_SERVER_ADDRESS), {key: CARELINKEU_TOKEN_COOKIE});
     else
         return _.some(jar.getCookies(CARELINK_SECURITY_URL), {key: CARELINK_LOGIN_COOKIE});
-}
+}*/
 
 function responseAsError(response) {
     if (!(response.statusCode >= 200 && response.statusCode < 400)) {
@@ -87,6 +89,18 @@ var Client = exports.Client = function (options) {
     }
 
     var jar = request.jar();
+
+    function getCookies() {
+        return jar.getCookies(CARELINK_EU ? CARELINKEU_SERVER_ADDRESS : CARELINK_SECURITY_URL);
+    }
+
+    function haveCookie(cookieName) {
+        return _.some(getCookies(), {key: cookieName});
+    }
+
+    function getCookie(cookieName) {
+        return _.find(getCookies(), {key: cookieName});
+    }
 
     if (options.maxRetryDuration === undefined) {
         options.maxRetryDuration = DEFAULT_MAX_RETRY_DURATION;
@@ -187,7 +201,7 @@ var Client = exports.Client = function (options) {
         let ps = params(response.request.body);
 
         const regex = /(<input type="hidden" name="sessionData" value=")(.*)"/gm;
-        ps.sessionData = regex.exec(response.body)[2];
+        ps.sessionData = regex.exec(response.body)[2] || '';
 
         request.post(
             CARELINKEU_LOGIN4_URL,
@@ -223,15 +237,33 @@ var Client = exports.Client = function (options) {
         );
     }
 
+    function refreshTokenEu(response, next) {
+        logger.log('Refresh auth token');
+
+        request.post(
+            CARELINKEU_REFRESH_TOKEN_URL,
+            reqOptions({
+                jar: jar,
+                rejectUnauthorized: false,
+                changeOrigin: true,
+                gzip: true,
+                json: true,
+                headers: {
+                    Authorization: "Bearer " + _.get(getCookie(CARELINKEU_TOKEN_COOKIE), 'value', ''),
+                },
+            }),
+            checkResponseThen(next)
+        );
+    }
+
     function getConnectData(response, next, retryCount) {
         var url = carelinkJsonUrlNow();
         logger.log('GET ' + url);
 
         var reqO = {jar: jar, gzip: true};
         if (CARELINK_EU) {
-            var cookie = _.find(jar.getCookies(CARELINKEU_SERVER_ADDRESS), { key: 'auth_tmp_token' });
             reqO.headers = {
-                Authorization: "Bearer " + cookie.value,
+                Authorization: "Bearer " + _.get(getCookie(CARELINKEU_TOKEN_COOKIE), 'value', ''),
             };
         }
 
@@ -269,54 +301,55 @@ var Client = exports.Client = function (options) {
         next(null, parsed);
     }
 
-    function firstFetch(callback) {
-        var funcs = [
-            getConnectData,
-            parseData,
-            callback.bind(null, null),
-        ];
+    function checkLogin(next) {
         if (CARELINK_EU) {
-            funcs = [
-                doLoginEu1,
-                doLoginEu2,
-                doLoginEu3,
-                doLoginEu4,
-                doLoginEu5,
-                ...funcs];
-        } else {
-            funcs = [
-                doLogin,
-                doFetchCookie,
-                ...funcs];
-        }
+            // EU - SSO method
+            if (haveCookie(CARELINKEU_TOKEN_COOKIE)) {
+                let expire = new Date(Date.parse( _.get(getCookie(CARELINKEU_TOKENEXPIRE_COOKIE), 'value', '1970-01-01')));
 
-        common.step(
-            funcs,
-            callback
-        );
+                if (expire < new Date(Date.now() - 5 * 1000 * 60)) {
+                    refreshTokenEu(next);
+                } else {
+                    next(null);
+                }
+            } else {
+                common.step([
+                        doLoginEu1,
+                        doLoginEu2,
+                        doLoginEu3,
+                        doLoginEu4,
+                        doLoginEu5,
+                        next.bind(null, null)
+                    ],
+                );
+            }
+        } else {
+            // US - Cookie method
+            if (haveCookie(CARELINK_LOGIN_COOKIE)) {
+                next(null);
+            } else {
+                logger.log('Logging in to CareLink');
+
+                common.step([
+                        doLogin,
+                        doFetchCookie,
+                        next.bind(null, null)
+                    ]
+                );
+            }
+        }
     }
 
-    function fetchLoggedIn(callback) {
+    function fetch(callback) {
         common.step(
             [
+                checkLogin,
                 getConnectData,
                 parseData,
                 callback.bind(null, null),
             ],
-            function onError(err) {
-                logger.log('Fetch JSON failed; logging in again');
-                firstFetch(callback);
-            }
+            callback
         );
-    }
-
-    function fetch(callback) {
-        if (haveLoginCookie(jar)) {
-            fetchLoggedIn(callback);
-        } else {
-            logger.log('Logging in to CareLink');
-            firstFetch(callback);
-        }
     }
 
     return {
