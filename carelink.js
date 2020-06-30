@@ -41,10 +41,10 @@ function reqOptions(extra) {
     var defaults = {
         jar: true,
         followRedirect: false,
-        rejectUnauthorized: false,
+        //rejectUnauthorized: false,
         changeOrigin: true,
         headers: {
-            Host: carelinkServerAddress,
+            //Host: carelinkServerAddress,
             Connection: 'keep-alive',
             Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
             'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.10; rv:41.0) Gecko/20100101 Firefox/41.0',
