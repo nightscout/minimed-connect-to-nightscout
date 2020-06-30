@@ -32,7 +32,7 @@ function reqOptions(extra) {
     var defaults = {
         jar: true,
         followRedirect: false,
-        rejectUnauthorized: false,
+        //rejectUnauthorized: false,
         //secure: false,
         changeOrigin: true,
         headers: {
@@ -44,6 +44,8 @@ function reqOptions(extra) {
             'Accept-Language': 'en-US,en;q=0.8'
         },
         checkServerIdentity: function (host, cert) {
+            /*if (host != cert.subject.CN)
+                return 'Incorrect server identity';// Return error in case of failed checking.*/
             return undefined;
         }
     };
