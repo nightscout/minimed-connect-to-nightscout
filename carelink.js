@@ -3,6 +3,8 @@
 
 var _ = require('lodash'),
     common = require('common'),
+    qs = require('qs'),
+    urllib = require('url'),
     request = require('request');
 
 var logger = require('./logger');
@@ -11,6 +13,10 @@ var MMCONNECT_SERVER = process.env['MMCONNECT_SERVER'];
 var CARELINK_EU = MMCONNECT_SERVER === 'EU';
 var MMCONNECT_SERVERNAME = process.env['MMCONNECT_SERVERNAME'];
 
+var DEFAULT_COUNTRYCODE = process.env['MMCONNECT_COUNTRYCODE'] || 'gb';
+var DEFAULT_LANGCODE = process.env['MMCONNECT_LANGCODE'] || 'en';
+
+var CARELINKEU_LOGIN_LOCALE = { country: DEFAULT_COUNTRYCODE, lang: DEFAULT_LANGCODE };
 
 var DEFAULT_MAX_RETRY_DURATION = module.exports.defaultMaxRetryDuration = 512;
 var carelinkServerAddress = MMCONNECT_SERVERNAME || (CARELINK_EU ? "carelink.minimed.eu" : "carelink.minimed.com");
@@ -147,10 +153,14 @@ var Client = exports.Client = function (options) {
     }
 
     function doLoginEu1(next) {
-        logger.log('GET ' + CARELINKEU_LOGIN1_URL);
+        let url = urllib.parse(CARELINKEU_LOGIN1_URL);
+        var query = _.merge(qs.parse(url.query), CARELINKEU_LOGIN_LOCALE);
+        url = urllib.format(_.merge(url, { search: null, query: query }));
+
+        logger.log('GET ' + url);
 
         request.get(
-            CARELINKEU_LOGIN1_URL,
+            url,
             reqOptions({
                 jar: jar,
             }),
