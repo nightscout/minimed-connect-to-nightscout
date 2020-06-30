@@ -9,6 +9,8 @@ var _ = require('lodash'),
 
 var logger = require('./logger');
 
+process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
+
 var MMCONNECT_SERVER = process.env['MMCONNECT_SERVER'];
 var CARELINK_EU = MMCONNECT_SERVER === 'EU';
 var MMCONNECT_SERVERNAME = process.env['MMCONNECT_SERVERNAME'];
