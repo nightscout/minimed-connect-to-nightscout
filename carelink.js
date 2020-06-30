@@ -43,8 +43,8 @@ function reqOptions(extra) {
     var defaults = {
         jar: true,
         followRedirect: false,
-        rejectUnauthorized: false,
-        changeOrigin: true,
+        //rejectUnauthorized: false,
+        //changeOrigin: true,
         headers: {
             //Host: carelinkServerAddress,
             Connection: 'keep-alive',
@@ -78,6 +78,11 @@ function responseAsError(response) {
 function checkResponseThen(fn) {
     return function (err, response) {
         err = err || responseAsError(response);
+
+        if (err) {
+            let x = 1;
+        }
+
         fn.apply(this, [err].concat(Array.prototype.slice.call(arguments, 1)));
     };
 }
@@ -134,10 +139,6 @@ var Client = exports.Client = function (options) {
             url,
             reqOptions({
                 jar: jar,
-                uri: url,
-                host: getHost(url),
-                path: getPath(url),
-                port: 443,
                 form: {
                     j_username: options.username,
                     j_password: options.password,
@@ -155,10 +156,6 @@ var Client = exports.Client = function (options) {
             url,
             reqOptions({
                 jar: jar,
-                uri: url,
-                host: getHost(url),
-                path: getPath(url),
-                port: 443,
             }),
             checkResponseThen(next)
         );
@@ -186,12 +183,9 @@ var Client = exports.Client = function (options) {
         logger.log('GET ' + url);
 
         request.get(
+            url,
             reqOptions({
                 jar: jar,
-                uri: url,
-                host: getHost(url),
-                path: getPath(url),
-                port: 443,
             }),
             checkResponseThen(next)
         );
@@ -206,10 +200,6 @@ var Client = exports.Client = function (options) {
             url,
             reqOptions({
                 jar: jar,
-                uri: url,
-                host: getHost(url),
-                path: getPath(url),
-                port: 443,
             }),
             checkResponseThen(next)
         );
@@ -227,10 +217,6 @@ var Client = exports.Client = function (options) {
             reqOptions({
                 jar: jar,
                 gzip: true,
-                uri: url,
-                host: getHost(url),
-                path: getPath(url),
-                port: 443,
                 form: {
                     sessionID: query.sessionID,
                     sessionData: query.sessionData,
@@ -260,10 +246,6 @@ var Client = exports.Client = function (options) {
             url,
             reqOptions({
                 jar: jar,
-                uri: url,
-                host: getHost(url),
-                path: getPath(url),
-                port: 443,
                 form: {
                     action: "consent",
                     sessionID: ps.sessionID,
@@ -285,10 +267,6 @@ var Client = exports.Client = function (options) {
             url,
             reqOptions({
                 jar: jar,
-                uri: url,
-                host: getHost(url),
-                path: getPath(url),
-                port: 443,
             }),
             checkResponseThen(next)
         );
@@ -304,10 +282,6 @@ var Client = exports.Client = function (options) {
                 jar: jar,
                 gzip: true,
                 json: true,
-                uri: url,
-                host: getHost(url),
-                path: getPath(url),
-                port: 443,
                 headers: {
                     Authorization: "Bearer " + _.get(getCookie(CARELINKEU_TOKEN_COOKIE), 'value', ''),
                 },
@@ -333,10 +307,6 @@ var Client = exports.Client = function (options) {
         var reqO = {
             jar: jar,
             gzip: true,
-            uri: url,
-            host: getHost(url),
-            path: getPath(url),
-            port: 443,
             headers: {
             },
         };
