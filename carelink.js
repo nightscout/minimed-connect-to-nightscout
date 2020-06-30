@@ -44,7 +44,8 @@ function reqOptions(extra) {
         jar: true,
         followRedirect: false,
         rejectUnauthorized: false,
-        //changeOrigin: true,
+        //secure: false,
+        changeOrigin: true,
         headers: {
             //Host: carelinkServerAddress,
             Connection: 'keep-alive',
