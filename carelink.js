@@ -34,6 +34,7 @@ function reqOptions(extra) {
     var defaults = {
         jar: true,
         followRedirect: false,
+        rejectUnauthorized: false,
         headers: {
             Host: carelinkServerAddress,
             Connection: 'keep-alive',
@@ -148,7 +149,6 @@ var Client = exports.Client = function (options) {
             CARELINKEU_LOGIN1_URL,
             reqOptions({
                 jar: jar,
-                rejectUnauthorized: false,
             }),
             checkResponseThen(next)
         );
@@ -163,7 +163,6 @@ var Client = exports.Client = function (options) {
             url,
             reqOptions({
                 jar: jar,
-                rejectUnauthorized: false,
             }),
             checkResponseThen(next)
         );
@@ -178,7 +177,6 @@ var Client = exports.Client = function (options) {
             CARELINKEU_LOGIN3_URL,
             reqOptions({
                 jar: jar,
-                rejectUnauthorized: false,
                 changeOrigin: true,
                 gzip: true,
                 form: {
@@ -207,7 +205,6 @@ var Client = exports.Client = function (options) {
             CARELINKEU_LOGIN4_URL,
             reqOptions({
                 jar: jar,
-                rejectUnauthorized: false,
                 changeOrigin: true,
                 form: {
                     action: "consent",
@@ -230,7 +227,6 @@ var Client = exports.Client = function (options) {
             url,
             reqOptions({
                 jar: jar,
-                rejectUnauthorized: false,
                 changeOrigin: true,
             }),
             checkResponseThen(next)
@@ -244,7 +240,6 @@ var Client = exports.Client = function (options) {
             CARELINKEU_REFRESH_TOKEN_URL,
             reqOptions({
                 jar: jar,
-                rejectUnauthorized: false,
                 changeOrigin: true,
                 gzip: true,
                 json: true,
@@ -308,9 +303,9 @@ var Client = exports.Client = function (options) {
                 let expire = new Date(Date.parse( _.get(getCookie(CARELINKEU_TOKENEXPIRE_COOKIE), 'value', '1970-01-01')));
 
                 if (expire < new Date(Date.now() - 5 * 1000 * 60)) {
-                    refreshTokenEu(next);
+                    refreshTokenEu(null, next);
                 } else {
-                    next(null);
+                    next(null, null);
                 }
             } else {
                 common.step([
@@ -319,7 +314,7 @@ var Client = exports.Client = function (options) {
                         doLoginEu3,
                         doLoginEu4,
                         doLoginEu5,
-                        next.bind(null, null)
+                        next.bind(null, null),
                     ],
                 );
             }
