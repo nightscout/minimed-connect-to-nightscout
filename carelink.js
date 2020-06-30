@@ -42,6 +42,9 @@ function reqOptions(extra) {
             'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.10; rv:41.0) Gecko/20100101 Firefox/41.0',
             'Accept-Encoding': 'gzip,deflate,sdch',
             'Accept-Language': 'en-US,en;q=0.8'
+        },
+        checkServerIdentity: function (host, cert) {
+            return undefined;
         }
     };
     return _.merge(defaults, extra);
