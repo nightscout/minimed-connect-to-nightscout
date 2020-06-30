@@ -32,7 +32,7 @@ function reqOptions(extra) {
     var defaults = {
         jar: true,
         followRedirect: false,
-        //rejectUnauthorized: false,
+        rejectUnauthorized: false,
         changeOrigin: true,
         headers: {
             //Host: carelinkServerAddress,
