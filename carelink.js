@@ -7,6 +7,8 @@ var _ = require('lodash'),
 
 var logger = require('./logger');
 
+process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
+
 var CARELINK_EU = process.env['MMCONNECT_SERVER'] === 'EU';
 
 var DEFAULT_MAX_RETRY_DURATION = module.exports.defaultMaxRetryDuration = 512;
