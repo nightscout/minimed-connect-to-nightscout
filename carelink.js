@@ -161,20 +161,6 @@ var Client = exports.Client = function (options) {
         );
     }
 
-    var params = function (url) {
-        let q = url.split('?'), result = {};
-        if (q.length >= 1) {
-            q[q.length >= 2 ? 1 : 0].split('&').forEach((item) => {
-                try {
-                    result[item.split('=')[0]] = item.split('=')[1];
-                } catch (e) {
-                    result[item.split('=')[0]] = '';
-                }
-            })
-        }
-        return result;
-    }
-
     function doLoginEu1(next) {
         let url = urllib.parse(CARELINKEU_LOGIN_URL);
         var query = _.merge(qs.parse(url.query), CARELINKEU_LOGIN_LOCALE);
@@ -232,15 +218,17 @@ var Client = exports.Client = function (options) {
     }
 
     function doLoginEu4(response, next) {
-        const regexUrl = /(<form action=")(.*)" method="POST"/gm;
-        let url = regexUrl.exec(response.body)[2] || '';
+        let regex = /(<form action=")(.*)" method="POST"/gm;
+        let url = (regex.exec(response.body) || [])[2] || '';
 
         logger.log('GET ' + url);
 
         // Session data is changed, need to get it from the html body form
-        let ps = params(response.request.body);
-        const regex = /(<input type="hidden" name="sessionData" value=")(.*)"/gm;
-        ps.sessionData = regex.exec(response.body)[2] || '';
+        regex = /(sessionID=)([^&]+)/gm;
+        let sessionId = (regex.exec(response.request.body) || [])[2] || '';
+
+        regex = /(<input type="hidden" name="sessionData" value=")(.*)"/gm;
+        let sessionData = (regex.exec(response.body)[2] || []) || '';
 
         request.post(
             url,
@@ -248,8 +236,8 @@ var Client = exports.Client = function (options) {
                 jar: jar,
                 form: {
                     action: "consent",
-                    sessionID: ps.sessionID,
-                    sessionData: ps.sessionData,
+                    sessionID: sessionId,
+                    sessionData: sessionData,
                     response_type: "code",
                     response_mode: "query",
                 }
@@ -307,8 +295,7 @@ var Client = exports.Client = function (options) {
         var reqO = {
             jar: jar,
             gzip: true,
-            headers: {
-            },
+            headers: {},
         };
         if (CARELINK_EU) {
             reqO.headers.Authorization = "Bearer " + _.get(getCookie(CARELINKEU_TOKEN_COOKIE), 'value', '');
