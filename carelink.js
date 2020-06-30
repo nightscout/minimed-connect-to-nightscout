@@ -7,10 +7,13 @@ var _ = require('lodash'),
 
 var logger = require('./logger');
 
-var CARELINK_EU = process.env['MMCONNECT_SERVER'] === 'EU';
+var MMCONNECT_SERVER = process.env['MMCONNECT_SERVER'];
+var CARELINK_EU = MMCONNECT_SERVER === 'EU';
+var MMCONNECT_SERVERNAME = process.env['MMCONNECT_SERVERNAME'];
+
 
 var DEFAULT_MAX_RETRY_DURATION = module.exports.defaultMaxRetryDuration = 512;
-var carelinkServerAddress = CARELINK_EU ? "carelink.minimed.eu" : "carelink.minimed.com";
+var carelinkServerAddress = MMCONNECT_SERVERNAME || (CARELINK_EU ? "carelink.minimed.eu" : "carelink.minimed.com");
 
 var CARELINKEU_SERVER_ADDRESS = 'https://' + carelinkServerAddress;
 var CARELINKEU_LOGIN1_URL = 'https://' + carelinkServerAddress + '/patient/sso/login?country=gb&lang=en';
