@@ -43,11 +43,9 @@ function reqOptions(extra) {
             'Accept-Encoding': 'gzip,deflate,sdch',
             'Accept-Language': 'en-US,en;q=0.8'
         },
-        checkServerIdentity: function (host, cert) {
-            /*if (host != cert.subject.CN)
-                return 'Incorrect server identity';// Return error in case of failed checking.*/
+        /*checkServerIdentity: function (host, cert) {
             return undefined;
-        }
+        }*/
     };
     return _.merge(defaults, extra);
 }
@@ -73,10 +71,6 @@ function responseAsError(response) {
 function checkResponseThen(fn) {
     return function (err, response) {
         err = err || responseAsError(response);
-
-        if (err) {
-            let x = 1;
-        }
 
         fn.apply(this, [err].concat(Array.prototype.slice.call(arguments, 1)));
     };
