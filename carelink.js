@@ -22,7 +22,7 @@ var DEFAULT_MAX_RETRY_DURATION = module.exports.defaultMaxRetryDuration = 512;
 var carelinkServerAddress = MMCONNECT_SERVERNAME || (CARELINK_EU ? "carelink.minimed.eu" : "carelink.minimed.com");
 
 var CARELINKEU_SERVER_ADDRESS = 'https://' + carelinkServerAddress;
-var CARELINKEU_LOGIN1_URL = 'https://' + carelinkServerAddress + '/patient/sso/login?country=gb&lang=en';
+var CARELINKEU_LOGIN_URL = 'https://' + carelinkServerAddress + '/patient/sso/login?country=gb&lang=en';
 var CARELINKEU_REFRESH_TOKEN_URL = 'https://' + carelinkServerAddress + '/patient/sso/reauth';
 var CARELINKEU_JSON_BASE_URL = 'https://' + carelinkServerAddress + '/patient/connect/data?cpSerialNumber=NONE&msgType=last24hours&requestTime=';
 var CARELINKEU_TOKEN_COOKIE = 'auth_tmp_token';
@@ -99,6 +99,10 @@ var Client = exports.Client = function (options) {
 
     var jar = request.jar();
 
+    if (options.maxRetryDuration === undefined) {
+        options.maxRetryDuration = DEFAULT_MAX_RETRY_DURATION;
+    }
+
     function getCookies() {
         return jar.getCookies(CARELINK_EU ? CARELINKEU_SERVER_ADDRESS : CARELINK_SECURITY_URL);
     }
@@ -111,28 +115,41 @@ var Client = exports.Client = function (options) {
         return _.find(getCookies(), {key: cookieName});
     }
 
-    if (options.maxRetryDuration === undefined) {
-        options.maxRetryDuration = DEFAULT_MAX_RETRY_DURATION;
+    function getHost(url) {
+        return new URL(url).host;
     }
 
     function doLogin(next) {
-        logger.log('POST ' + CARELINK_SECURITY_URL);
+        let url = CARELINK_SECURITY_URL;
+        logger.log('POST ' + url);
+
         request.post(
-            CARELINK_SECURITY_URL,
+            url,
             reqOptions({
                 jar: jar,
-                form: {j_username: options.username, j_password: options.password, j_character_encoding: "UTF-8"}
+                headers: {
+                    Host: getHost(url),
+                },
+                form: {
+                    j_username: options.username,
+                    j_password: options.password,
+                    j_character_encoding: "UTF-8"
+                },
             }),
             checkResponseThen(next)
         );
     }
 
     function doFetchCookie(response, next) {
-        logger.log('GET ' + CARELINK_AFTER_LOGIN_URL);
+        let url = CARELINK_AFTER_LOGIN_URL;
+        logger.log('GET ' + url);
         request.get(
-            CARELINK_AFTER_LOGIN_URL,
+            url,
             reqOptions({
-                jar: jar
+                jar: jar,
+                headers: {
+                    Host: getHost(url),
+                },
             }),
             checkResponseThen(next)
         );
@@ -153,7 +170,7 @@ var Client = exports.Client = function (options) {
     }
 
     function doLoginEu1(next) {
-        let url = urllib.parse(CARELINKEU_LOGIN1_URL);
+        let url = urllib.parse(CARELINKEU_LOGIN_URL);
         var query = _.merge(qs.parse(url.query), CARELINKEU_LOGIN_LOCALE);
         url = urllib.format(_.merge(url, { search: null, query: query }));
 
@@ -163,6 +180,9 @@ var Client = exports.Client = function (options) {
             url,
             reqOptions({
                 jar: jar,
+                headers: {
+                    Host: getHost(url),
+                },
             }),
             checkResponseThen(next)
         );
@@ -177,6 +197,9 @@ var Client = exports.Client = function (options) {
             url,
             reqOptions({
                 jar: jar,
+                headers: {
+                    Host: getHost(url),
+                },
             }),
             checkResponseThen(next)
         );
@@ -194,6 +217,9 @@ var Client = exports.Client = function (options) {
             reqOptions({
                 jar: jar,
                 gzip: true,
+                headers: {
+                    host: getHost(url),
+                },
                 form: {
                     sessionID: query.sessionID,
                     sessionData: query.sessionData,
@@ -223,6 +249,9 @@ var Client = exports.Client = function (options) {
             url,
             reqOptions({
                 jar: jar,
+                headers: {
+                    Host: getHost(url),
+                },
                 form: {
                     action: "consent",
                     sessionID: ps.sessionID,
@@ -244,21 +273,26 @@ var Client = exports.Client = function (options) {
             url,
             reqOptions({
                 jar: jar,
+                headers: {
+                    Host: getHost(url),
+                },
             }),
             checkResponseThen(next)
         );
     }
 
     function refreshTokenEu(next) {
+        let url = CARELINKEU_REFRESH_TOKEN_URL;
         logger.log('Refresh auth token');
 
         request.post(
-            CARELINKEU_REFRESH_TOKEN_URL,
+            url,
             reqOptions({
                 jar: jar,
                 gzip: true,
                 json: true,
                 headers: {
+                    Host: getHost(url),
                     Authorization: "Bearer " + _.get(getCookie(CARELINKEU_TOKEN_COOKIE), 'value', ''),
                 },
             }),
@@ -282,12 +316,13 @@ var Client = exports.Client = function (options) {
 
         var reqO = {
             jar: jar,
-            gzip: true
+            gzip: true,
+            headers: {
+                Host: getHost(url),
+            },
         };
         if (CARELINK_EU) {
-            reqO.headers = {
-                Authorization: "Bearer " + _.get(getCookie(CARELINKEU_TOKEN_COOKIE), 'value', ''),
-            };
+            reqO.headers.Authorization = "Bearer " + _.get(getCookie(CARELINKEU_TOKEN_COOKIE), 'value', '');
         }
 
         var resp = request.get(
@@ -306,7 +341,7 @@ var Client = exports.Client = function (options) {
                     logger.log('Trying again in ' + timeout + ' second(s)...');
                     setTimeout(function () {
                         if (CARELINK_EU) {
-                            refreshTokenEu(function() {
+                            refreshTokenEu(function () {
                                 getConnectData(response, next, retryCount + 1);
                             });
                         } else {
