@@ -249,7 +249,17 @@ var Client = exports.Client = function (options) {
                     Authorization: "Bearer " + _.get(getCookie(CARELINKEU_TOKEN_COOKIE), 'value', ''),
                 },
             }),
-            checkResponseThen(next)
+            function (err, response) {
+                err = err || responseAsError(response);
+
+                if (err) {
+                    // reset cookie jar and do the login again
+                    jar = request.jar();
+                    checkLogin(next);
+                } else {
+                    next();
+                }
+            },
         );
     }
 
@@ -282,7 +292,13 @@ var Client = exports.Client = function (options) {
                     var timeout = retryDurationOnAttempt(retryCount);
                     logger.log('Trying again in ' + timeout + ' second(s)...');
                     setTimeout(function () {
-                        getConnectData(response, next, retryCount + 1);
+                        if (CARELINK_EU) {
+                            refreshTokenEu(function() {
+                                getConnectData(response, next, retryCount + 1);
+                            });
+                        } else {
+                            getConnectData(response, next, retryCount + 1);
+                        }
                     }, 1000 * timeout);
                 } else {
                     next(null, response);
@@ -305,9 +321,9 @@ var Client = exports.Client = function (options) {
         if (CARELINK_EU) {
             // EU - SSO method
             if (haveCookie(CARELINKEU_TOKEN_COOKIE)) {
-                let expire = new Date(Date.parse( _.get(getCookie(CARELINKEU_TOKENEXPIRE_COOKIE), 'value', '1970-01-01')));
+                let expire = new Date(Date.parse(_.get(getCookie(CARELINKEU_TOKENEXPIRE_COOKIE), 'value', '2999-01-01')));
 
-                if (expire < new Date(Date.now() - 5 * 1000 * 60)) {
+                if (expire < new Date(Date.now() - 10 * 1000 * 60)) {
                     refreshTokenEu(next);
                 } else {
                     next(null, null);
