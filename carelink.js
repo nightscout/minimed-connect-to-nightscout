@@ -65,6 +65,10 @@ var Client = exports.Client = function (options) {
         options.maxRetryDuration = DEFAULT_MAX_RETRY_DURATION;
     }
 
+    function retryDurationOnAttempt(n) {
+        return Math.pow(2, n);
+    }
+
     function getCookies() {
         let cookies = [];
         axios.defaults.jar.store.getAllCookies(function (err, cookieArray) {
