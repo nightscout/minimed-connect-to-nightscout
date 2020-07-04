@@ -217,14 +217,15 @@ var Client = exports.Client = function (options) {
     }
 
     async function fetch(callback) {
+        let data = null;
+        let error = null;
         try {
             let maxRetry = 3;
             for (let i = 1; i <= maxRetry; i++) {
                 await checkLogin();
                 try {
-                    let response = await getConnectData();
-                    callback(null, response.data);
-                    return;
+                    data = (await getConnectData()).data;
+                    break;
                 } catch (e1) {
                     if (i === maxRetry)
                         throw e1;
@@ -238,10 +239,10 @@ var Client = exports.Client = function (options) {
                     await sleep(1000 * timeout);
                 }
             }
-
-            throw new Error('Failed to download Carelink data');
         } catch (e) {
-            callback(`${e.toString()}\nstack: ${e.stack}`, null);
+            error = `${e.toString()}\nstack: ${e.stack}`;
+        } finally {
+            callback(error, data);
         }
     }
 
