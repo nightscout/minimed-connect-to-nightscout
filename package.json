@@ -5,10 +5,10 @@
   "author": "Mark Wilson <mark@warkmilson.com>",
   "repository": {
     "type": "git",
-    "url": "https://github.com/mddub/minimed-connect-to-nightscout.git"
+    "url": "https://github.com/nightscout/minimed-connect-to-nightscout.git"
   },
   "bugs": {
-    "url": "https://github.com/mddub/minimed-connect-to-nightscout/issues"
+    "url": "https://github.com/nightscout/minimed-connect-to-nightscout/issues"
   },
   "main": "index.js",
   "scripts": {

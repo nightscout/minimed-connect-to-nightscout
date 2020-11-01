@@ -1,7 +1,5 @@
 # minimed-connect-to-nightscout
 
-[![Circle CI](https://circleci.com/gh/mddub/minimed-connect-to-nightscout.svg?style=shield)](https://circleci.com/gh/mddub/minimed-connect-to-nightscout)
-
 [MiniMed Connect] is a device which communicates with a Medtronic insulin pump over 916MHz radio to gather data about pump status. This data may include readings from an Enlite continuous glucose monitor (CGM). The Connect forwards pump data via Bluetooth LE to a [proprietary app][connect-app] running on an iPhone. The iPhone app uploads the data to Medtronic's servers, enabling authorized users to view it on the [Medtronic CareLink Connect][carelink] website.
 
 [Nightscout] is an open source, DIY project that allows real-time access to CGM data on any platform. The core of the Nightscout project is [cgm-remote-monitor], a web service which can receive and broadcast CGM data using a Mongo database. Various other software projects communicate with an instance of `cgm-remote-monitor`, either to transmit data from a CGM device, or to display that CGM data on a computer, smartphone/tablet, or smartwatch.
@@ -28,7 +26,7 @@ Another turnkey installation option is to run this on a Heroku worker dyno. You 
 ## Installation in general
 
 1. Install [Node].
-1. Clone this repository or [download a zip] with the latest version.
+1. Clone this repository.
 1. `npm install` to install dependencies.
 1. Set environment variables (see below).
 1. `npm start` and leave it running.
@@ -97,9 +95,8 @@ This project is intended for educational and informational purposes only. It rel
 [azure-install]: http://www.nightscout.info/wiki/welcome/website-features/funnel-cake-0-8-features/minimed-connect-and-nightscout
 [Share2 Bridge instructions for Heroku]: https://github.com/bewest/share2nightscout-bridge/wiki/Deploy-to-Heroku
 [Node]: https://nodejs.org
-[download a zip]: https://github.com/mddub/minimed-connect-to-nightscout/archive/master.zip
 [azure-environment]: https://github.com/projectkudu/kudu/wiki/Azure-runtime-environment
 [this analysis]: https://gist.github.com/mddub/5e4a585508c93249eb51
-[run.js]: https://github.com/mddub/minimed-connect-to-nightscout/blob/master/run.js
-[File an issue]: https://github.com/mddub/minimed-connect-to-nightscout/issues
+[run.js]: https://github.com/nightscout/minimed-connect-to-nightscout/blob/master/run.js
+[File an issue]: https://github.com/nightscout/minimed-connect-to-nightscout/issues
 [mmcsv]: https://github.com/bewest/mmcsv
