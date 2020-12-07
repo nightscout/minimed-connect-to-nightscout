@@ -220,20 +220,17 @@ var Client = exports.Client = function (options) {
         let data = null;
         let error = null;
         try {
-            let maxRetry = 3;
+            let maxRetry = 1;
             for (let i = 1; i <= maxRetry; i++) {
-                await checkLogin();
                 try {
+                    await checkLogin();
                     data = (await getConnectData()).data;
                     break;
                 } catch (e1) {
+                    cookieJar.removeAllCookiesSync();
+
                     if (i === maxRetry)
                         throw e1;
-
-                    if (e1.response && e1.response.status === 401) {
-                        // reauth
-                        cookieJar.removeAllCookiesSync();
-                    }
 
                     let timeout = retryDurationOnAttempt(i);
                     await sleep(1000 * timeout);
