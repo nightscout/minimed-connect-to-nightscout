@@ -108,11 +108,12 @@ var Client = exports.Client = function (options) {
         var query = _.merge(qs.parse(url.query), CARELINKEU_LOGIN_LOCALE);
         url = urllib.format(_.merge(url, { search: null, query: query }));
 
-        logger.log('GET ' + url);
+        logger.log('EU login 1');
         return await axios.get(url);
     }
 
     async function doLoginEu2(response) {
+        logger.log(`EU login 2 (url: ${response.headers.location})`);
         return await axios.get(response.headers.location);
     }
 
@@ -122,6 +123,7 @@ var Client = exports.Client = function (options) {
 
         let url = `${uri.origin}${uri.pathname}?locale=${uriParam.get('locale')}&countrycode=${uriParam.get('countrycode')}`;
 
+        logger.log(`EU login 3 (url: ${url})`);
         response = await axios.post(url, qs.stringify({
             sessionID: uriParam.get('sessionID'),
             sessionData: uriParam.get('sessionData'),
@@ -139,6 +141,7 @@ var Client = exports.Client = function (options) {
     }
 
     async function doLoginEu4(response) {
+
         let regex = /(<form action=")(.*)" method="POST"/gm;
         let url = (regex.exec(response.data) || [])[2] || '';
 
@@ -149,6 +152,7 @@ var Client = exports.Client = function (options) {
         regex = /(<input type="hidden" name="sessionData" value=")(.*)"/gm;
         let sessionData = (regex.exec(response.data)[2] || []) || '';
 
+        logger.log(`EU login 4 (url: ${url}, sessionID: ${sessionId}, sessionData: ${sessionData})`);
         return await axios.post(url, qs.stringify({
             action: "consent",
             sessionID: sessionId,
@@ -161,10 +165,12 @@ var Client = exports.Client = function (options) {
     }
 
     async function doLoginEu5(response) {
+        logger.log(`EU login 5 (url: ${response.headers.location})`);
         return await axios.get(response.headers.location, {maxRedirects: 0});
     }
 
     async function refreshTokenEu() {
+        logger.log('Refresh EU token');
         return await axios.post(
             CARELINKEU_REFRESH_TOKEN_URL,
             {},
@@ -174,6 +180,8 @@ var Client = exports.Client = function (options) {
                 },
             },
         ).catch(async function (error) {
+            logger.log(`Refresh EU token failed (${error})`);
+
             if (error.response && error.response.status === 401) {
                 // Login again
                 await checkLogin();
@@ -234,7 +242,7 @@ var Client = exports.Client = function (options) {
         let data = null;
         let error = null;
         try {
-            let maxRetry = 3;
+            let maxRetry = 1; // No retry
             for (let i = 1; i <= maxRetry; i++) {
                 await checkLogin();
                 try {
