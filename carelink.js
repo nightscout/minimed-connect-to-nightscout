@@ -205,7 +205,7 @@ var Client = exports.Client = function (options) {
             })
             .catch(async function (error) {
                 logger.log(`Refresh EU token failed (${error})`);
-
+                deleteCookies();
                 await checkLogin(true);
             });
     }
@@ -219,7 +219,7 @@ var Client = exports.Client = function (options) {
     async function checkLogin(relogin = false) {
         if (CARELINK_EU) {
             // EU - SSO method
-            if (!relogin && haveCookie(CARELINKEU_TOKEN_COOKIE) || haveCookie(CARELINKEU_TOKENEXPIRE_COOKIE)) {
+            if (!relogin && (haveCookie(CARELINKEU_TOKEN_COOKIE) || haveCookie(CARELINKEU_TOKENEXPIRE_COOKIE))) {
                 let expire = new Date(Date.parse(_.get(getCookie(CARELINKEU_TOKENEXPIRE_COOKIE), 'value')));
 
                 // Refresh token if expires in 10 minutes
