@@ -83,9 +83,16 @@ function uploadMaybe(items, endpoint, callback) {
       // does not do the same for created_at, so we need to de-dupe them here.
       var newDeviceStatuses = filterDeviceStatus(transformed.devicestatus);
 
+      // Calculate interval by the device next upload time
+      let interval = config.deviceInterval - (data.currentServerTime - data.lastMedicalDeviceDataUpdateServerTime);
+      if (interval > config.deviceInterval)
+        interval = config.deviceInterval;
+
+      logger.log(`Next check ${Math.round(interval / 1000)}s later (at ${new Date(Date.now() + interval)})`)
+
       uploadMaybe(newSgvs, entriesUrl, function() {
         uploadMaybe(newDeviceStatuses, devicestatusUrl, function() {
-          setTimeout(requestLoop, config.interval);
+          setTimeout(requestLoop, interval);
         });
       });
     }
