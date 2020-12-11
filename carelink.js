@@ -40,6 +40,7 @@ var Client = exports.Client = function (options) {
     var cookieJar = new tough.CookieJar();
     axios.defaults.jar = new tough.CookieJar();
     axios.defaults.maxRedirects = 0;
+    axios.defaults.timeout = 10 * 1000;
     axios.defaults.withCredentials = true;
     axios.interceptors.response.use(function (response) {
         // Do something with response data
