@@ -1,1 +1,1 @@
-web: node --inspect ./run.js
+worker: node --inspect 9090 run.js
