@@ -32,12 +32,13 @@ var carelinkJsonUrlNow = function () {
 };
 
 var Client = exports.Client = function (options) {
+    let requestCount = 0;
+
     if (!(this instanceof Client)) {
         return new Client(arguments[0]);
     }
 
     axiosCookieJarSupport(axios);
-    var cookieJar = new tough.CookieJar();
     axios.defaults.jar = new tough.CookieJar();
     axios.defaults.maxRedirects = 0;
     axios.defaults.timeout = 10 * 1000;
@@ -55,6 +56,15 @@ var Client = exports.Client = function (options) {
             // Do something with response error
             return Promise.reject(error);
         }
+    });
+
+    axios.interceptors.request.use((config) => {
+        requestCount++;
+
+        if (requestCount > 10)
+            throw new Error("Request count exceeds the maximum in one fetch!");
+
+        return config;
     });
 
     if (options.maxRetryDuration === undefined) {
@@ -238,6 +248,8 @@ var Client = exports.Client = function (options) {
     }
 
     async function fetch(callback) {
+        requestCount = 0;
+
         let data = null;
         let error = null;
         try {
