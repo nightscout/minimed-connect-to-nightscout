@@ -1,1 +1,1 @@
-worker: node run.js
+web: node --inspect ./run.js
