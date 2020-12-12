@@ -88,7 +88,7 @@ function uploadMaybe(items, endpoint, callback) {
 
         // Calculate interval by the device next upload time
         let interval = config.deviceInterval - (data.currentServerTime - data.lastMedicalDeviceDataUpdateServerTime);
-        if (interval > config.deviceInterval)
+        if (interval > config.deviceInterval || interval < 0)
           interval = config.deviceInterval;
 
         logger.log(`Next check ${Math.round(interval / 1000)}s later (at ${new Date(Date.now() + interval)})`)
