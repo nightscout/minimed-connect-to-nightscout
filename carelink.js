@@ -6,6 +6,7 @@ var _ = require('lodash'),
     axiosCookieJarSupport = require('axios-cookiejar-support').default,
     tough = require('tough-cookie'),
     urllib = require('url'),
+    software = require('./package.json'),
     qs = require('qs');
 
 var logger = require('./logger');
@@ -32,6 +33,7 @@ var CARELINK_SECURITY_URL = 'https://' + carelinkServerAddress + '/patient/j_sec
 var CARELINK_AFTER_LOGIN_URL = 'https://' + carelinkServerAddress + '/patient/main/login.do';
 var CARELINK_JSON_BASE_URL = 'https://' + carelinkServerAddress + '/patient/connect/ConnectViewerServlet?cpSerialNumber=NONE&msgType=last24hours&requestTime=';
 var CARELINK_LOGIN_COOKIE = '_WL_AUTHCOOKIE_JSESSIONID';
+var user_agent_string = [software.name, software.version, software.bugs.url].join(' // ');
 
 var carelinkJsonUrlNow = function () {
     return (CARELINK_EU ? CARELINKEU_JSON_BASE_URL : CARELINK_JSON_BASE_URL) + Date.now();
@@ -50,7 +52,7 @@ var Client = exports.Client = function (options) {
     axios.defaults.timeout = 10 * 1000;
     axios.defaults.withCredentials = true;
     axios.defaults.headers.common = {
-        'User-Agent': null,
+        'User-Agent': user_agent_string
     };
     axios.interceptors.response.use(function (response) {
         // Do something with response data
@@ -194,7 +196,7 @@ var Client = exports.Client = function (options) {
         await axios.get(response.headers.location, {maxRedirects: 0});
         axios.defaults.headers.common = {
             'Authorization': `Bearer ${_.get(getCookie(CARELINKEU_TOKEN_COOKIE), 'value', '')}`,
-            'User-Agent': null,
+            'User-Agent': user_agent_string,
         };
     }
 
@@ -208,7 +210,6 @@ var Client = exports.Client = function (options) {
             .then(response => {
                 axios.defaults.headers.common = {
                     'Authorization': `Bearer ${_.get(getCookie(CARELINKEU_TOKEN_COOKIE), 'value', '')}`,
-                    'User-Agent': null,
                 };
             })
             .catch(async function (error) {
