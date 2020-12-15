@@ -25,7 +25,8 @@ var config = {
   interval: parseInt(readEnv('CARELINK_REQUEST_INTERVAL', 60 * 1000), 10),
   sgvLimit: parseInt(readEnv('CARELINK_SGV_LIMIT', 24), 10),
   maxRetryDuration: parseInt(readEnv('CARELINK_MAX_RETRY_DURATION', carelink.defaultMaxRetryDuration), 10),
-  verbose: !readEnv('CARELINK_QUIET')
+  verbose: !readEnv('CARELINK_QUIET'),
+  deviceInterval: 5.1 * 60 * 1000,
 };
 
 if (!config.username) {
@@ -68,26 +69,39 @@ function uploadMaybe(items, endpoint, callback) {
 }
 
 (function requestLoop() {
-  client.fetch(function(err, data) {
-    if (err) {
-      throw new Error(err);
-    } else {
-      var transformed = transform(data, config.sgvLimit);
+  try {
+    client.fetch(function(err, data) {
+      if (err) {
+        console.log(err);
+        setTimeout(requestLoop, config.deviceInterval);
+      } else {
+        let transformed = transform(data, config.sgvLimit);
 
-      // Because of Nightscout's upsert semantics and the fact that CareLink provides trend
-      // data only for the most recent sgv, we need to filter out sgvs we've already sent.
-      // Otherwise we'll overwrite existing sgv entries and remove their trend data.
-      var newSgvs = filterSgvs(transformed.entries);
+        // Because of Nightscout's upsert semantics and the fact that CareLink provides trend
+        // data only for the most recent sgv, we need to filter out sgvs we've already sent.
+        // Otherwise we'll overwrite existing sgv entries and remove their trend data.
+        let newSgvs = filterSgvs(transformed.entries);
 
-      // Nightscout's entries collection upserts based on date, but the devicestatus collection
-      // does not do the same for created_at, so we need to de-dupe them here.
-      var newDeviceStatuses = filterDeviceStatus(transformed.devicestatus);
+        // Nightscout's entries collection upserts based on date, but the devicestatus collection
+        // does not do the same for created_at, so we need to de-dupe them here.
+        let newDeviceStatuses = filterDeviceStatus(transformed.devicestatus);
 
-      uploadMaybe(newSgvs, entriesUrl, function() {
-        uploadMaybe(newDeviceStatuses, devicestatusUrl, function() {
-          setTimeout(requestLoop, config.interval);
+        // Calculate interval by the device next upload time
+        let interval = config.deviceInterval - (data.currentServerTime - data.lastMedicalDeviceDataUpdateServerTime);
+        if (interval > config.deviceInterval || interval < 0)
+          interval = config.deviceInterval;
+
+        logger.log(`Next check ${Math.round(interval / 1000)}s later (at ${new Date(Date.now() + interval)})`)
+
+        uploadMaybe(newSgvs, entriesUrl, function() {
+          uploadMaybe(newDeviceStatuses, devicestatusUrl, function() {
+            setTimeout(requestLoop, interval);
+          });
         });
-      });
-    }
-  });
+      }
+    });
+  } catch (error) {
+    console.error(error);
+    setTimeout(requestLoop, config.deviceInterval);
+  }
 })();

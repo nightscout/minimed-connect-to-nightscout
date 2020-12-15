@@ -2,12 +2,15 @@
 "use strict";
 
 var _ = require('lodash'),
-    common = require('common'),
-    qs = require('qs'),
+    axios = require('axios').default,
+    axiosCookieJarSupport = require('axios-cookiejar-support').default,
+    tough = require('tough-cookie'),
     urllib = require('url'),
-    request = require('request');
+    qs = require('qs');
 
 var logger = require('./logger');
+
+process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
 
 var MMCONNECT_SERVER = process.env['MMCONNECT_SERVER'];
 var CARELINK_EU = MMCONNECT_SERVER === 'EU';
@@ -21,8 +24,7 @@ var CARELINKEU_LOGIN_LOCALE = { country: DEFAULT_COUNTRYCODE, lang: DEFAULT_LANG
 var DEFAULT_MAX_RETRY_DURATION = module.exports.defaultMaxRetryDuration = 512;
 var carelinkServerAddress = MMCONNECT_SERVERNAME || (CARELINK_EU ? "carelink.minimed.eu" : "carelink.minimed.com");
 
-var CARELINKEU_SERVER_ADDRESS = 'https://' + carelinkServerAddress;
-var CARELINKEU_LOGIN1_URL = 'https://' + carelinkServerAddress + '/patient/sso/login?country=gb&lang=en';
+var CARELINKEU_LOGIN_URL = 'https://' + carelinkServerAddress + '/patient/sso/login?country=gb&lang=en';
 var CARELINKEU_REFRESH_TOKEN_URL = 'https://' + carelinkServerAddress + '/patient/sso/reauth';
 var CARELINKEU_JSON_BASE_URL = 'https://' + carelinkServerAddress + '/patient/connect/data?cpSerialNumber=NONE&msgType=last24hours&requestTime=';
 var CARELINKEU_TOKEN_COOKIE = 'auth_tmp_token';
@@ -37,70 +39,59 @@ var carelinkJsonUrlNow = function () {
     return (CARELINK_EU ? CARELINKEU_JSON_BASE_URL : CARELINK_JSON_BASE_URL) + Date.now();
 };
 
-function reqOptions(extra) {
-    var defaults = {
-        jar: true,
-        followRedirect: false,
-        rejectUnauthorized: false,
-        changeOrigin: true,
-        headers: {
-            Host: carelinkServerAddress,
-            Connection: 'keep-alive',
-            Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.10; rv:41.0) Gecko/20100101 Firefox/41.0',
-            'Accept-Encoding': 'gzip,deflate,sdch',
-            'Accept-Language': 'en-US,en;q=0.8'
-        }
-    };
-    return _.merge(defaults, extra);
-}
-
-/*function haveLoginCookie(jar) {
-    if (CARELINK_EU)
-        return _.some(jar.getCookies(CARELINKEU_SERVER_ADDRESS), {key: CARELINKEU_TOKEN_COOKIE});
-    else
-        return _.some(jar.getCookies(CARELINK_SECURITY_URL), {key: CARELINK_LOGIN_COOKIE});
-}*/
-
-function responseAsError(response) {
-    if (!(response.statusCode >= 200 && response.statusCode < 400)) {
-        return new Error(
-            "Bad response from CareLink: " +
-            JSON.stringify(_.merge(response, {'body': '<redacted>'}))
-        );
-    } else {
-        return null;
-    }
-}
-
-function checkResponseThen(fn) {
-    return function (err, response) {
-        err = err || responseAsError(response);
-        fn.apply(this, [err].concat(Array.prototype.slice.call(arguments, 1)));
-    };
-}
-
-function retryDurationOnAttempt(n) {
-    return Math.pow(2, n);
-}
-
-function totalDurationAfterNextRetry(n) {
-    var sum = 0;
-    for (var i = 0; i <= n; i++) {
-        sum += retryDurationOnAttempt(i);
-    }
-    return sum;
-}
-
 var Client = exports.Client = function (options) {
+    let requestCount = 0;
+
     if (!(this instanceof Client)) {
         return new Client(arguments[0]);
     }
 
-    var jar = request.jar();
+    axiosCookieJarSupport(axios);
+    axios.defaults.jar = new tough.CookieJar();
+    axios.defaults.maxRedirects = 0;
+    axios.defaults.timeout = 10 * 1000;
+    axios.defaults.withCredentials = true;
+    axios.defaults.headers.common = {
+        'User-Agent': null,
+    };
+    axios.interceptors.response.use(function (response) {
+        // Do something with response data
+        return response;
+    }, function (error) {
+        if (error.response && error.response.status >= 200 && error.response.status < 400) {
+            return error.response;
+        } else {
+            // Do something with response error
+            return Promise.reject(error);
+        }
+    });
+
+    axios.interceptors.request.use((config) => {
+        requestCount++;
+
+        if (requestCount > 10)
+            throw new Error("Request count exceeds the maximum in one fetch!");
+
+        return config;
+    });
+
+    if (options.maxRetryDuration === undefined) {
+        options.maxRetryDuration = DEFAULT_MAX_RETRY_DURATION;
+    }
+
+    function retryDurationOnAttempt(n) {
+        return Math.pow(2, n);
+    }
 
     function getCookies() {
-        return jar.getCookies(CARELINK_EU ? CARELINKEU_SERVER_ADDRESS : CARELINK_SECURITY_URL);
+        let cookies = [];
+        axios.defaults.jar.store.getAllCookies(function (err, cookieArray) {
+            if (err)
+                cookies = [];
+            cookies = cookieArray;
+        });
+
+        return cookies.filter(c => c.domain === carelinkServerAddress);
     }
 
     function haveCookie(cookieName) {
@@ -111,274 +102,195 @@ var Client = exports.Client = function (options) {
         return _.find(getCookies(), {key: cookieName});
     }
 
-    if (options.maxRetryDuration === undefined) {
-        options.maxRetryDuration = DEFAULT_MAX_RETRY_DURATION;
+    function deleteCookies() {
+        return axios.defaults.jar.removeAllCookiesSync();
     }
 
-    function doLogin(next) {
-        logger.log('POST ' + CARELINK_SECURITY_URL);
-        request.post(
+    function removeCookie(domain, path, key) {
+        return axios.defaults.jar.store.removeCookie(domain, path, key, function () {
+        });
+    }
+
+    function setCookie(domain, path, key, value) {
+        axios.defaults.jar.setCookieSync(`${key}=${value}`, `https://${domain}${path}`);
+    }
+
+    async function doLogin() {
+        return await axios.post(
             CARELINK_SECURITY_URL,
-            reqOptions({
-                jar: jar,
-                form: {j_username: options.username, j_password: options.password, j_character_encoding: "UTF-8"}
-            }),
-            checkResponseThen(next)
-        );
+            qs.stringify({
+                j_username: options.username,
+                j_password: options.password,
+                j_character_encoding: "UTF-8"
+            }));
     }
 
-    function doFetchCookie(response, next) {
-        logger.log('GET ' + CARELINK_AFTER_LOGIN_URL);
-        request.get(
-            CARELINK_AFTER_LOGIN_URL,
-            reqOptions({
-                jar: jar
-            }),
-            checkResponseThen(next)
-        );
+    async function doFetchCookie() {
+        return await axios.get(CARELINK_AFTER_LOGIN_URL);
     }
 
-    var params = function (url) {
-        let q = url.split('?'), result = {};
-        if (q.length >= 1) {
-            q[q.length >= 2 ? 1 : 0].split('&').forEach((item) => {
-                try {
-                    result[item.split('=')[0]] = item.split('=')[1];
-                } catch (e) {
-                    result[item.split('=')[0]] = '';
-                }
-            })
-        }
-        return result;
-    }
-
-    function doLoginEu1(next) {
-        let url = urllib.parse(CARELINKEU_LOGIN1_URL);
+    async function doLoginEu1() {
+        let url = urllib.parse(CARELINKEU_LOGIN_URL);
         var query = _.merge(qs.parse(url.query), CARELINKEU_LOGIN_LOCALE);
         url = urllib.format(_.merge(url, { search: null, query: query }));
 
-        logger.log('GET ' + url);
-
-        request.get(
-            url,
-            reqOptions({
-                jar: jar,
-            }),
-            checkResponseThen(next)
-        );
+        deleteCookies();
+        logger.log('EU login 1');
+        return await axios.get(url);
     }
 
-    function doLoginEu2(response, next) {
-        let url = response.headers.location;
-
-        logger.log('GET ' + url);
-
-        request.get(
-            url,
-            reqOptions({
-                jar: jar,
-            }),
-            checkResponseThen(next)
-        );
+    async function doLoginEu2(response) {
+        logger.log(`EU login 2 (url: ${response.headers.location})`);
+        return await axios.get(response.headers.location);
     }
 
-    function doLoginEu3(response, next) {
-        let uri = response.headers.location;
-        let url = urllib.parse(uri);
-        let query = qs.parse(url.query);
-        url = urllib.format(_.merge(url, {search: null, query: CARELINKEU_LOGIN_LOCALE}));
-        logger.log('POST ' + url);
+    async function doLoginEu3(response) {
+        let uri = new URL(response.headers.location);
+        let uriParam = uri.searchParams;
 
-        request.post(
-            url,
-            reqOptions({
-                jar: jar,
-                gzip: true,
-                form: {
-                    sessionID: query.sessionID,
-                    sessionData: query.sessionData,
-                    locale: "en",
-                    action: "login",
-                    username: options.username,
-                    password: options.password,
-                    actionButton: "Log in",
-                }
-            }),
-            checkResponseThen(next)
-        );
+        let url = `${uri.origin}${uri.pathname}?locale=${uriParam.get('locale')}&countrycode=${uriParam.get('countrycode')}`;
+
+        logger.log(`EU login 3 (url: ${url})`);
+        response = await axios.post(url, qs.stringify({
+            sessionID: uriParam.get('sessionID'),
+            sessionData: uriParam.get('sessionData'),
+            locale: "en",
+            action: "login",
+            username: options.username,
+            password: options.password,
+            actionButton: "Log in",
+        }));
+
+        if (_.get(response, 'data', '').includes(uri.pathname))
+            throw new Error('Carelink invalid username or password');
+
+        return response;
     }
 
-    function doLoginEu4(response, next) {
-        const regexUrl = /(<form action=")(.*)" method="POST"/gm;
-        let url = regexUrl.exec(response.body)[2] || '';
+    async function doLoginEu4(response) {
 
-        logger.log('GET ' + url);
+        let regex = /(<form action=")(.*)" method="POST"/gm;
+        let url = (regex.exec(response.data) || [])[2] || '';
 
         // Session data is changed, need to get it from the html body form
-        let ps = params(response.request.body);
-        const regex = /(<input type="hidden" name="sessionData" value=")(.*)"/gm;
-        ps.sessionData = regex.exec(response.body)[2] || '';
+        regex = /(<input type="hidden" name="sessionID" value=")(.*)"/gm;
+        let sessionId = (regex.exec(response.data) || [])[2] || '';
 
-        request.post(
-            url,
-            reqOptions({
-                jar: jar,
-                form: {
-                    action: "consent",
-                    sessionID: ps.sessionID,
-                    sessionData: ps.sessionData,
-                    response_type: "code",
-                    response_mode: "query",
-                }
-            }),
-            checkResponseThen(next)
-        );
+        regex = /(<input type="hidden" name="sessionData" value=")(.*)"/gm;
+        let sessionData = (regex.exec(response.data)[2] || []) || '';
+
+        logger.log(`EU login 4 (url: ${url}, sessionID: ${sessionId}, sessionData: ${sessionData})`);
+        return await axios.post(url, qs.stringify({
+            action: "consent",
+            sessionID: sessionId,
+            sessionData: sessionData,
+            response_type: "code",
+            response_mode: "query",
+        }), {
+            maxRedirects: 0,
+        });
     }
 
-    function doLoginEu5(response, next) {
-        let url = response.headers.location;
-
-        logger.log('GET ' + url);
-
-        request.get(
-            url,
-            reqOptions({
-                jar: jar,
-            }),
-            checkResponseThen(next)
-        );
-    }
-
-    function refreshTokenEu(next) {
-        logger.log('Refresh auth token');
-
-        request.post(
-            CARELINKEU_REFRESH_TOKEN_URL,
-            reqOptions({
-                jar: jar,
-                gzip: true,
-                json: true,
-                headers: {
-                    Authorization: "Bearer " + _.get(getCookie(CARELINKEU_TOKEN_COOKIE), 'value', ''),
-                },
-            }),
-            function (err, response) {
-                err = err || responseAsError(response);
-
-                if (err) {
-                    // reset cookie jar and do the login again
-                    jar = request.jar();
-                    checkLogin(next);
-                } else {
-                    next();
-                }
-            },
-        );
-    }
-
-    function getConnectData(response, next, retryCount) {
-        var url = carelinkJsonUrlNow();
-        logger.log('GET ' + url);
-
-        var reqO = {
-            jar: jar,
-            gzip: true
+    async function doLoginEu5(response) {
+        logger.log(`EU login 5 (url: ${response.headers.location})`);
+        await axios.get(response.headers.location, {maxRedirects: 0});
+        axios.defaults.headers.common = {
+            'Authorization': `Bearer ${_.get(getCookie(CARELINKEU_TOKEN_COOKIE), 'value', '')}`,
+            'User-Agent': null,
         };
-        if (CARELINK_EU) {
-            reqO.headers = {
-                Authorization: "Bearer " + _.get(getCookie(CARELINKEU_TOKEN_COOKIE), 'value', ''),
-            };
-        }
+    }
 
-        var resp = request.get(
-            url,
-            reqOptions(reqO),
-            checkResponseThen(function (err, response) {
-                if (err) {
-                    logger.log(err);
-                    if (retryCount === undefined) {
-                        retryCount = 0;
-                    } else if (totalDurationAfterNextRetry(retryCount) >= options.maxRetryDuration) {
-                        logger.log('Retried for too long (' + totalDurationAfterNextRetry(retryCount - 1) + ' seconds).');
-                        next(err);
-                    }
-                    var timeout = retryDurationOnAttempt(retryCount);
-                    logger.log('Trying again in ' + timeout + ' second(s)...');
-                    setTimeout(function () {
-                        if (CARELINK_EU) {
-                            refreshTokenEu(function() {
-                                getConnectData(response, next, retryCount + 1);
-                            });
-                        } else {
-                            getConnectData(response, next, retryCount + 1);
-                        }
-                    }, 1000 * timeout);
-                } else {
-                    next(null, response);
-                }
+    async function refreshTokenEu() {
+        logger.log('Refresh EU token');
+
+        removeCookie('carelink.minimed.eu', '/', 'codeVerifier')
+
+        return await axios
+            .post(CARELINKEU_REFRESH_TOKEN_URL)
+            .then(response => {
+                axios.defaults.headers.common = {
+                    'Authorization': `Bearer ${_.get(getCookie(CARELINKEU_TOKEN_COOKIE), 'value', '')}`,
+                    'User-Agent': null,
+                };
             })
-        );
+            .catch(async function (error) {
+                logger.log(`Refresh EU token failed (${error})`);
+                deleteCookies();
+                await checkLogin(true);
+            });
     }
 
-    function parseData(response, next) {
-        var parsed;
-        try {
-            parsed = JSON.parse(response.body);
-        } catch (e) {
-            next(e);
-        }
-        next(null, parsed);
+    async function getConnectData() {
+        var url = carelinkJsonUrlNow();
+        logger.log('GET data ' + url);
+        return await axios.get(url);
     }
 
-    function checkLogin(next) {
+    async function checkLogin(relogin = false) {
         if (CARELINK_EU) {
             // EU - SSO method
-            if (haveCookie(CARELINKEU_TOKEN_COOKIE)) {
-                let expire = new Date(Date.parse(_.get(getCookie(CARELINKEU_TOKENEXPIRE_COOKIE), 'value', '2999-01-01')));
+            if (!relogin && (haveCookie(CARELINKEU_TOKEN_COOKIE) || haveCookie(CARELINKEU_TOKENEXPIRE_COOKIE))) {
+                let expire = new Date(Date.parse(_.get(getCookie(CARELINKEU_TOKENEXPIRE_COOKIE), 'value')));
 
-                if (expire < new Date(Date.now() - 10 * 1000 * 60)) {
-                    refreshTokenEu(next);
-                } else {
-                    next(null, null);
-                }
+                // Refresh token if expires in 10 minutes
+                if (expire < new Date(Date.now() + 6 * 1000 * 60))
+                    await refreshTokenEu();
             } else {
-                common.step([
-                        doLoginEu1,
-                        doLoginEu2,
-                        doLoginEu3,
-                        doLoginEu4,
-                        doLoginEu5,
-                        next.bind(null, null),
-                    ],
-                );
+                logger.log('Logging in to CareLink');
+                let response = await doLoginEu1();
+                response = await doLoginEu2(response);
+                response = await doLoginEu3(response);
+                response = await doLoginEu4(response);
+                await doLoginEu5(response);
             }
         } else {
             // US - Cookie method
-            if (haveCookie(CARELINK_LOGIN_COOKIE)) {
-                next(null);
-            } else {
+            if (!haveCookie(CARELINK_LOGIN_COOKIE)) {
                 logger.log('Logging in to CareLink');
-
-                common.step([
-                        doLogin,
-                        doFetchCookie,
-                        next.bind(null, null)
-                    ]
-                );
+                let response = await doLogin()
+                await doFetchCookie(response)
             }
         }
     }
 
-    function fetch(callback) {
-        common.step(
-            [
-                checkLogin,
-                getConnectData,
-                parseData,
-                callback.bind(null, null),
-            ],
-            callback
-        );
+    function sleep(ms) {
+        return new Promise((resolve) => {
+            setTimeout(resolve, ms);
+        });
+    }
+
+    async function fetch(callback) {
+        requestCount = 0;
+
+        let data = null;
+        let error = null;
+        try {
+            let maxRetry = 1; // No retry
+            for (let i = 1; i <= maxRetry; i++) {
+                await checkLogin();
+                try {
+                    data = (await getConnectData()).data;
+                    break;
+                } catch (e1) {
+                    deleteCookies();
+
+                    if (i === maxRetry)
+                        throw e1;
+
+                    if (e1.response && e1.response.status === 401) {
+                        // reauth
+                        cookieJar.removeAllCookiesSync();
+                    }
+
+                    let timeout = retryDurationOnAttempt(i);
+                    await sleep(1000 * timeout);
+                }
+            }
+        } catch (e) {
+            error = `${e.toString()}\nstack: ${e.stack}`;
+        } finally {
+            callback(error, data);
+        }
     }
 
     return {
