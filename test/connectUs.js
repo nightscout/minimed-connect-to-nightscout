@@ -9,7 +9,7 @@ var _ = require('lodash'),
 
 var carelink = require('../carelink.js');
 
-describe('connectEu()', function() {
+describe('connectUS()', function() {
   var client = carelink.Client({
     username: "nstestuss",
     password: "ournightscoutustest",
