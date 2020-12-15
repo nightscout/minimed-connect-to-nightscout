@@ -5,6 +5,7 @@ var _ = require('lodash'),
     axios = require('axios').default,
     axiosCookieJarSupport = require('axios-cookiejar-support').default,
     tough = require('tough-cookie'),
+    urllib = require('url'),
     qs = require('qs');
 
 var logger = require('./logger');
@@ -19,7 +20,7 @@ var DEFAULT_LANGCODE = process.env['MMCONNECT_LANGCODE'] || 'en';
 var CARELINKEU_LOGIN_LOCALE = { country: DEFAULT_COUNTRYCODE, lang: DEFAULT_LANGCODE };
 
 var DEFAULT_MAX_RETRY_DURATION = module.exports.defaultMaxRetryDuration = 512;
-var carelinkServerAddress = CARELINK_EU ? "carelink.minimed.eu" : "carelink.minimed.com";
+var carelinkServerAddress = MMCONNECT_SERVERNAME || (CARELINK_EU ? "carelink.minimed.eu" : "carelink.minimed.com");
 
 var CARELINKEU_LOGIN_URL = 'https://' + carelinkServerAddress + '/patient/sso/login?country=gb&lang=en';
 var CARELINKEU_REFRESH_TOKEN_URL = 'https://' + carelinkServerAddress + '/patient/sso/reauth';
