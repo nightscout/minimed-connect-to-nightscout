@@ -34,12 +34,13 @@ var Client = exports.Client = function (options) {
         return new Client(arguments[0]);
     }
 
-    axiosCookieJarSupport(axios);
-    var cookieJar = new tough.CookieJar();
-    axios.defaults.jar = new tough.CookieJar();
-    axios.defaults.maxRedirects = 0;
-    axios.defaults.withCredentials = true;
-    axios.interceptors.response.use(function (response) {
+    const axiosInstance = axios.create({});
+
+    axiosCookieJarSupport(axiosInstance);
+    axiosInstance.defaults.jar = new tough.CookieJar();
+    axiosInstance.defaults.maxRedirects = 0;
+    axiosInstance.defaults.withCredentials = true;
+    axiosInstance.interceptors.response.use(function (response) {
         // Do something with response data
         return response;
     }, function (error) {
@@ -57,7 +58,7 @@ var Client = exports.Client = function (options) {
 
     function getCookies() {
         let cookies = [];
-        axios.defaults.jar.store.getAllCookies(function (err, cookieArray) {
+        axiosInstance.defaults.jar.store.getAllCookies(function (err, cookieArray) {
             if (err)
                 cookies = [];
             cookies = cookieArray;
@@ -75,7 +76,7 @@ var Client = exports.Client = function (options) {
     }
 
     async function doLogin() {
-        return await axios.post(
+        return await axiosInstance.post(
             CARELINK_SECURITY_URL,
             qs.stringify({
                 j_username: options.username,
@@ -85,15 +86,15 @@ var Client = exports.Client = function (options) {
     }
 
     async function doFetchCookie() {
-        return await axios.get(CARELINK_AFTER_LOGIN_URL);
+        return await axiosInstance.get(CARELINK_AFTER_LOGIN_URL);
     }
 
     async function doLoginEu1() {
-        return await axios.get(CARELINKEU_LOGIN_URL);
+        return await axiosInstance.get(CARELINKEU_LOGIN_URL);
     }
 
     async function doLoginEu2(response) {
-        return await axios.get(response.headers.location);
+        return await axiosInstance.get(response.headers.location);
     }
 
     async function doLoginEu3(response) {
@@ -102,7 +103,7 @@ var Client = exports.Client = function (options) {
 
         let url = `${uri.origin}${uri.pathname}?locale=${uriParam.get('locale')}&countrycode=${uriParam.get('countrycode')}`;
 
-        response = await axios.post(url, qs.stringify({
+        response = await axiosInstance.post(url, qs.stringify({
             sessionID: uriParam.get('sessionID'),
             sessionData: uriParam.get('sessionData'),
             locale: "en",
@@ -129,7 +130,7 @@ var Client = exports.Client = function (options) {
         regex = /(<input type="hidden" name="sessionData" value=")(.*)"/gm;
         let sessionData = (regex.exec(response.data)[2] || []) || '';
 
-        return await axios.post(url, qs.stringify({
+        return await axiosInstance.post(url, qs.stringify({
             action: "consent",
             sessionID: sessionId,
             sessionData: sessionData,
@@ -141,11 +142,11 @@ var Client = exports.Client = function (options) {
     }
 
     async function doLoginEu5(response) {
-        return await axios.get(response.headers.location, {maxRedirects: 0});
+        return await axiosInstance.get(response.headers.location, {maxRedirects: 0});
     }
 
     async function refreshTokenEu() {
-        return await axios.post(
+        return await axiosInstance.post(
             CARELINKEU_REFRESH_TOKEN_URL,
             {},
             {
@@ -174,7 +175,7 @@ var Client = exports.Client = function (options) {
             config.headers.Authorization = "Bearer " + _.get(getCookie(CARELINKEU_TOKEN_COOKIE), 'value', '');
         }
 
-        return await axios.get(url, config);
+        return await axiosInstance.get(url, config);
     }
 
     async function checkLogin() {
@@ -225,7 +226,7 @@ var Client = exports.Client = function (options) {
 
                     if (e1.response && e1.response.status === 401) {
                         // reauth
-                        cookieJar.removeAllCookiesSync();
+                        axiosInstance.defaults.jar.removeAllCookiesSync();
                     }
 
                     let timeout = retryDurationOnAttempt(i);
