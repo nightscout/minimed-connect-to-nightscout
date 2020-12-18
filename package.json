@@ -13,7 +13,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node run.js",
-    "test": "node_modules/.bin/mocha --timeout 10000"
+    "test": "make test"
   },
   "license": "MIT",
   "engines": {
