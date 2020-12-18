@@ -36,7 +36,7 @@ var CARELINK_LOGIN_COOKIE = '_WL_AUTHCOOKIE_JSESSIONID';
 var user_agent_string = [software.name, software.version, software.bugs.url].join(' // ');
 
 var carelinkJsonUrlNow = function () {
-    return (CARELINK_EU ? CARELINKEU_JSON_BASE_URL : CARELINK_JSON_BASE_URL) + Date.now();
+    return (1 || CARELINK_EU ? CARELINKEU_JSON_BASE_URL : CARELINK_JSON_BASE_URL) + Date.now();
 };
 
 var Client = exports.Client = function (options) {
@@ -228,7 +228,7 @@ var Client = exports.Client = function (options) {
     }
 
     async function checkLogin(relogin = false) {
-        if (CARELINK_EU) {
+        if (1 || CARELINK_EU) {
             // EU - SSO method
             if (!relogin && (haveCookie(CARELINKEU_TOKEN_COOKIE) || haveCookie(CARELINKEU_TOKENEXPIRE_COOKIE))) {
                 let expire = new Date(Date.parse(_.get(getCookie(CARELINKEU_TOKENEXPIRE_COOKIE), 'value')));
