@@ -5,19 +5,19 @@
   "author": "Mark Wilson <mark@warkmilson.com>",
   "repository": {
     "type": "git",
-    "url": "https://github.com/mddub/minimed-connect-to-nightscout.git"
+    "url": "https://github.com/nightscout/minimed-connect-to-nightscout.git"
   },
   "bugs": {
-    "url": "https://github.com/mddub/minimed-connect-to-nightscout/issues"
+    "url": "https://github.com/nightscout/minimed-connect-to-nightscout/issues"
   },
   "main": "index.js",
   "scripts": {
     "start": "node run.js",
-    "test": "node_modules/.bin/mocha"
+    "test": "node_modules/.bin/mocha --timeout 10000"
   },
   "license": "MIT",
   "engines": {
-    "node": "^10.15.2 || ^8.15.1",
+    "node": "^10.14.1 || ^8.15.1 || ^12.2.0",
     "npm": "^6.4.1"
   },
   "dependencies": {
