@@ -5,14 +5,23 @@ var _ = require('lodash'),
     axios = require('axios').default,
     axiosCookieJarSupport = require('axios-cookiejar-support').default,
     tough = require('tough-cookie'),
+    urllib = require('url'),
+    software = require('./package.json'),
     qs = require('qs');
 
 var logger = require('./logger');
 
-var CARELINK_EU = process.env['MMCONNECT_SERVER'] === 'EU';
+var MMCONNECT_SERVER = process.env['MMCONNECT_SERVER'];
+var CARELINK_EU = MMCONNECT_SERVER === 'EU';
+var MMCONNECT_SERVERNAME = process.env['MMCONNECT_SERVERNAME'];
+
+var DEFAULT_COUNTRYCODE = process.env['MMCONNECT_COUNTRYCODE'] || 'gb';
+var DEFAULT_LANGCODE = process.env['MMCONNECT_LANGCODE'] || 'en';
+
+var CARELINKEU_LOGIN_LOCALE = { country: DEFAULT_COUNTRYCODE, lang: DEFAULT_LANGCODE };
 
 var DEFAULT_MAX_RETRY_DURATION = module.exports.defaultMaxRetryDuration = 512;
-var carelinkServerAddress = CARELINK_EU ? "carelink.minimed.eu" : "carelink.minimed.com";
+var carelinkServerAddress = MMCONNECT_SERVERNAME || (CARELINK_EU ? "carelink.minimed.eu" : "carelink.minimed.com");
 
 var CARELINKEU_LOGIN_URL = 'https://' + carelinkServerAddress + '/patient/sso/login?country=gb&lang=en';
 var CARELINKEU_REFRESH_TOKEN_URL = 'https://' + carelinkServerAddress + '/patient/sso/reauth';
@@ -24,12 +33,15 @@ var CARELINK_SECURITY_URL = 'https://' + carelinkServerAddress + '/patient/j_sec
 var CARELINK_AFTER_LOGIN_URL = 'https://' + carelinkServerAddress + '/patient/main/login.do';
 var CARELINK_JSON_BASE_URL = 'https://' + carelinkServerAddress + '/patient/connect/ConnectViewerServlet?cpSerialNumber=NONE&msgType=last24hours&requestTime=';
 var CARELINK_LOGIN_COOKIE = '_WL_AUTHCOOKIE_JSESSIONID';
+var user_agent_string = [software.name, software.version, software.bugs.url].join(' // ');
 
 var carelinkJsonUrlNow = function () {
     return (CARELINK_EU ? CARELINKEU_JSON_BASE_URL : CARELINK_JSON_BASE_URL) + Date.now();
 };
 
 var Client = exports.Client = function (options) {
+    let requestCount = 0;
+
     if (!(this instanceof Client)) {
         return new Client(arguments[0]);
     }
@@ -39,7 +51,11 @@ var Client = exports.Client = function (options) {
     axiosCookieJarSupport(axiosInstance);
     axiosInstance.defaults.jar = new tough.CookieJar();
     axiosInstance.defaults.maxRedirects = 0;
+    axiosInstance.defaults.timeout = 10 * 1000;
     axiosInstance.defaults.withCredentials = true;
+    axiosInstance.defaults.headers.common = {
+        'User-Agent': user_agent_string
+    };
     axiosInstance.interceptors.response.use(function (response) {
         // Do something with response data
         return response;
@@ -52,8 +68,21 @@ var Client = exports.Client = function (options) {
         }
     });
 
+    axiosInstance.interceptors.request.use((config) => {
+        requestCount++;
+
+        if (requestCount > 10)
+            throw new Error("Request count exceeds the maximum in one fetch!");
+
+        return config;
+    });
+
     if (options.maxRetryDuration === undefined) {
         options.maxRetryDuration = DEFAULT_MAX_RETRY_DURATION;
+    }
+
+    function retryDurationOnAttempt(n) {
+        return Math.pow(2, n);
     }
 
     function getCookies() {
@@ -75,6 +104,19 @@ var Client = exports.Client = function (options) {
         return _.find(getCookies(), {key: cookieName});
     }
 
+    function deleteCookies() {
+        return axiosInstance.defaults.jar.removeAllCookiesSync();
+    }
+
+    function removeCookie(domain, path, key) {
+        return axiosInstance.defaults.jar.store.removeCookie(domain, path, key, function () {
+        });
+    }
+
+    function setCookie(domain, path, key, value) {
+        axiosInstance.defaults.jar.setCookieSync(`${key}=${value}`, `https://${domain}${path}`);
+    }
+
     async function doLogin() {
         return await axiosInstance.post(
             CARELINK_SECURITY_URL,
@@ -90,10 +132,17 @@ var Client = exports.Client = function (options) {
     }
 
     async function doLoginEu1() {
-        return await axiosInstance.get(CARELINKEU_LOGIN_URL);
+        let url = urllib.parse(CARELINKEU_LOGIN_URL);
+        var query = _.merge(qs.parse(url.query), CARELINKEU_LOGIN_LOCALE);
+        url = urllib.format(_.merge(url, { search: null, query: query }));
+
+        deleteCookies();
+        logger.log('EU login 1');
+        return await axiosInstance.get(url);
     }
 
     async function doLoginEu2(response) {
+        logger.log(`EU login 2 (url: ${response.headers.location})`);
         return await axiosInstance.get(response.headers.location);
     }
 
@@ -103,6 +152,7 @@ var Client = exports.Client = function (options) {
 
         let url = `${uri.origin}${uri.pathname}?locale=${uriParam.get('locale')}&countrycode=${uriParam.get('countrycode')}`;
 
+        logger.log(`EU login 3 (url: ${url})`);
         response = await axiosInstance.post(url, qs.stringify({
             sessionID: uriParam.get('sessionID'),
             sessionData: uriParam.get('sessionData'),
@@ -120,6 +170,7 @@ var Client = exports.Client = function (options) {
     }
 
     async function doLoginEu4(response) {
+
         let regex = /(<form action=")(.*)" method="POST"/gm;
         let url = (regex.exec(response.data) || [])[2] || '';
 
@@ -130,6 +181,7 @@ var Client = exports.Client = function (options) {
         regex = /(<input type="hidden" name="sessionData" value=")(.*)"/gm;
         let sessionData = (regex.exec(response.data)[2] || []) || '';
 
+        logger.log(`EU login 4 (url: ${url}, sessionID: ${sessionId}, sessionData: ${sessionData})`);
         return await axiosInstance.post(url, qs.stringify({
             action: "consent",
             sessionID: sessionId,
@@ -142,50 +194,47 @@ var Client = exports.Client = function (options) {
     }
 
     async function doLoginEu5(response) {
-        return await axiosInstance.get(response.headers.location, {maxRedirects: 0});
+        logger.log(`EU login 5 (url: ${response.headers.location})`);
+        await axiosInstance.get(response.headers.location, {maxRedirects: 0});
+        axiosInstance.defaults.headers.common = {
+            'Authorization': `Bearer ${_.get(getCookie(CARELINKEU_TOKEN_COOKIE), 'value', '')}`,
+            'User-Agent': user_agent_string,
+        };
     }
 
     async function refreshTokenEu() {
-        return await axiosInstance.post(
-            CARELINKEU_REFRESH_TOKEN_URL,
-            {},
-            {
-                headers: {
-                    Authorization: "Bearer " + _.get(getCookie(CARELINKEU_TOKEN_COOKIE), 'value', ''),
-                },
-            },
-        ).catch(async function (error) {
-            if (error.response && error.response.status === 401) {
-                // Login again
-                await checkLogin();
-            } else {
-                throw error;
-            }
-        });
+        logger.log('Refresh EU token');
+
+        removeCookie('carelink.minimed.eu', '/', 'codeVerifier')
+
+        return await axiosInstance
+            .post(CARELINKEU_REFRESH_TOKEN_URL)
+            .then(response => {
+                axiosInstance.defaults.headers.common = {
+                    'Authorization': `Bearer ${_.get(getCookie(CARELINKEU_TOKEN_COOKIE), 'value', '')}`,
+                };
+            })
+            .catch(async function (error) {
+                logger.log(`Refresh EU token failed (${error})`);
+                deleteCookies();
+                await checkLogin(true);
+            });
     }
 
     async function getConnectData() {
         var url = carelinkJsonUrlNow();
-        logger.log('GET ' + url);
-
-        var config = {
-            headers: {},
-        };
-        if (CARELINK_EU) {
-            config.headers.Authorization = "Bearer " + _.get(getCookie(CARELINKEU_TOKEN_COOKIE), 'value', '');
-        }
-
-        return await axiosInstance.get(url, config);
+        logger.log('GET data ' + url);
+        return await axiosInstance.get(url);
     }
 
-    async function checkLogin() {
+    async function checkLogin(relogin = false) {
         if (CARELINK_EU) {
             // EU - SSO method
-            if (haveCookie(CARELINKEU_TOKEN_COOKIE) || haveCookie(CARELINKEU_TOKENEXPIRE_COOKIE)) {
+            if (!relogin && (haveCookie(CARELINKEU_TOKEN_COOKIE) || haveCookie(CARELINKEU_TOKENEXPIRE_COOKIE))) {
                 let expire = new Date(Date.parse(_.get(getCookie(CARELINKEU_TOKENEXPIRE_COOKIE), 'value')));
 
                 // Refresh token if expires in 10 minutes
-                if (expire < new Date(Date.now() + 10 * 1000 * 60))
+                if (expire < new Date(Date.now() + 6 * 1000 * 60))
                     await refreshTokenEu();
             } else {
                 logger.log('Logging in to CareLink');
@@ -212,15 +261,20 @@ var Client = exports.Client = function (options) {
     }
 
     async function fetch(callback) {
+        requestCount = 0;
+
+        let data = null;
+        let error = null;
         try {
-            let maxRetry = 3;
+            let maxRetry = 1; // No retry
             for (let i = 1; i <= maxRetry; i++) {
                 await checkLogin();
                 try {
-                    let response = await getConnectData();
-                    callback(null, response.data);
-                    return;
+                    data = (await getConnectData()).data;
+                    break;
                 } catch (e1) {
+                    deleteCookies();
+
                     if (i === maxRetry)
                         throw e1;
 
@@ -233,10 +287,10 @@ var Client = exports.Client = function (options) {
                     await sleep(1000 * timeout);
                 }
             }
-
-            throw new Error('Failed to download Carelink data');
         } catch (e) {
-            callback(`${e.toString()}\nstack: ${e.stack}`, null);
+            error = `${e.toString()}\nstack: ${e.stack}`;
+        } finally {
+            callback(error, data);
         }
     }
 
