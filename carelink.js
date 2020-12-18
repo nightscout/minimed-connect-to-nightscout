@@ -268,8 +268,8 @@ var Client = exports.Client = function (options) {
         try {
             let maxRetry = 1; // No retry
             for (let i = 1; i <= maxRetry; i++) {
-                await checkLogin();
                 try {
+                    await checkLogin();
                     data = (await getConnectData()).data;
                     break;
                 } catch (e1) {
@@ -277,11 +277,6 @@ var Client = exports.Client = function (options) {
 
                     if (i === maxRetry)
                         throw e1;
-
-                    if (e1.response && e1.response.status === 401) {
-                        // reauth
-                        axiosInstance.defaults.jar.removeAllCookiesSync();
-                    }
 
                     let timeout = retryDurationOnAttempt(i);
                     await sleep(1000 * timeout);
