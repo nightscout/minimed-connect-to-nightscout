@@ -13,6 +13,11 @@ function readEnv(key, defaultVal) {
     // Azure prefixes environment variables with this
     process.env['CUSTOMCONNSTR_' + key] ||
     process.env['CUSTOMCONNSTR_' + key.toLowerCase()];
+
+  if (val === 'true') val = true;
+  if (val === 'false') val = false;
+  if (val === 'null') val = null;
+
   return val !== undefined ? val : defaultVal;
 }
 
@@ -25,7 +30,7 @@ var config = {
   interval: parseInt(readEnv('CARELINK_REQUEST_INTERVAL', 60 * 1000), 10),
   sgvLimit: parseInt(readEnv('CARELINK_SGV_LIMIT', 24), 10),
   maxRetryDuration: parseInt(readEnv('CARELINK_MAX_RETRY_DURATION', carelink.defaultMaxRetryDuration), 10),
-  verbose: !readEnv('CARELINK_QUIET'),
+  verbose: !readEnv('CARELINK_QUIET', true),
   deviceInterval: 5.1 * 60 * 1000,
 };
 
