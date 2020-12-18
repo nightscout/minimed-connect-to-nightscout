@@ -10,7 +10,7 @@ module.exports = (function() {
     },
     log: function(str) {
       if(verbose_) {
-        console.log(new Date() + ' ' + str);
+        console.log(new Date(), arguments); 
       }
     }
   };

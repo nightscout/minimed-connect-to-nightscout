@@ -3,6 +3,7 @@
 "use strict";
 
 process.env['MMCONNECT_SERVER'] = "EU";
+process.env['MMCONNECT_COUNTRYCODE'] = "gb";
 
 var _ = require('lodash'),
   expect = require('expect.js');

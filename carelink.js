@@ -14,32 +14,36 @@ var logger = require('./logger');
 var MMCONNECT_SERVER = process.env['MMCONNECT_SERVER'];
 var CARELINK_EU = MMCONNECT_SERVER === 'EU';
 var MMCONNECT_SERVERNAME = process.env['MMCONNECT_SERVERNAME'];
+var DEFAULT_CARELINKSERVERADDRESS = MMCONNECT_SERVERNAME || (CARELINK_EU ? "carelink.minimed.eu" : "carelink.minimed.com");
 
 var DEFAULT_COUNTRYCODE = process.env['MMCONNECT_COUNTRYCODE'] || 'gb';
 var DEFAULT_LANGCODE = process.env['MMCONNECT_LANGCODE'] || 'en';
 
-var CARELINKEU_LOGIN_LOCALE = { country: DEFAULT_COUNTRYCODE, lang: DEFAULT_LANGCODE };
-
-var DEFAULT_MAX_RETRY_DURATION = module.exports.defaultMaxRetryDuration = 512;
-var carelinkServerAddress = MMCONNECT_SERVERNAME || (CARELINK_EU ? "carelink.minimed.eu" : "carelink.minimed.com");
-
-var CARELINKEU_LOGIN_URL = 'https://' + carelinkServerAddress + '/patient/sso/login?country=gb&lang=en';
-var CARELINKEU_REFRESH_TOKEN_URL = 'https://' + carelinkServerAddress + '/patient/sso/reauth';
-var CARELINKEU_JSON_BASE_URL = 'https://' + carelinkServerAddress + '/patient/connect/data?cpSerialNumber=NONE&msgType=last24hours&requestTime=';
-var CARELINKEU_TOKEN_COOKIE = 'auth_tmp_token';
-var CARELINKEU_TOKENEXPIRE_COOKIE = 'c_token_valid_to';
-
-var CARELINK_SECURITY_URL = 'https://' + carelinkServerAddress + '/patient/j_security_check';
-var CARELINK_AFTER_LOGIN_URL = 'https://' + carelinkServerAddress + '/patient/main/login.do';
-var CARELINK_JSON_BASE_URL = 'https://' + carelinkServerAddress + '/patient/connect/ConnectViewerServlet?cpSerialNumber=NONE&msgType=last24hours&requestTime=';
-var CARELINK_LOGIN_COOKIE = '_WL_AUTHCOOKIE_JSESSIONID';
-var user_agent_string = [software.name, software.version, software.bugs.url].join(' // ');
-
-var carelinkJsonUrlNow = function () {
-    return (1 || CARELINK_EU ? CARELINKEU_JSON_BASE_URL : CARELINK_JSON_BASE_URL) + Date.now();
-};
 
 var Client = exports.Client = function (options) {
+  var CARELINKEU_LOGIN_LOCALE = { country: options.countrycode || DEFAULT_COUNTRYCODE
+                                , lang: options.lang || DEFAULT_LANGCODE };
+
+  var DEFAULT_MAX_RETRY_DURATION = module.exports.defaultMaxRetryDuration = 512;
+  if (options.server && options.server.toUpperCase( ) == 'EU') { options.server = 'carelink.minimed.eu'; }
+  var serverName = options.server || DEFAULT_CARELINKSERVERADDRESS;
+  var carelinkServerAddress = serverName;
+
+  var CARELINKEU_LOGIN_URL = 'https://' + carelinkServerAddress + '/patient/sso/login?country=gb&lang=en';
+  var CARELINKEU_REFRESH_TOKEN_URL = 'https://' + carelinkServerAddress + '/patient/sso/reauth';
+  var CARELINKEU_JSON_BASE_URL = 'https://' + carelinkServerAddress + '/patient/connect/data?cpSerialNumber=NONE&msgType=last24hours&requestTime=';
+  var CARELINKEU_TOKEN_COOKIE = 'auth_tmp_token';
+  var CARELINKEU_TOKENEXPIRE_COOKIE = 'c_token_valid_to';
+
+  var CARELINK_SECURITY_URL = 'https://' + carelinkServerAddress + '/patient/j_security_check';
+  var CARELINK_AFTER_LOGIN_URL = 'https://' + carelinkServerAddress + '/patient/main/login.do';
+  var CARELINK_JSON_BASE_URL = 'https://' + carelinkServerAddress + '/patient/connect/ConnectViewerServlet?cpSerialNumber=NONE&msgType=last24hours&requestTime=';
+  var CARELINK_LOGIN_COOKIE = '_WL_AUTHCOOKIE_JSESSIONID';
+  var user_agent_string = [software.name, software.version, software.bugs.url].join(' // ');
+
+  var carelinkJsonUrlNow = function () {
+      return (1 || CARELINK_EU ? CARELINKEU_JSON_BASE_URL : CARELINK_JSON_BASE_URL) + Date.now();
+  };
     let requestCount = 0;
 
     if (!(this instanceof Client)) {
@@ -137,7 +141,7 @@ var Client = exports.Client = function (options) {
         url = urllib.format(_.merge(url, { search: null, query: query }));
 
         deleteCookies();
-        logger.log('EU login 1');
+        logger.log('EU login 1', url);
         return await axiosInstance.get(url);
     }
 
