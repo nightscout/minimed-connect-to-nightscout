@@ -73,7 +73,7 @@ function uploadMaybe(items, endpoint, callback) {
   }
 }
 
-(function requestLoop() {
+function requestLoop() {
   try {
     client.fetch(function(err, data) {
       if (err) {
@@ -109,4 +109,13 @@ function uploadMaybe(items, endpoint, callback) {
     console.error(error);
     setTimeout(requestLoop, config.deviceInterval);
   }
-})();
+}
+
+function getRandomInt(max) {
+  return Math.floor(Math.random() * Math.floor(max));
+}
+
+// Safety function to avoid ban for managed environments (it only happens once, on the start)
+let waitTime = getRandomInt(3 * 60 * 1000);
+console.log(`[MMConnect] Wait ${Math.round(waitTime / 1000)} seconds before start`);
+setTimeout(requestLoop, waitTime);
