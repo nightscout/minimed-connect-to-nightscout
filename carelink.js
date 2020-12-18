@@ -46,15 +46,17 @@ var Client = exports.Client = function (options) {
         return new Client(arguments[0]);
     }
 
-    axiosCookieJarSupport(axios);
-    axios.defaults.jar = new tough.CookieJar();
-    axios.defaults.maxRedirects = 0;
-    axios.defaults.timeout = 10 * 1000;
-    axios.defaults.withCredentials = true;
-    axios.defaults.headers.common = {
+    const axiosInstance = axios.create({});
+
+    axiosCookieJarSupport(axiosInstance);
+    axiosInstance.defaults.jar = new tough.CookieJar();
+    axiosInstance.defaults.maxRedirects = 0;
+    axiosInstance.defaults.timeout = 10 * 1000;
+    axiosInstance.defaults.withCredentials = true;
+    axiosInstance.defaults.headers.common = {
         'User-Agent': user_agent_string
     };
-    axios.interceptors.response.use(function (response) {
+    axiosInstance.interceptors.response.use(function (response) {
         // Do something with response data
         return response;
     }, function (error) {
@@ -66,7 +68,7 @@ var Client = exports.Client = function (options) {
         }
     });
 
-    axios.interceptors.request.use((config) => {
+    axiosInstance.interceptors.request.use((config) => {
         requestCount++;
 
         if (requestCount > 10)
@@ -85,7 +87,7 @@ var Client = exports.Client = function (options) {
 
     function getCookies() {
         let cookies = [];
-        axios.defaults.jar.store.getAllCookies(function (err, cookieArray) {
+        axiosInstance.defaults.jar.store.getAllCookies(function (err, cookieArray) {
             if (err)
                 cookies = [];
             cookies = cookieArray;
@@ -103,20 +105,20 @@ var Client = exports.Client = function (options) {
     }
 
     function deleteCookies() {
-        return axios.defaults.jar.removeAllCookiesSync();
+        return axiosInstance.defaults.jar.removeAllCookiesSync();
     }
 
     function removeCookie(domain, path, key) {
-        return axios.defaults.jar.store.removeCookie(domain, path, key, function () {
+        return axiosInstance.defaults.jar.store.removeCookie(domain, path, key, function () {
         });
     }
 
     function setCookie(domain, path, key, value) {
-        axios.defaults.jar.setCookieSync(`${key}=${value}`, `https://${domain}${path}`);
+        axiosInstance.defaults.jar.setCookieSync(`${key}=${value}`, `https://${domain}${path}`);
     }
 
     async function doLogin() {
-        return await axios.post(
+        return await axiosInstance.post(
             CARELINK_SECURITY_URL,
             qs.stringify({
                 j_username: options.username,
@@ -126,7 +128,7 @@ var Client = exports.Client = function (options) {
     }
 
     async function doFetchCookie() {
-        return await axios.get(CARELINK_AFTER_LOGIN_URL);
+        return await axiosInstance.get(CARELINK_AFTER_LOGIN_URL);
     }
 
     async function doLoginEu1() {
@@ -138,12 +140,12 @@ var Client = exports.Client = function (options) {
 
         deleteCookies();
         logger.log('EU login 1');
-        return await axios.get(url);
+        return await axiosInstance.get(url);
     }
 
     async function doLoginEu2(response) {
         logger.log(`EU login 2 (url: ${response.headers.location})`);
-        return await axios.get(response.headers.location);
+        return await axiosInstance.get(response.headers.location);
     }
 
     async function doLoginEu3(response) {
@@ -153,7 +155,7 @@ var Client = exports.Client = function (options) {
         let url = `${uri.origin}${uri.pathname}?locale=${uriParam.get('locale')}&countrycode=${uriParam.get('countrycode')}`;
 
         logger.log(`EU login 3 (url: ${url})`);
-        response = await axios.post(url, qs.stringify({
+        response = await axiosInstance.post(url, qs.stringify({
             sessionID: uriParam.get('sessionID'),
             sessionData: uriParam.get('sessionData'),
             locale: "en",
@@ -182,7 +184,7 @@ var Client = exports.Client = function (options) {
         let sessionData = (regex.exec(response.data)[2] || []) || '';
 
         logger.log(`EU login 4 (url: ${url}, sessionID: ${sessionId}, sessionData: ${sessionData})`);
-        return await axios.post(url, qs.stringify({
+        return await axiosInstance.post(url, qs.stringify({
             action: "consent",
             sessionID: sessionId,
             sessionData: sessionData,
@@ -195,8 +197,8 @@ var Client = exports.Client = function (options) {
 
     async function doLoginEu5(response) {
         logger.log(`EU login 5 (url: ${response.headers.location})`);
-        await axios.get(response.headers.location, {maxRedirects: 0});
-        axios.defaults.headers.common = {
+        await axiosInstance.get(response.headers.location, {maxRedirects: 0});
+        axiosInstance.defaults.headers.common = {
             'Authorization': `Bearer ${_.get(getCookie(CARELINKEU_TOKEN_COOKIE), 'value', '')}`,
             'User-Agent': user_agent_string,
         };
@@ -207,10 +209,10 @@ var Client = exports.Client = function (options) {
 
         removeCookie('carelink.minimed.eu', '/', 'codeVerifier')
 
-        return await axios
+        return await axiosInstance
             .post(CARELINKEU_REFRESH_TOKEN_URL)
             .then(response => {
-                axios.defaults.headers.common = {
+                axiosInstance.defaults.headers.common = {
                     'Authorization': `Bearer ${_.get(getCookie(CARELINKEU_TOKEN_COOKIE), 'value', '')}`,
                     'User-Agent': user_agent_string,
                 };
@@ -225,7 +227,7 @@ var Client = exports.Client = function (options) {
     async function getConnectData() {
         var url = carelinkJsonUrlNow();
         logger.log('GET data ' + url);
-        return await axios.get(url);
+        return await axiosInstance.get(url);
     }
 
     async function checkLogin(relogin = false) {
