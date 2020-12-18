@@ -53,9 +53,6 @@ var Client = exports.Client = function (options) {
     axiosInstance.defaults.maxRedirects = 0;
     axiosInstance.defaults.timeout = 10 * 1000;
     axiosInstance.defaults.withCredentials = true;
-    axiosInstance.defaults.headers.common = {
-        'User-Agent': user_agent_string
-    };
     axiosInstance.interceptors.response.use(function (response) {
         // Do something with response data
         return response;
@@ -73,6 +70,9 @@ var Client = exports.Client = function (options) {
 
         if (requestCount > 10)
             throw new Error("Request count exceeds the maximum in one fetch!");
+
+
+        config.headers['User-Agent'] = user_agent_string;
 
         return config;
     });
@@ -200,7 +200,6 @@ var Client = exports.Client = function (options) {
         await axiosInstance.get(response.headers.location, {maxRedirects: 0});
         axiosInstance.defaults.headers.common = {
             'Authorization': `Bearer ${_.get(getCookie(CARELINKEU_TOKEN_COOKIE), 'value', '')}`,
-            'User-Agent': user_agent_string,
         };
     }
 
@@ -214,7 +213,6 @@ var Client = exports.Client = function (options) {
             .then(response => {
                 axiosInstance.defaults.headers.common = {
                     'Authorization': `Bearer ${_.get(getCookie(CARELINKEU_TOKEN_COOKIE), 'value', '')}`,
-                    'User-Agent': user_agent_string,
                 };
             })
             .catch(async function (error) {
