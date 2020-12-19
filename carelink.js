@@ -57,9 +57,6 @@ var Client = exports.Client = function (options) {
     axiosInstance.defaults.maxRedirects = 0;
     axiosInstance.defaults.timeout = 10 * 1000;
     axiosInstance.defaults.withCredentials = true;
-    axiosInstance.defaults.headers.common = {
-        'User-Agent': user_agent_string
-    };
     axiosInstance.interceptors.response.use(function (response) {
         // Do something with response data
         return response;
@@ -77,6 +74,9 @@ var Client = exports.Client = function (options) {
 
         if (requestCount > 10)
             throw new Error("Request count exceeds the maximum in one fetch!");
+
+
+        config.headers['User-Agent'] = user_agent_string;
 
         return config;
     });
@@ -136,6 +136,8 @@ var Client = exports.Client = function (options) {
     }
 
     async function doLoginEu1() {
+        deleteCookies();
+        logger.log('EU login 1');
         let url = urllib.parse(CARELINKEU_LOGIN_URL);
         var query = _.merge(qs.parse(url.query), CARELINKEU_LOGIN_LOCALE);
         url = urllib.format(_.merge(url, { search: null, query: query }));
@@ -200,16 +202,16 @@ var Client = exports.Client = function (options) {
     async function doLoginEu5(response) {
         logger.log(`EU login 5 (url: ${response.headers.location})`);
         await axiosInstance.get(response.headers.location, {maxRedirects: 0});
+
+        removeCookie('carelink.minimed.eu', '/', 'codeVerifier')
+
         axiosInstance.defaults.headers.common = {
             'Authorization': `Bearer ${_.get(getCookie(CARELINKEU_TOKEN_COOKIE), 'value', '')}`,
-            'User-Agent': user_agent_string,
         };
     }
 
     async function refreshTokenEu() {
         logger.log('Refresh EU token');
-
-        removeCookie('carelink.minimed.eu', '/', 'codeVerifier')
 
         return await axiosInstance
             .post(CARELINKEU_REFRESH_TOKEN_URL)
@@ -219,7 +221,7 @@ var Client = exports.Client = function (options) {
                 };
             })
             .catch(async function (error) {
-                logger.log(`Refresh EU token failed (${error})`);
+                console.error(`[MMConnect] Refresh EU token failed (${error})`);
                 deleteCookies();
                 await checkLogin(true);
             });
@@ -237,8 +239,8 @@ var Client = exports.Client = function (options) {
             if (!relogin && (haveCookie(CARELINKEU_TOKEN_COOKIE) || haveCookie(CARELINKEU_TOKENEXPIRE_COOKIE))) {
                 let expire = new Date(Date.parse(_.get(getCookie(CARELINKEU_TOKENEXPIRE_COOKIE), 'value')));
 
-                // Refresh token if expires in 10 minutes
-                if (expire < new Date(Date.now() + 6 * 1000 * 60))
+                // Refresh token if expires in 6 minutes
+                if (expire < new Date(Date.now() + 6 * 60 * 1000))
                     await refreshTokenEu();
             } else {
                 logger.log('Logging in to CareLink');

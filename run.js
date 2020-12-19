@@ -13,6 +13,11 @@ function readEnv(key, defaultVal) {
     // Azure prefixes environment variables with this
     process.env['CUSTOMCONNSTR_' + key] ||
     process.env['CUSTOMCONNSTR_' + key.toLowerCase()];
+
+  if (val === 'true') val = true;
+  if (val === 'false') val = false;
+  if (val === 'null') val = null;
+
   return val !== undefined ? val : defaultVal;
 }
 
@@ -25,7 +30,7 @@ var config = {
   interval: parseInt(readEnv('CARELINK_REQUEST_INTERVAL', 60 * 1000), 10),
   sgvLimit: parseInt(readEnv('CARELINK_SGV_LIMIT', 24), 10),
   maxRetryDuration: parseInt(readEnv('CARELINK_MAX_RETRY_DURATION', carelink.defaultMaxRetryDuration), 10),
-  verbose: !readEnv('CARELINK_QUIET'),
+  verbose: !readEnv('CARELINK_QUIET', true),
   deviceInterval: 5.1 * 60 * 1000,
 };
 
@@ -68,7 +73,7 @@ function uploadMaybe(items, endpoint, callback) {
   }
 }
 
-(function requestLoop() {
+function requestLoop() {
   try {
     client.fetch(function(err, data) {
       if (err) {
@@ -104,4 +109,13 @@ function uploadMaybe(items, endpoint, callback) {
     console.error(error);
     setTimeout(requestLoop, config.deviceInterval);
   }
-})();
+}
+
+function getRandomInt(max) {
+  return Math.floor(Math.random() * Math.floor(max));
+}
+
+// Safety function to avoid ban for managed environments (it only happens once, on the start)
+let waitTime = getRandomInt(3 * 60 * 1000);
+console.log(`[MMConnect] Wait ${Math.round(waitTime / 1000)} seconds before start`);
+setTimeout(requestLoop, waitTime);
