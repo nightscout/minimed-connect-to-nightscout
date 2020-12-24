@@ -218,6 +218,7 @@ var Client = exports.Client = function (options) {
             .then(response => {
                 axiosInstance.defaults.headers.common = {
                     'Authorization': `Bearer ${_.get(getCookie(CARELINKEU_TOKEN_COOKIE), 'value', '')}`,
+                    'Cookie': ''
                 };
             })
             .catch(async function (error) {
