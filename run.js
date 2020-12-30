@@ -116,6 +116,7 @@ function getRandomInt(max) {
 }
 
 // Safety function to avoid ban for managed environments (it only happens once, on the start)
-let waitTime = getRandomInt(3 * 60 * 1000);
+let waitTime = 0;
+if (process.env.RANDOMIZE_INIT) { waitTime = getRandomInt(3 * 60 * 1000); }
 console.log(`[MMConnect] Wait ${Math.round(waitTime / 1000)} seconds before start`);
 setTimeout(requestLoop, waitTime);
