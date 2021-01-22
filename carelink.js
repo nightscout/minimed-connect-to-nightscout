@@ -16,7 +16,7 @@ var CARELINK_EU = MMCONNECT_SERVER === 'EU';
 var MMCONNECT_SERVERNAME = process.env['MMCONNECT_SERVERNAME'];
 var DEFAULT_CARELINKSERVERADDRESS = MMCONNECT_SERVERNAME || (CARELINK_EU ? "carelink.minimed.eu" : "carelink.minimed.com");
 
-var DEFAULT_COUNTRYCODE = process.env['MMCONNECT_COUNTRYCODE'] || 'gb';
+var DEFAULT_COUNTRYCODE = process.env['MMCONNECT_COUNTRYCODE'] || 'au';
 var DEFAULT_LANGCODE = process.env['MMCONNECT_LANGCODE'] || 'en';
 
 
@@ -29,7 +29,7 @@ var Client = exports.Client = function (options) {
   var serverName = options.server || DEFAULT_CARELINKSERVERADDRESS;
   var carelinkServerAddress = serverName;
 
-  var CARELINKEU_LOGIN_URL = 'https://' + carelinkServerAddress + '/patient/sso/login?country=gb&lang=en';
+  var CARELINKEU_LOGIN_URL = 'https://' + carelinkServerAddress + '/patient/sso/login?country=au&lang=en';
   var CARELINKEU_REFRESH_TOKEN_URL = 'https://' + carelinkServerAddress + '/patient/sso/reauth';
   var CARELINKEU_JSON_BASE_URL = 'https://' + carelinkServerAddress + '/patient/connect/data?cpSerialNumber=NONE&msgType=last24hours&requestTime=';
   var CARELINKEU_TOKEN_COOKIE = 'auth_tmp_token';
