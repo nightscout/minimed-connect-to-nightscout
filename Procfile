@@ -1,1 +1,1 @@
-worker: node run.js
+worker: NODE_ENV=production node run.js
