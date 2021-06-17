@@ -1,6 +1,10 @@
 /* jshint node: true */
 "use strict";
 
+// load environment vars
+const dotenv = require('dotenv');
+dotenv.config();
+
 var carelink = require('./carelink'),
   filter = require('./filter'),
   logger = require('./logger'),

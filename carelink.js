@@ -277,7 +277,13 @@ var Client = exports.Client = function (options) {
             for (let i = 1; i <= maxRetry; i++) {
                 try {
                     await checkLogin();
-                    data = (await getConnectData()).data;
+
+                    const res = await axiosInstance.post('https://clcloud.minimed.com/connect/v2/display/message', {
+                        username: 'claysmith',
+                        role: 'patient'
+                    });
+                    data = res.data;
+
                     break;
                 } catch (e1) {
                     deleteCookies();
