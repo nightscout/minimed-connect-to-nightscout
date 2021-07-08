@@ -279,7 +279,7 @@ var Client = exports.Client = function (options) {
                     await checkLogin();
 
                     const res = await axiosInstance.post('https://clcloud.minimed.com/connect/v2/display/message', {
-                        username: 'claysmith',
+                        username: options.username,
                         role: 'patient'
                     });
                     data = res.data;
