@@ -1,6 +1,12 @@
 /* jshint node: true */
 "use strict";
 
+// load environment vars in dev env
+if (process.env['NODE_ENV'] !== 'production') {
+  const dotenv = require('dotenv');
+  dotenv.config();
+}
+
 var carelink = require('./carelink'),
   filter = require('./filter'),
   logger = require('./logger'),

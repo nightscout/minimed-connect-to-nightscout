@@ -42,7 +42,7 @@ function parsePumpTime(pumpTimeString, offset, medicalDeviceFamily) {
   if (process.env['MMCONNECT_SERVER'] === 'EU' || medicalDeviceFamily === 'GUARDIAN') {
     return Date.parse(pumpTimeString);
   } else {
-    return Date.parse(pumpTimeString + ' ' + offset);
+    return Date.parse(pumpTimeString.slice(0, pumpTimeString.length - (pumpTimeString.charAt(pumpTimeString.length - 1) === 'Z' ? 1 : 6)) + offset);
   }
 }
 
@@ -61,10 +61,10 @@ var guessPumpOffset = (function () {
   // always close to a whole number of hours, and can be used to guess the pump's timezone:
   // https://gist.github.com/mddub/f673570e6427c93784bf
   return function (data) {
-    var pumpTimeAsIfUTC = Date.parse(data['sMedicalDeviceTime'] + ' +0');
+    var pumpTimeAsIfUTC = Date.parse(data['sMedicalDeviceTime']);
     var serverTimeUTC = data['currentServerTime'];
     var hours = Math.round((pumpTimeAsIfUTC - serverTimeUTC) / (60 * 60 * 1000));
-    var offset = (hours >= 0 ? '+' : '-') + (Math.abs(hours) < 10 ? '0' : '') + Math.abs(hours) + '00';
+    var offset = (hours >= 0 ? '+' : '-') + (Math.abs(hours) < 10 ? '0' : '') + Math.abs(hours) + ':00';
     if (offset !== lastGuess) {
       logger.log('Guessed pump timezone ' + offset + ' (pump time: "' + data['sMedicalDeviceTime'] + '"; server time: ' + new Date(data['currentServerTime']) + ')');
     }
