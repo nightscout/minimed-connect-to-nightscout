@@ -35,13 +35,18 @@ var Client = exports.Client = function (options) {
   var CARELINKEU_TOKEN_COOKIE = 'auth_tmp_token';
   var CARELINKEU_TOKENEXPIRE_COOKIE = 'c_token_valid_to';
 
+  var CARELINK_ME_URL = 'https://' + carelinkServerAddress + '/patient/users/me';
+  var CARELINK_COUNTRY_SETTINGS_URL = 'https://' + carelinkServerAddress + '/patient/countries/settings?countryCode='+(options.countrycode || DEFAULT_COUNTRYCODE)+'&language='+(options.lang || DEFAULT_LANGCODE);
   var CARELINK_SECURITY_URL = 'https://' + carelinkServerAddress + '/patient/j_security_check';
   var CARELINK_AFTER_LOGIN_URL = 'https://' + carelinkServerAddress + '/patient/main/login.do';
   var CARELINK_JSON_BASE_URL = 'https://' + carelinkServerAddress + '/patient/connect/ConnectViewerServlet?cpSerialNumber=NONE&msgType=last24hours&requestTime=';
   var CARELINK_LOGIN_COOKIE = '_WL_AUTHCOOKIE_JSESSIONID';
   var user_agent_string = [software.name, software.version, software.bugs.url].join(' // ');
 
-  var carelinkJsonUrlNow = function () {
+  var getCurrentRole = async function() {
+    return (await axiosInstance.get(CARELINK_ME_URL))?.data?.role?.toUpperCase();
+  }
+  var carelinkJsonUrlNow = async function () {
       return (1 || CARELINK_EU ? CARELINKEU_JSON_BASE_URL : CARELINK_JSON_BASE_URL) + Date.now();
   };
     let requestCount = 0;
@@ -229,9 +234,27 @@ var Client = exports.Client = function (options) {
     }
 
     async function getConnectData() {
-        var url = carelinkJsonUrlNow();
+      var currentRole=await getCurrentRole();
+
+      if(currentRole === "CARE_PARTNER_OUS" || currentRole === "CARE_PARTNER") {
+          var dataRetrievalUrl = (await axiosInstance.get(CARELINK_COUNTRY_SETTINGS_URL))?.data.blePereodicDataEndpoint;
+          if(dataRetrievalUrl) {
+                logger.log('GET data (as carepartner) ' + dataRetrievalUrl);
+                var body = {
+                    username: options.username,
+                    role: "carepartner"
+                };
+                return await axiosInstance.post(dataRetrievalUrl,body,{
+                    
+                });
+          } else {
+            throw new Error('Unable to retrieve data retrieval url for carepartner account');
+          }
+      } else {
+        var url = await carelinkJsonUrlNow();
         logger.log('GET data ' + url);
         return await axiosInstance.get(url);
+      }
     }
 
     async function checkLogin(relogin = false) {
