@@ -43,17 +43,13 @@ var Client = exports.Client = function (options) {
   var CARELINK_LOGIN_COOKIE = '_WL_AUTHCOOKIE_JSESSIONID';
   var user_agent_string = [software.name, software.version, software.bugs.url].join(' // ');
 
-  var carepartner = false;
-
+  var getCurrentRole = async function() {
+    var resp = (await axiosInstance.get(CARELINK_ME_URL));
+    if (resp && resp.data && resp.data.role) {
+      return resp.data.role.toUpperCase( );
+    }
+  }
   var carelinkJsonUrlNow = async function () {
-      var currentRole=(await axiosInstance.get(CARELINK_ME_URL))?.data?.role?.toUpperCase();
-      if(currentRole === "CARE_PARTNER_OUS" || currentRole === "CARE_PARTNER") {
-          var dataRetrievalUrl = (await axiosInstance.get(CARELINK_COUNTRY_SETTINGS_URL))?.data.blePereodicDataEndpoint;
-          if(dataRetrievalUrl) {
-              carepartner = true;
-              return dataRetrievalUrl;
-          }
-      }
       return (1 || CARELINK_EU ? CARELINKEU_JSON_BASE_URL : CARELINK_JSON_BASE_URL) + Date.now();
   };
     let requestCount = 0;
@@ -241,20 +237,31 @@ var Client = exports.Client = function (options) {
     }
 
     async function getConnectData() {
+      var currentRole=await getCurrentRole();
+
+      if(currentRole === "CARE_PARTNER_OUS" || currentRole === "CARE_PARTNER") {
+          var dataRetrievalUrl = null;
+          var resp = (await axiosInstance.get(CARELINK_COUNTRY_SETTINGS_URL));
+          if (resp && resp.data && resp.data.blePereodicDataEndpoint) {
+            dataRetrievalUrl = resp.data.blePereodicDataEndpoint;
+          }
+          if(dataRetrievalUrl) {
+                logger.log('GET data (as carepartner) ' + dataRetrievalUrl);
+                var body = {
+                    username: options.username,
+                    role: "carepartner"
+                };
+                return await axiosInstance.post(dataRetrievalUrl,body,{
+                    
+                });
+          } else {
+            throw new Error('Unable to retrieve data retrieval url for carepartner account');
+          }
+      } else {
         var url = await carelinkJsonUrlNow();
-        if(carepartner) {
-            logger.log('GET data (as carepartner) ' + url);
-            var body = {
-                username: options.username,
-                role: "carepartner"
-            };
-            return await axiosInstance.post(url,body,{
-                
-            });
-        } else {
-            logger.log('GET data ' + url);
-            return await axiosInstance.get(url);
-        }
+        logger.log('GET data ' + url);
+        return await axiosInstance.get(url);
+      }
     }
 
     async function checkLogin(relogin = false) {
