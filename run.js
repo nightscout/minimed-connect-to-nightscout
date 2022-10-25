@@ -1,5 +1,6 @@
 /* jshint node: true */
 "use strict";
+const fs = require('fs');
 
 var carelink = require('./carelink'),
   filter = require('./filter'),
@@ -73,6 +74,17 @@ function uploadMaybe(items, endpoint, callback) {
   }
 }
 
+function deleteFileIfExists(path) {
+  fs.exists(path, function(exists) {
+    if(exists) {
+        console.log('File exists. Deleting now ...');
+        fs.unlinkSync(path);
+    } else {
+        console.log('File not found, so not deleting.');
+    }
+  });
+}
+
 function requestLoop() {
   try {
     client.fetch(function(err, data) {
@@ -80,7 +92,16 @@ function requestLoop() {
         console.log(err);
         setTimeout(requestLoop, config.deviceInterval);
       } else {
+        var dataPath = '/Users/asopleo/workspace/minimed-connect-to-nightscout/carelink-data.json';
+        var transformedPath = '/Users/asopleo/workspace/minimed-connect-to-nightscout/carelink-transformed.json';
+
+        var jsonData = JSON.stringify(data,undefined,4);
+        deleteFileIfExists(dataPath);
+        fs.writeFileSync(dataPath,jsonData);
         let transformed = transform(data, config.sgvLimit);
+        var transformedData = JSON.stringify(transformed.devicestatus,undefined,4);
+        deleteFileIfExists(transformedPath);
+        fs.writeFileSync(transformedPath,transformedData);
 
         // Because of Nightscout's upsert semantics and the fact that CareLink provides trend
         // data only for the most recent sgv, we need to filter out sgvs we've already sent.
@@ -98,11 +119,11 @@ function requestLoop() {
 
         logger.log(`Next check ${Math.round(interval / 1000)}s later (at ${new Date(Date.now() + interval)})`)
 
-        uploadMaybe(newSgvs, entriesUrl, function() {
+        //uploadMaybe(newSgvs, entriesUrl, function() {
           uploadMaybe(newDeviceStatuses, devicestatusUrl, function() {
             setTimeout(requestLoop, interval);
           });
-        });
+        //});
       }
     });
   } catch (error) {

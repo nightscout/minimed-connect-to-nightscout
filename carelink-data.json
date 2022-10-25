@@ -1,0 +1,3277 @@
+{
+    "lastSensorTS": 0,
+    "medicalDeviceTimeAsString": "2022-10-25T08:51:18.461-00:00",
+    "lastSensorTSAsString": "2022-10-25T08:51:00.000Z",
+    "kind": "BLENGP",
+    "version": 2,
+    "pumpModelNumber": "MMT-1886",
+    "currentServerTime": 1666680828344,
+    "lastConduitTime": 0,
+    "lastConduitUpdateServerTime": 1666680760240,
+    "lastMedicalDeviceDataUpdateServerTime": 1666680760240,
+    "firstName": "Leon",
+    "lastName": "Brouwers",
+    "conduitSerialNumber": "BC45A5-3E01-F3A4-4DFA-0000-0000-0000-0000",
+    "conduitBatteryLevel": 93,
+    "conduitBatteryStatus": "FULL",
+    "conduitInRange": true,
+    "conduitMedicalDeviceInRange": true,
+    "conduitSensorInRange": true,
+    "medicalDeviceFamily": "NGP",
+    "sensorState": "NO_ERROR_MESSAGE",
+    "medicalDeviceSerialNumber": "NG3016981H",
+    "medicalDeviceTime": 0,
+    "sMedicalDeviceTime": "2022-10-25T08:51:18.461-00:00",
+    "reservoirLevelPercent": 41,
+    "reservoirAmount": 300,
+    "reservoirRemainingUnits": 125.8,
+    "medicalDeviceBatteryLevelPercent": 75,
+    "sensorDurationHours": 122,
+    "timeToNextCalibHours": 11,
+    "calibStatus": "LESS_THAN_TWELVE_HRS",
+    "bgUnits": "MGDL",
+    "timeFormat": "HR_24",
+    "lastSensorTime": 0,
+    "sLastSensorTime": "2022-10-25T08:51:00.000Z",
+    "medicalDeviceSuspended": true,
+    "lastSGTrend": "NONE",
+    "lastSG": {
+        "sg": 79,
+        "datetime": "2022-10-25T08:51:00.000Z",
+        "timeChange": false,
+        "sensorState": "NO_ERROR_MESSAGE",
+        "kind": "SG",
+        "version": 1,
+        "relativeOffset": -18
+    },
+    "lastAlarm": {
+        "code": 803,
+        "datetime": "2022-10-25T08:34:18.000-00:00",
+        "type": "ALARM",
+        "flash": false,
+        "instanceId": 3512,
+        "messageId": "BC_SID_LOW_SG_INSULIN_DELIVERY_SUSPENDED_SINCE_X_CHECK_BG",
+        "secondaryTime": "07:21",
+        "sg": 63,
+        "pumpDeliverySuspendState": false,
+        "referenceGUID": "9bb3926a-f481-35ae-b2f3-df18b524d901",
+        "kind": "ALARM",
+        "version": 1
+    },
+    "activeInsulin": {
+        "amount": 0.125,
+        "datetime": "2022-10-25T08:51:18.461Z",
+        "precision": "THOUSANDS",
+        "kind": "Insulin",
+        "version": 1
+    },
+    "sgs": [
+        {
+            "sg": 89,
+            "datetime": "2022-10-24T08:56:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -86118
+        },
+        {
+            "sg": 83,
+            "datetime": "2022-10-24T09:01:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -85818
+        },
+        {
+            "sg": 78,
+            "datetime": "2022-10-24T09:06:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -85518
+        },
+        {
+            "sg": 72,
+            "datetime": "2022-10-24T09:11:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -85218
+        },
+        {
+            "sg": 68,
+            "datetime": "2022-10-24T09:16:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -84918
+        },
+        {
+            "sg": 70,
+            "datetime": "2022-10-24T09:21:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -84618
+        },
+        {
+            "sg": 72,
+            "datetime": "2022-10-24T09:26:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -84318
+        },
+        {
+            "sg": 76,
+            "datetime": "2022-10-24T09:31:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -84018
+        },
+        {
+            "sg": 81,
+            "datetime": "2022-10-24T09:36:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -83718
+        },
+        {
+            "sg": 87,
+            "datetime": "2022-10-24T09:41:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -83418
+        },
+        {
+            "sg": 93,
+            "datetime": "2022-10-24T09:46:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -83118
+        },
+        {
+            "sg": 100,
+            "datetime": "2022-10-24T09:51:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -82818
+        },
+        {
+            "sg": 107,
+            "datetime": "2022-10-24T09:56:01.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -82517
+        },
+        {
+            "sg": 114,
+            "datetime": "2022-10-24T10:01:01.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -82217
+        },
+        {
+            "sg": 120,
+            "datetime": "2022-10-24T10:06:01.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -81917
+        },
+        {
+            "sg": 125,
+            "datetime": "2022-10-24T10:11:01.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -81617
+        },
+        {
+            "sg": 127,
+            "datetime": "2022-10-24T10:16:01.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -81317
+        },
+        {
+            "sg": 127,
+            "datetime": "2022-10-24T10:21:01.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -81017
+        },
+        {
+            "sg": 128,
+            "datetime": "2022-10-24T10:26:01.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -80717
+        },
+        {
+            "sg": 132,
+            "datetime": "2022-10-24T10:31:01.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -80417
+        },
+        {
+            "sg": 137,
+            "datetime": "2022-10-24T10:36:01.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -80117
+        },
+        {
+            "sg": 141,
+            "datetime": "2022-10-24T10:41:01.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -79817
+        },
+        {
+            "sg": 144,
+            "datetime": "2022-10-24T10:46:01.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -79517
+        },
+        {
+            "sg": 145,
+            "datetime": "2022-10-24T10:51:01.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -79217
+        },
+        {
+            "sg": 148,
+            "datetime": "2022-10-24T10:56:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -78918
+        },
+        {
+            "sg": 151,
+            "datetime": "2022-10-24T11:01:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -78618
+        },
+        {
+            "sg": 154,
+            "datetime": "2022-10-24T11:06:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -78318
+        },
+        {
+            "sg": 158,
+            "datetime": "2022-10-24T11:11:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -78018
+        },
+        {
+            "sg": 159,
+            "datetime": "2022-10-24T11:16:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -77718
+        },
+        {
+            "sg": 161,
+            "datetime": "2022-10-24T11:21:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -77418
+        },
+        {
+            "sg": 165,
+            "datetime": "2022-10-24T11:26:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -77118
+        },
+        {
+            "sg": 167,
+            "datetime": "2022-10-24T11:31:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -76818
+        },
+        {
+            "sg": 172,
+            "datetime": "2022-10-24T11:36:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -76518
+        },
+        {
+            "sg": 169,
+            "datetime": "2022-10-24T11:41:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -76218
+        },
+        {
+            "sg": 165,
+            "datetime": "2022-10-24T11:46:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -75918
+        },
+        {
+            "sg": 161,
+            "datetime": "2022-10-24T11:51:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -75618
+        },
+        {
+            "sg": 160,
+            "datetime": "2022-10-24T11:56:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -75318
+        },
+        {
+            "sg": 162,
+            "datetime": "2022-10-24T12:01:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -75018
+        },
+        {
+            "sg": 164,
+            "datetime": "2022-10-24T12:06:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -74718
+        },
+        {
+            "sg": 162,
+            "datetime": "2022-10-24T12:11:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -74418
+        },
+        {
+            "sg": 154,
+            "datetime": "2022-10-24T12:16:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -74118
+        },
+        {
+            "sg": 145,
+            "datetime": "2022-10-24T12:21:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -73818
+        },
+        {
+            "sg": 139,
+            "datetime": "2022-10-24T12:26:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -73518
+        },
+        {
+            "sg": 134,
+            "datetime": "2022-10-24T12:31:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -73218
+        },
+        {
+            "sg": 132,
+            "datetime": "2022-10-24T12:36:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -72918
+        },
+        {
+            "sg": 132,
+            "datetime": "2022-10-24T12:41:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -72618
+        },
+        {
+            "sg": 134,
+            "datetime": "2022-10-24T12:46:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -72318
+        },
+        {
+            "sg": 137,
+            "datetime": "2022-10-24T12:51:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -72018
+        },
+        {
+            "sg": 136,
+            "datetime": "2022-10-24T12:56:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -71718
+        },
+        {
+            "sg": 131,
+            "datetime": "2022-10-24T13:01:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -71418
+        },
+        {
+            "sg": 130,
+            "datetime": "2022-10-24T13:06:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -71118
+        },
+        {
+            "sg": 134,
+            "datetime": "2022-10-24T13:11:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -70818
+        },
+        {
+            "sg": 143,
+            "datetime": "2022-10-24T13:16:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -70518
+        },
+        {
+            "sg": 155,
+            "datetime": "2022-10-24T13:21:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -70218
+        },
+        {
+            "sg": 165,
+            "datetime": "2022-10-24T13:26:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -69918
+        },
+        {
+            "sg": 168,
+            "datetime": "2022-10-24T13:31:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -69618
+        },
+        {
+            "sg": 169,
+            "datetime": "2022-10-24T13:36:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -69318
+        },
+        {
+            "sg": 170,
+            "datetime": "2022-10-24T13:41:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -69018
+        },
+        {
+            "sg": 172,
+            "datetime": "2022-10-24T13:46:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -68718
+        },
+        {
+            "sg": 178,
+            "datetime": "2022-10-24T13:51:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -68418
+        },
+        {
+            "sg": 188,
+            "datetime": "2022-10-24T13:56:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -68118
+        },
+        {
+            "sg": 196,
+            "datetime": "2022-10-24T14:01:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -67818
+        },
+        {
+            "sg": 200,
+            "datetime": "2022-10-24T14:06:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -67518
+        },
+        {
+            "sg": 205,
+            "datetime": "2022-10-24T14:11:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -67218
+        },
+        {
+            "sg": 212,
+            "datetime": "2022-10-24T14:16:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -66918
+        },
+        {
+            "sg": 222,
+            "datetime": "2022-10-24T14:21:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -66618
+        },
+        {
+            "sg": 220,
+            "datetime": "2022-10-24T14:26:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -66318
+        },
+        {
+            "sg": 226,
+            "datetime": "2022-10-24T14:31:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -66018
+        },
+        {
+            "sg": 225,
+            "datetime": "2022-10-24T14:36:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -65718
+        },
+        {
+            "sg": 222,
+            "datetime": "2022-10-24T14:41:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -65418
+        },
+        {
+            "sg": 216,
+            "datetime": "2022-10-24T14:46:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -65118
+        },
+        {
+            "sg": 210,
+            "datetime": "2022-10-24T14:51:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -64818
+        },
+        {
+            "sg": 202,
+            "datetime": "2022-10-24T14:56:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -64518
+        },
+        {
+            "sg": 197,
+            "datetime": "2022-10-24T15:01:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -64218
+        },
+        {
+            "sg": 195,
+            "datetime": "2022-10-24T15:06:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -63918
+        },
+        {
+            "sg": 194,
+            "datetime": "2022-10-24T15:11:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -63618
+        },
+        {
+            "sg": 193,
+            "datetime": "2022-10-24T15:16:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -63318
+        },
+        {
+            "sg": 189,
+            "datetime": "2022-10-24T15:21:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -63018
+        },
+        {
+            "sg": 181,
+            "datetime": "2022-10-24T15:26:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -62718
+        },
+        {
+            "sg": 170,
+            "datetime": "2022-10-24T15:31:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -62418
+        },
+        {
+            "sg": 162,
+            "datetime": "2022-10-24T15:36:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -62118
+        },
+        {
+            "sg": 154,
+            "datetime": "2022-10-24T15:41:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -61818
+        },
+        {
+            "sg": 144,
+            "datetime": "2022-10-24T15:46:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -61518
+        },
+        {
+            "sg": 132,
+            "datetime": "2022-10-24T15:51:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -61218
+        },
+        {
+            "sg": 127,
+            "datetime": "2022-10-24T15:56:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -60918
+        },
+        {
+            "sg": 116,
+            "datetime": "2022-10-24T16:01:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -60618
+        },
+        {
+            "sg": 113,
+            "datetime": "2022-10-24T16:06:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -60318
+        },
+        {
+            "sg": 105,
+            "datetime": "2022-10-24T16:11:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -60018
+        },
+        {
+            "sg": 96,
+            "datetime": "2022-10-24T16:16:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -59718
+        },
+        {
+            "sg": 86,
+            "datetime": "2022-10-24T16:21:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -59418
+        },
+        {
+            "sg": 75,
+            "datetime": "2022-10-24T16:26:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -59118
+        },
+        {
+            "sg": 65,
+            "datetime": "2022-10-24T16:31:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -58818
+        },
+        {
+            "sg": 57,
+            "datetime": "2022-10-24T16:36:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -58518
+        },
+        {
+            "sg": 51,
+            "datetime": "2022-10-24T16:41:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -58218
+        },
+        {
+            "sg": 48,
+            "datetime": "2022-10-24T16:46:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -57918
+        },
+        {
+            "sg": 55,
+            "datetime": "2022-10-24T16:51:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -57618
+        },
+        {
+            "sg": 63,
+            "datetime": "2022-10-24T16:56:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -57318
+        },
+        {
+            "sg": 71,
+            "datetime": "2022-10-24T17:01:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -57018
+        },
+        {
+            "sg": 76,
+            "datetime": "2022-10-24T17:06:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -56718
+        },
+        {
+            "sg": 79,
+            "datetime": "2022-10-24T17:11:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -56418
+        },
+        {
+            "sg": 82,
+            "datetime": "2022-10-24T17:16:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -56118
+        },
+        {
+            "sg": 84,
+            "datetime": "2022-10-24T17:21:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -55818
+        },
+        {
+            "sg": 86,
+            "datetime": "2022-10-24T17:26:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -55518
+        },
+        {
+            "sg": 87,
+            "datetime": "2022-10-24T17:31:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -55218
+        },
+        {
+            "sg": 89,
+            "datetime": "2022-10-24T17:36:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -54918
+        },
+        {
+            "sg": 91,
+            "datetime": "2022-10-24T17:41:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -54618
+        },
+        {
+            "sg": 95,
+            "datetime": "2022-10-24T17:46:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -54318
+        },
+        {
+            "sg": 102,
+            "datetime": "2022-10-24T17:51:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -54018
+        },
+        {
+            "sg": 111,
+            "datetime": "2022-10-24T17:56:01.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -53717
+        },
+        {
+            "sg": 117,
+            "datetime": "2022-10-24T18:01:01.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -53417
+        },
+        {
+            "sg": 113,
+            "datetime": "2022-10-24T18:06:01.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -53117
+        },
+        {
+            "sg": 113,
+            "datetime": "2022-10-24T18:11:01.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -52817
+        },
+        {
+            "sg": 112,
+            "datetime": "2022-10-24T18:16:01.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -52517
+        },
+        {
+            "sg": 112,
+            "datetime": "2022-10-24T18:21:01.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -52217
+        },
+        {
+            "sg": 114,
+            "datetime": "2022-10-24T18:26:01.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -51917
+        },
+        {
+            "sg": 115,
+            "datetime": "2022-10-24T18:31:01.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -51617
+        },
+        {
+            "sg": 114,
+            "datetime": "2022-10-24T18:36:01.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -51317
+        },
+        {
+            "sg": 111,
+            "datetime": "2022-10-24T18:41:01.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -51017
+        },
+        {
+            "sg": 106,
+            "datetime": "2022-10-24T18:46:01.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -50717
+        },
+        {
+            "sg": 99,
+            "datetime": "2022-10-24T18:51:01.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -50417
+        },
+        {
+            "sg": 91,
+            "datetime": "2022-10-24T18:56:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -50118
+        },
+        {
+            "sg": 86,
+            "datetime": "2022-10-24T19:01:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -49818
+        },
+        {
+            "sg": 83,
+            "datetime": "2022-10-24T19:06:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -49518
+        },
+        {
+            "sg": 82,
+            "datetime": "2022-10-24T19:11:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -49218
+        },
+        {
+            "sg": 83,
+            "datetime": "2022-10-24T19:16:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -48918
+        },
+        {
+            "sg": 84,
+            "datetime": "2022-10-24T19:21:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -48618
+        },
+        {
+            "sg": 84,
+            "datetime": "2022-10-24T19:26:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -48318
+        },
+        {
+            "sg": 83,
+            "datetime": "2022-10-24T19:31:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -48018
+        },
+        {
+            "sg": 77,
+            "datetime": "2022-10-24T19:36:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -47718
+        },
+        {
+            "sg": 72,
+            "datetime": "2022-10-24T19:41:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -47418
+        },
+        {
+            "sg": 67,
+            "datetime": "2022-10-24T19:46:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -47118
+        },
+        {
+            "sg": 65,
+            "datetime": "2022-10-24T19:51:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -46818
+        },
+        {
+            "sg": 67,
+            "datetime": "2022-10-24T19:56:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -46518
+        },
+        {
+            "sg": 68,
+            "datetime": "2022-10-24T20:01:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -46218
+        },
+        {
+            "sg": 69,
+            "datetime": "2022-10-24T20:06:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -45918
+        },
+        {
+            "sg": 69,
+            "datetime": "2022-10-24T20:11:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -45618
+        },
+        {
+            "sg": 69,
+            "datetime": "2022-10-24T20:16:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -45318
+        },
+        {
+            "sg": 68,
+            "datetime": "2022-10-24T20:21:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -45018
+        },
+        {
+            "sg": 67,
+            "datetime": "2022-10-24T20:26:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -44718
+        },
+        {
+            "sg": 66,
+            "datetime": "2022-10-24T20:31:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -44418
+        },
+        {
+            "sg": 66,
+            "datetime": "2022-10-24T20:36:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -44118
+        },
+        {
+            "sg": 65,
+            "datetime": "2022-10-24T20:41:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -43818
+        },
+        {
+            "sg": 66,
+            "datetime": "2022-10-24T20:46:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -43518
+        },
+        {
+            "sg": 66,
+            "datetime": "2022-10-24T20:51:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -43218
+        },
+        {
+            "sg": 68,
+            "datetime": "2022-10-24T20:56:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -42918
+        },
+        {
+            "sg": 70,
+            "datetime": "2022-10-24T21:01:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -42618
+        },
+        {
+            "sg": 71,
+            "datetime": "2022-10-24T21:06:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -42318
+        },
+        {
+            "sg": 73,
+            "datetime": "2022-10-24T21:11:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -42018
+        },
+        {
+            "sg": 75,
+            "datetime": "2022-10-24T21:16:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -41718
+        },
+        {
+            "sg": 77,
+            "datetime": "2022-10-24T21:21:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -41418
+        },
+        {
+            "sg": 79,
+            "datetime": "2022-10-24T21:26:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -41118
+        },
+        {
+            "sg": 82,
+            "datetime": "2022-10-24T21:31:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -40818
+        },
+        {
+            "sg": 86,
+            "datetime": "2022-10-24T21:36:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -40518
+        },
+        {
+            "sg": 91,
+            "datetime": "2022-10-24T21:41:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -40218
+        },
+        {
+            "sg": 96,
+            "datetime": "2022-10-24T21:46:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -39918
+        },
+        {
+            "sg": 102,
+            "datetime": "2022-10-24T21:51:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -39618
+        },
+        {
+            "sg": 107,
+            "datetime": "2022-10-24T21:56:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -39318
+        },
+        {
+            "sg": 111,
+            "datetime": "2022-10-24T22:01:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -39018
+        },
+        {
+            "sg": 113,
+            "datetime": "2022-10-24T22:06:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -38718
+        },
+        {
+            "sg": 113,
+            "datetime": "2022-10-24T22:11:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -38418
+        },
+        {
+            "sg": 111,
+            "datetime": "2022-10-24T22:16:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -38118
+        },
+        {
+            "sg": 111,
+            "datetime": "2022-10-24T22:21:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -37818
+        },
+        {
+            "sg": 112,
+            "datetime": "2022-10-24T22:26:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -37518
+        },
+        {
+            "sg": 114,
+            "datetime": "2022-10-24T22:31:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -37218
+        },
+        {
+            "sg": 116,
+            "datetime": "2022-10-24T22:36:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -36918
+        },
+        {
+            "sg": 116,
+            "datetime": "2022-10-24T22:41:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -36618
+        },
+        {
+            "sg": 114,
+            "datetime": "2022-10-24T22:46:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -36318
+        },
+        {
+            "sg": 114,
+            "datetime": "2022-10-24T22:51:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -36018
+        },
+        {
+            "sg": 115,
+            "datetime": "2022-10-24T22:56:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -35718
+        },
+        {
+            "sg": 116,
+            "datetime": "2022-10-24T23:01:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -35418
+        },
+        {
+            "sg": 116,
+            "datetime": "2022-10-24T23:06:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -35118
+        },
+        {
+            "sg": 114,
+            "datetime": "2022-10-24T23:11:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -34818
+        },
+        {
+            "sg": 109,
+            "datetime": "2022-10-24T23:16:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -34518
+        },
+        {
+            "sg": 104,
+            "datetime": "2022-10-24T23:21:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -34218
+        },
+        {
+            "sg": 99,
+            "datetime": "2022-10-24T23:26:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -33918
+        },
+        {
+            "sg": 94,
+            "datetime": "2022-10-24T23:31:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -33618
+        },
+        {
+            "sg": 90,
+            "datetime": "2022-10-24T23:36:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -33318
+        },
+        {
+            "sg": 85,
+            "datetime": "2022-10-24T23:41:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -33018
+        },
+        {
+            "sg": 80,
+            "datetime": "2022-10-24T23:46:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -32718
+        },
+        {
+            "sg": 74,
+            "datetime": "2022-10-24T23:51:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -32418
+        },
+        {
+            "sg": 69,
+            "datetime": "2022-10-24T23:56:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -32118
+        },
+        {
+            "sg": 67,
+            "datetime": "2022-10-25T00:01:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -31818
+        },
+        {
+            "sg": 65,
+            "datetime": "2022-10-25T00:06:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -31518
+        },
+        {
+            "sg": 64,
+            "datetime": "2022-10-25T00:11:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -31218
+        },
+        {
+            "sg": 61,
+            "datetime": "2022-10-25T00:16:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -30918
+        },
+        {
+            "sg": 59,
+            "datetime": "2022-10-25T00:21:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -30618
+        },
+        {
+            "sg": 57,
+            "datetime": "2022-10-25T00:26:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -30318
+        },
+        {
+            "sg": 56,
+            "datetime": "2022-10-25T00:31:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -30018
+        },
+        {
+            "sg": 58,
+            "datetime": "2022-10-25T00:36:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -29718
+        },
+        {
+            "sg": 60,
+            "datetime": "2022-10-25T00:41:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -29418
+        },
+        {
+            "sg": 63,
+            "datetime": "2022-10-25T00:46:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -29118
+        },
+        {
+            "sg": 67,
+            "datetime": "2022-10-25T00:51:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -28818
+        },
+        {
+            "sg": 71,
+            "datetime": "2022-10-25T00:56:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -28518
+        },
+        {
+            "sg": 74,
+            "datetime": "2022-10-25T01:01:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -28218
+        },
+        {
+            "sg": 78,
+            "datetime": "2022-10-25T01:06:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -27918
+        },
+        {
+            "sg": 79,
+            "datetime": "2022-10-25T01:11:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -27618
+        },
+        {
+            "sg": 79,
+            "datetime": "2022-10-25T01:16:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -27318
+        },
+        {
+            "sg": 74,
+            "datetime": "2022-10-25T01:21:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -27018
+        },
+        {
+            "sg": 62,
+            "datetime": "2022-10-25T01:26:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -26718
+        },
+        {
+            "sg": 51,
+            "datetime": "2022-10-25T01:31:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -26418
+        },
+        {
+            "sg": 54,
+            "datetime": "2022-10-25T01:36:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -26118
+        },
+        {
+            "sg": 61,
+            "datetime": "2022-10-25T01:41:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -25818
+        },
+        {
+            "sg": 66,
+            "datetime": "2022-10-25T01:46:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -25518
+        },
+        {
+            "sg": 71,
+            "datetime": "2022-10-25T01:51:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -25218
+        },
+        {
+            "sg": 74,
+            "datetime": "2022-10-25T01:56:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -24918
+        },
+        {
+            "sg": 78,
+            "datetime": "2022-10-25T02:01:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -24618
+        },
+        {
+            "sg": 87,
+            "datetime": "2022-10-25T02:06:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -24318
+        },
+        {
+            "sg": 91,
+            "datetime": "2022-10-25T02:11:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -24018
+        },
+        {
+            "sg": 94,
+            "datetime": "2022-10-25T02:16:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -23718
+        },
+        {
+            "sg": 99,
+            "datetime": "2022-10-25T02:21:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -23418
+        },
+        {
+            "sg": 103,
+            "datetime": "2022-10-25T02:26:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -23118
+        },
+        {
+            "sg": 108,
+            "datetime": "2022-10-25T02:31:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -22818
+        },
+        {
+            "sg": 112,
+            "datetime": "2022-10-25T02:36:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -22518
+        },
+        {
+            "sg": 114,
+            "datetime": "2022-10-25T02:41:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -22218
+        },
+        {
+            "sg": 113,
+            "datetime": "2022-10-25T02:46:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -21918
+        },
+        {
+            "sg": 111,
+            "datetime": "2022-10-25T02:51:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -21618
+        },
+        {
+            "sg": 107,
+            "datetime": "2022-10-25T02:56:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -21318
+        },
+        {
+            "sg": 102,
+            "datetime": "2022-10-25T03:01:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -21018
+        },
+        {
+            "sg": 98,
+            "datetime": "2022-10-25T03:06:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -20718
+        },
+        {
+            "sg": 94,
+            "datetime": "2022-10-25T03:11:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -20418
+        },
+        {
+            "sg": 92,
+            "datetime": "2022-10-25T03:16:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -20118
+        },
+        {
+            "sg": 90,
+            "datetime": "2022-10-25T03:21:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -19818
+        },
+        {
+            "sg": 89,
+            "datetime": "2022-10-25T03:26:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -19518
+        },
+        {
+            "sg": 90,
+            "datetime": "2022-10-25T03:31:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -19218
+        },
+        {
+            "sg": 91,
+            "datetime": "2022-10-25T03:36:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -18918
+        },
+        {
+            "sg": 93,
+            "datetime": "2022-10-25T03:41:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -18618
+        },
+        {
+            "sg": 96,
+            "datetime": "2022-10-25T03:46:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -18318
+        },
+        {
+            "sg": 100,
+            "datetime": "2022-10-25T03:51:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -18018
+        },
+        {
+            "sg": 104,
+            "datetime": "2022-10-25T03:56:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -17718
+        },
+        {
+            "sg": 109,
+            "datetime": "2022-10-25T04:01:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -17418
+        },
+        {
+            "sg": 113,
+            "datetime": "2022-10-25T04:06:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -17118
+        },
+        {
+            "sg": 115,
+            "datetime": "2022-10-25T04:11:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -16818
+        },
+        {
+            "sg": 116,
+            "datetime": "2022-10-25T04:16:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -16518
+        },
+        {
+            "sg": 117,
+            "datetime": "2022-10-25T04:21:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -16218
+        },
+        {
+            "sg": 117,
+            "datetime": "2022-10-25T04:26:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -15918
+        },
+        {
+            "sg": 119,
+            "datetime": "2022-10-25T04:31:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -15618
+        },
+        {
+            "sg": 121,
+            "datetime": "2022-10-25T04:36:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -15318
+        },
+        {
+            "sg": 123,
+            "datetime": "2022-10-25T04:41:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -15018
+        },
+        {
+            "sg": 122,
+            "datetime": "2022-10-25T04:46:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -14718
+        },
+        {
+            "sg": 123,
+            "datetime": "2022-10-25T04:51:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -14418
+        },
+        {
+            "sg": 125,
+            "datetime": "2022-10-25T04:56:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -14118
+        },
+        {
+            "sg": 128,
+            "datetime": "2022-10-25T05:01:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -13818
+        },
+        {
+            "sg": 132,
+            "datetime": "2022-10-25T05:06:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -13518
+        },
+        {
+            "sg": 135,
+            "datetime": "2022-10-25T05:11:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -13218
+        },
+        {
+            "sg": 136,
+            "datetime": "2022-10-25T05:16:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -12918
+        },
+        {
+            "sg": 136,
+            "datetime": "2022-10-25T05:21:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -12618
+        },
+        {
+            "sg": 135,
+            "datetime": "2022-10-25T05:26:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -12318
+        },
+        {
+            "sg": 134,
+            "datetime": "2022-10-25T05:31:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -12018
+        },
+        {
+            "sg": 132,
+            "datetime": "2022-10-25T05:36:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -11718
+        },
+        {
+            "sg": 129,
+            "datetime": "2022-10-25T05:41:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -11418
+        },
+        {
+            "sg": 128,
+            "datetime": "2022-10-25T05:46:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -11118
+        },
+        {
+            "sg": 128,
+            "datetime": "2022-10-25T05:51:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -10818
+        },
+        {
+            "sg": 130,
+            "datetime": "2022-10-25T05:56:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -10518
+        },
+        {
+            "sg": 135,
+            "datetime": "2022-10-25T06:01:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -10218
+        },
+        {
+            "sg": 135,
+            "datetime": "2022-10-25T06:06:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -9918
+        },
+        {
+            "sg": 132,
+            "datetime": "2022-10-25T06:11:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -9618
+        },
+        {
+            "sg": 129,
+            "datetime": "2022-10-25T06:16:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -9318
+        },
+        {
+            "sg": 127,
+            "datetime": "2022-10-25T06:21:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -9018
+        },
+        {
+            "sg": 125,
+            "datetime": "2022-10-25T06:26:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -8718
+        },
+        {
+            "sg": 123,
+            "datetime": "2022-10-25T06:31:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -8418
+        },
+        {
+            "sg": 123,
+            "datetime": "2022-10-25T06:36:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -8118
+        },
+        {
+            "sg": 122,
+            "datetime": "2022-10-25T06:41:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -7818
+        },
+        {
+            "sg": 120,
+            "datetime": "2022-10-25T06:46:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -7518
+        },
+        {
+            "sg": 117,
+            "datetime": "2022-10-25T06:51:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -7218
+        },
+        {
+            "sg": 112,
+            "datetime": "2022-10-25T06:56:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -6918
+        },
+        {
+            "sg": 106,
+            "datetime": "2022-10-25T07:01:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -6618
+        },
+        {
+            "sg": 103,
+            "datetime": "2022-10-25T07:06:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -6318
+        },
+        {
+            "sg": 101,
+            "datetime": "2022-10-25T07:11:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -6018
+        },
+        {
+            "sg": 97,
+            "datetime": "2022-10-25T07:16:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -5718
+        },
+        {
+            "sg": 93,
+            "datetime": "2022-10-25T07:21:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -5418
+        },
+        {
+            "sg": 85,
+            "datetime": "2022-10-25T07:26:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -5118
+        },
+        {
+            "sg": 78,
+            "datetime": "2022-10-25T07:31:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -4818
+        },
+        {
+            "sg": 74,
+            "datetime": "2022-10-25T07:36:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -4518
+        },
+        {
+            "sg": 72,
+            "datetime": "2022-10-25T07:41:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -4218
+        },
+        {
+            "sg": 74,
+            "datetime": "2022-10-25T07:46:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -3918
+        },
+        {
+            "sg": 79,
+            "datetime": "2022-10-25T07:51:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -3618
+        },
+        {
+            "sg": 84,
+            "datetime": "2022-10-25T07:56:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -3318
+        },
+        {
+            "sg": 88,
+            "datetime": "2022-10-25T08:01:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -3018
+        },
+        {
+            "sg": 88,
+            "datetime": "2022-10-25T08:06:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -2718
+        },
+        {
+            "sg": 87,
+            "datetime": "2022-10-25T08:11:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -2418
+        },
+        {
+            "sg": 83,
+            "datetime": "2022-10-25T08:16:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -2118
+        },
+        {
+            "sg": 77,
+            "datetime": "2022-10-25T08:21:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -1818
+        },
+        {
+            "sg": 66,
+            "datetime": "2022-10-25T08:26:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -1518
+        },
+        {
+            "sg": 63,
+            "datetime": "2022-10-25T08:31:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -1218
+        },
+        {
+            "sg": 65,
+            "datetime": "2022-10-25T08:36:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -918
+        },
+        {
+            "sg": 68,
+            "datetime": "2022-10-25T08:41:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -618
+        },
+        {
+            "sg": 72,
+            "datetime": "2022-10-25T08:46:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -318
+        },
+        {
+            "sg": 79,
+            "datetime": "2022-10-25T08:51:00.000Z",
+            "timeChange": false,
+            "sensorState": "NO_ERROR_MESSAGE",
+            "kind": "SG",
+            "version": 1,
+            "relativeOffset": -18
+        }
+    ],
+    "limits": [
+        {
+            "index": 0,
+            "highLimit": 200,
+            "lowLimit": 65,
+            "kind": "Limits",
+            "version": 1
+        },
+        {
+            "index": 133,
+            "highLimit": 200,
+            "lowLimit": 65,
+            "kind": "Limits",
+            "version": 1
+        },
+        {
+            "index": 181,
+            "highLimit": 200,
+            "lowLimit": 65,
+            "kind": "Limits",
+            "version": 1
+        },
+        {
+            "index": 265,
+            "highLimit": 200,
+            "lowLimit": 0,
+            "kind": "Limits",
+            "version": 1
+        }
+    ],
+    "markers": [
+        {
+            "type": "BG_READING",
+            "index": 30,
+            "value": 161,
+            "kind": "Marker",
+            "version": 1,
+            "dateTime": "2022-10-24T11:25:00.000-00:00",
+            "relativeOffset": -77178
+        },
+        {
+            "type": "BG_READING",
+            "index": 63,
+            "value": 200,
+            "kind": "Marker",
+            "version": 1,
+            "dateTime": "2022-10-24T14:10:00.000-00:00",
+            "relativeOffset": -67278
+        },
+        {
+            "type": "CALIBRATION",
+            "index": 138,
+            "value": 70,
+            "kind": "Marker",
+            "version": 1,
+            "dateTime": "2022-10-24T20:26:00.000-00:00",
+            "relativeOffset": -44718,
+            "calibrationSuccess": true
+        },
+        {
+            "type": "CALIBRATION",
+            "index": 282,
+            "value": 63,
+            "kind": "Marker",
+            "version": 1,
+            "dateTime": "2022-10-25T08:25:00.000-00:00",
+            "relativeOffset": -1578,
+            "calibrationSuccess": true
+        },
+        {
+            "type": "MEAL",
+            "index": 30,
+            "kind": "Marker",
+            "version": 1,
+            "dateTime": "2022-10-24T11:25:31.000-00:00",
+            "relativeOffset": -77147,
+            "amount": 20
+        },
+        {
+            "type": "MEAL",
+            "index": 102,
+            "kind": "Marker",
+            "version": 1,
+            "dateTime": "2022-10-24T17:23:56.000-00:00",
+            "relativeOffset": -55642,
+            "amount": 14
+        },
+        {
+            "type": "MEAL",
+            "index": 267,
+            "kind": "Marker",
+            "version": 1,
+            "dateTime": "2022-10-25T07:07:30.000-00:00",
+            "relativeOffset": -6228,
+            "amount": 11
+        },
+        {
+            "type": "INSULIN",
+            "index": 30,
+            "kind": "Marker",
+            "version": 1,
+            "dateTime": "2022-10-24T11:25:32.000-00:00",
+            "relativeOffset": -77146,
+            "programmedExtendedAmount": 0,
+            "activationType": "RECOMMENDED",
+            "deliveredExtendedAmount": 0,
+            "programmedFastAmount": 1.15,
+            "programmedDuration": 0,
+            "deliveredFastAmount": 1.15,
+            "id": 105,
+            "effectiveDuration": 0,
+            "completed": true,
+            "bolusType": "FAST"
+        },
+        {
+            "type": "INSULIN",
+            "index": 63,
+            "kind": "Marker",
+            "version": 1,
+            "dateTime": "2022-10-24T14:10:01.000-00:00",
+            "relativeOffset": -67277,
+            "programmedExtendedAmount": 0,
+            "activationType": "RECOMMENDED",
+            "deliveredExtendedAmount": 0,
+            "programmedFastAmount": 0.275,
+            "programmedDuration": 0,
+            "deliveredFastAmount": 0.275,
+            "id": 106,
+            "effectiveDuration": 0,
+            "completed": true,
+            "bolusType": "FAST"
+        },
+        {
+            "type": "INSULIN",
+            "index": 102,
+            "kind": "Marker",
+            "version": 1,
+            "dateTime": "2022-10-24T17:23:56.000-00:00",
+            "relativeOffset": -55642,
+            "programmedExtendedAmount": 0,
+            "activationType": "RECOMMENDED",
+            "deliveredExtendedAmount": 0,
+            "programmedFastAmount": 0.55,
+            "programmedDuration": 0,
+            "deliveredFastAmount": 0.55,
+            "id": 107,
+            "effectiveDuration": 0,
+            "completed": true,
+            "bolusType": "FAST"
+        },
+        {
+            "type": "INSULIN",
+            "index": 267,
+            "kind": "Marker",
+            "version": 1,
+            "dateTime": "2022-10-25T07:07:30.000-00:00",
+            "relativeOffset": -6228,
+            "programmedExtendedAmount": 0,
+            "activationType": "RECOMMENDED",
+            "deliveredExtendedAmount": 0,
+            "programmedFastAmount": 1.325,
+            "programmedDuration": 0,
+            "deliveredFastAmount": 1.325,
+            "id": 108,
+            "effectiveDuration": 0,
+            "completed": true,
+            "bolusType": "FAST"
+        },
+        {
+            "type": "AUTO_MODE_STATUS",
+            "index": 0,
+            "kind": "Marker",
+            "version": 1,
+            "dateTime": "2022-10-24T08:51:20.000-00:00",
+            "relativeOffset": -86398,
+            "autoModeOn": false
+        },
+        {
+            "type": "LOW_GLUCOSE_SUSPENDED",
+            "index": 0,
+            "kind": "Marker",
+            "version": 1,
+            "dateTime": "2022-10-24T08:51:20.000-00:00",
+            "relativeOffset": -86398,
+            "deliverySuspended": true
+        },
+        {
+            "type": "LOW_GLUCOSE_SUSPENDED",
+            "index": 10,
+            "kind": "Marker",
+            "version": 1,
+            "dateTime": "2022-10-24T09:42:00.000-00:00",
+            "relativeOffset": -83358,
+            "deliverySuspended": false
+        },
+        {
+            "type": "LOW_GLUCOSE_SUSPENDED",
+            "index": 85,
+            "kind": "Marker",
+            "version": 1,
+            "dateTime": "2022-10-24T16:01:10.000-00:00",
+            "relativeOffset": -60608,
+            "deliverySuspended": true
+        },
+        {
+            "type": "LOW_GLUCOSE_SUSPENDED",
+            "index": 102,
+            "kind": "Marker",
+            "version": 1,
+            "dateTime": "2022-10-24T17:23:48.000-00:00",
+            "relativeOffset": -55650,
+            "deliverySuspended": false
+        },
+        {
+            "type": "LOW_GLUCOSE_SUSPENDED",
+            "index": 120,
+            "kind": "Marker",
+            "version": 1,
+            "dateTime": "2022-10-24T18:56:11.000-00:00",
+            "relativeOffset": -50107,
+            "deliverySuspended": true
+        },
+        {
+            "type": "LOW_GLUCOSE_SUSPENDED",
+            "index": 145,
+            "kind": "Marker",
+            "version": 1,
+            "dateTime": "2022-10-24T20:57:00.000-00:00",
+            "relativeOffset": -42858,
+            "deliverySuspended": false
+        },
+        {
+            "type": "LOW_GLUCOSE_SUSPENDED",
+            "index": 176,
+            "kind": "Marker",
+            "version": 1,
+            "dateTime": "2022-10-24T23:36:12.000-00:00",
+            "relativeOffset": -33306,
+            "deliverySuspended": true
+        },
+        {
+            "type": "LOW_GLUCOSE_SUSPENDED",
+            "index": 201,
+            "kind": "Marker",
+            "version": 1,
+            "dateTime": "2022-10-25T01:37:00.000-00:00",
+            "relativeOffset": -26058,
+            "deliverySuspended": false
+        },
+        {
+            "type": "LOW_GLUCOSE_SUSPENDED",
+            "index": 221,
+            "kind": "Marker",
+            "version": 1,
+            "dateTime": "2022-10-25T03:21:11.000-00:00",
+            "relativeOffset": -19807,
+            "deliverySuspended": true
+        },
+        {
+            "type": "LOW_GLUCOSE_SUSPENDED",
+            "index": 228,
+            "kind": "Marker",
+            "version": 1,
+            "dateTime": "2022-10-25T03:56:11.000-00:00",
+            "relativeOffset": -17707,
+            "deliverySuspended": false
+        },
+        {
+            "type": "LOW_GLUCOSE_SUSPENDED",
+            "index": 269,
+            "kind": "Marker",
+            "version": 1,
+            "dateTime": "2022-10-25T07:21:11.000-00:00",
+            "relativeOffset": -5407,
+            "deliverySuspended": true
+        }
+    ],
+    "notificationHistory": {
+        "activeNotifications": [],
+        "clearedNotifications": [
+            {
+                "referenceGUID": "50d60a07-b354-375c-af89-5627365c4abc",
+                "dateTime": "2022-10-24T09:53:33.000-00:00",
+                "type": "ALERT",
+                "faultId": 808,
+                "instanceId": 3487,
+                "messageId": "BC_SID_MAXIMUM_2_HOUR_SUSPEND_TIME_REACHED_CHECK_BG",
+                "pumpDeliverySuspendState": false,
+                "relativeOffset": -82667,
+                "alertSilenced": false,
+                "triggeredDateTime": "2022-10-24T09:42:00.000-00:00"
+            },
+            {
+                "referenceGUID": "37ed6251-0c7d-3297-91cc-128e096274a0",
+                "dateTime": "2022-10-24T14:09:09.000-00:00",
+                "type": "ALERT",
+                "faultId": 816,
+                "instanceId": 3488,
+                "messageId": "BC_SID_HIGH_SG_CHECK_BG",
+                "sg": 200,
+                "pumpDeliverySuspendState": false,
+                "relativeOffset": -67331,
+                "alertSilenced": false,
+                "triggeredDateTime": "2022-10-24T14:06:12.000-00:00"
+            },
+            {
+                "referenceGUID": "47a474d8-2f4f-3df7-a730-9b7fa50e5f39",
+                "dateTime": "2022-10-24T16:31:11.000-00:00",
+                "type": "ALERT",
+                "faultId": 810,
+                "instanceId": 3489,
+                "messageId": "BC_MESSAGE_DELIVERY_STOPPED_SG_APPROACHILG_LOW_LIMIT_CHECK_BG",
+                "pumpDeliverySuspendState": false,
+                "relativeOffset": -58809,
+                "alertSilenced": false,
+                "triggeredDateTime": "2022-10-24T16:01:10.000-00:00"
+            },
+            {
+                "referenceGUID": "337c8f78-7b0d-30b8-bcf7-5355d099cd27",
+                "dateTime": "2022-10-24T16:33:19.000-00:00",
+                "type": "ALARM",
+                "faultId": 803,
+                "instanceId": 3490,
+                "messageId": "BC_SID_LOW_SG_INSULIN_DELIVERY_SUSPENDED_SINCE_X_CHECK_BG",
+                "secondaryTime": "04:01",
+                "sg": 65,
+                "pumpDeliverySuspendState": false,
+                "relativeOffset": -58681,
+                "alertSilenced": false,
+                "triggeredDateTime": "2022-10-24T16:31:11.000-00:00"
+            },
+            {
+                "referenceGUID": "80f342b5-9da8-3299-92ec-c5c13638b979",
+                "dateTime": "2022-10-24T16:41:35.000-00:00",
+                "type": "ALARM",
+                "faultId": 827,
+                "instanceId": 3491,
+                "messageId": "BC_MESSAGE_SG_UNDER_50_MG_DL",
+                "sg": 51,
+                "pumpDeliverySuspendState": false,
+                "relativeOffset": -58185,
+                "alertSilenced": false,
+                "triggeredDateTime": "2022-10-24T16:41:12.000-00:00"
+            },
+            {
+                "referenceGUID": "818a02ee-f8da-3aad-a7bc-b54ae0ae8618",
+                "dateTime": "2022-10-24T16:57:14.000-00:00",
+                "type": "ALARM",
+                "faultId": 803,
+                "instanceId": 3492,
+                "messageId": "BC_SID_LOW_SG_INSULIN_DELIVERY_SUSPENDED_SINCE_X_CHECK_BG",
+                "secondaryTime": "04:01",
+                "sg": 63,
+                "pumpDeliverySuspendState": false,
+                "relativeOffset": -57246,
+                "alertSilenced": false,
+                "triggeredDateTime": "2022-10-24T16:56:10.000-00:00"
+            },
+            {
+                "referenceGUID": "616ab800-4c1f-3628-99ba-1aa838e1a0f2",
+                "dateTime": "2022-10-24T19:51:11.000-00:00",
+                "type": "ALERT",
+                "faultId": 810,
+                "instanceId": 3493,
+                "messageId": "BC_MESSAGE_DELIVERY_STOPPED_SG_APPROACHILG_LOW_LIMIT_CHECK_BG",
+                "pumpDeliverySuspendState": false,
+                "relativeOffset": -46809,
+                "alertSilenced": false,
+                "triggeredDateTime": "2022-10-24T18:56:11.000-00:00"
+            },
+            {
+                "referenceGUID": "ec26315c-c16d-327c-8654-dc63e6db1835",
+                "dateTime": "2022-10-24T19:52:21.000-00:00",
+                "type": "ALARM",
+                "faultId": 803,
+                "instanceId": 3495,
+                "messageId": "BC_SID_LOW_SG_INSULIN_DELIVERY_SUSPENDED_SINCE_X_CHECK_BG",
+                "secondaryTime": "06:56",
+                "sg": 65,
+                "pumpDeliverySuspendState": false,
+                "relativeOffset": -46739,
+                "alertSilenced": false,
+                "triggeredDateTime": "2022-10-24T19:51:11.000-00:00"
+            },
+            {
+                "referenceGUID": "0c872930-37f3-3ddd-8757-7346586eb20c",
+                "dateTime": "2022-10-24T19:52:26.000-00:00",
+                "type": "REMINDER",
+                "faultId": 869,
+                "instanceId": 3494,
+                "messageId": "BC_SID_CHECK_BG_AND_CALIBRATE_SENSOR_TO_RECEIVE",
+                "secondaryTime": "08:26",
+                "pumpDeliverySuspendState": false,
+                "pnpId": "1.1",
+                "relativeOffset": -46734,
+                "alertSilenced": false,
+                "triggeredDateTime": "2022-10-24T19:26:11.000-00:00"
+            },
+            {
+                "referenceGUID": "8af301fa-c5ff-3a8e-a069-1232d0bb25cc",
+                "dateTime": "2022-10-24T20:42:55.000-00:00",
+                "type": "ALARM",
+                "faultId": 803,
+                "instanceId": 3497,
+                "messageId": "BC_SID_LOW_SG_INSULIN_DELIVERY_SUSPENDED_SINCE_X_CHECK_BG",
+                "secondaryTime": "06:56",
+                "sg": 65,
+                "pumpDeliverySuspendState": false,
+                "relativeOffset": -43705,
+                "alertSilenced": false,
+                "triggeredDateTime": "2022-10-24T20:41:11.000-00:00"
+            },
+            {
+                "referenceGUID": "0994af03-9485-3241-8420-095e89cd87ab",
+                "dateTime": "2022-10-24T21:07:28.000-00:00",
+                "type": "ALERT",
+                "faultId": 808,
+                "instanceId": 3498,
+                "messageId": "BC_SID_MAXIMUM_2_HOUR_SUSPEND_TIME_REACHED_CHECK_BG",
+                "pumpDeliverySuspendState": false,
+                "relativeOffset": -42232,
+                "alertSilenced": false,
+                "triggeredDateTime": "2022-10-24T20:57:00.000-00:00"
+            },
+            {
+                "referenceGUID": "a5e04efb-c3ea-3430-a575-66d0ce1a7952",
+                "dateTime": "2022-10-25T00:06:11.000-00:00",
+                "type": "ALERT",
+                "faultId": 810,
+                "instanceId": 3499,
+                "messageId": "BC_MESSAGE_DELIVERY_STOPPED_SG_APPROACHILG_LOW_LIMIT_CHECK_BG",
+                "pumpDeliverySuspendState": false,
+                "relativeOffset": -31509,
+                "alertSilenced": false,
+                "triggeredDateTime": "2022-10-24T23:36:12.000-00:00"
+            },
+            {
+                "referenceGUID": "8eb21cb0-b34f-3351-bd64-64e431a6178b",
+                "dateTime": "2022-10-25T00:27:47.000-00:00",
+                "type": "ALARM",
+                "faultId": 812,
+                "instanceId": 3501,
+                "messageId": "BC_SID_CALL_FOR_EMERGENCY",
+                "pumpDeliverySuspendState": false,
+                "relativeOffset": -30213,
+                "alertSilenced": false,
+                "triggeredDateTime": "2022-10-25T00:17:00.000-00:00"
+            },
+            {
+                "referenceGUID": "b90d7d9c-98a7-33e0-8002-8159b2987f05",
+                "dateTime": "2022-10-25T00:27:49.000-00:00",
+                "type": "ALARM",
+                "faultId": 803,
+                "instanceId": 3500,
+                "messageId": "BC_SID_LOW_SG_INSULIN_DELIVERY_SUSPENDED_SINCE_X_CHECK_BG",
+                "secondaryTime": "11:36",
+                "sg": 65,
+                "pumpDeliverySuspendState": false,
+                "relativeOffset": -30211,
+                "alertSilenced": false,
+                "triggeredDateTime": "2022-10-25T00:06:11.000-00:00"
+            },
+            {
+                "referenceGUID": "67422fcf-52cc-3063-ba4a-aa8aea9769a9",
+                "dateTime": "2022-10-25T00:31:47.000-00:00",
+                "type": "ALARM",
+                "faultId": 803,
+                "instanceId": 3502,
+                "messageId": "BC_SID_LOW_SG_INSULIN_DELIVERY_SUSPENDED_SINCE_X_CHECK_BG",
+                "secondaryTime": "11:36",
+                "sg": 56,
+                "pumpDeliverySuspendState": false,
+                "relativeOffset": -29973,
+                "alertSilenced": false,
+                "triggeredDateTime": "2022-10-25T00:31:13.000-00:00"
+            },
+            {
+                "referenceGUID": "a0addab2-e18a-3508-b266-8a7ccdb68c96",
+                "dateTime": "2022-10-25T01:37:00.000-00:00",
+                "type": "ALARM",
+                "faultId": 803,
+                "instanceId": 3503,
+                "messageId": "BC_SID_LOW_SG_INSULIN_DELIVERY_SUSPENDED_SINCE_X_CHECK_BG",
+                "secondaryTime": "11:36",
+                "sg": 62,
+                "pumpDeliverySuspendState": false,
+                "relativeOffset": -26060,
+                "alertSilenced": false,
+                "triggeredDateTime": "2022-10-25T01:26:12.000-00:00"
+            },
+            {
+                "referenceGUID": "2c42a0fd-777d-3108-a9dc-4717cd5b8285",
+                "dateTime": "2022-10-25T01:37:54.000-00:00",
+                "type": "ALARM",
+                "faultId": 812,
+                "instanceId": 3505,
+                "messageId": "BC_SID_CALL_FOR_EMERGENCY",
+                "pumpDeliverySuspendState": false,
+                "relativeOffset": -26006,
+                "alertSilenced": false,
+                "triggeredDateTime": "2022-10-25T01:37:00.000-00:00"
+            },
+            {
+                "referenceGUID": "620bcf6c-5c36-3d0e-9e3b-9dd10ea65f08",
+                "dateTime": "2022-10-25T01:37:56.000-00:00",
+                "type": "ALARM",
+                "faultId": 814,
+                "instanceId": 3506,
+                "messageId": "BC_SID_MAXIMUM_2_HOUR_SUSPEND_TIME_REACHED_SG_STILL_UNDER_LOW",
+                "pumpDeliverySuspendState": false,
+                "relativeOffset": -26004,
+                "alertSilenced": false,
+                "triggeredDateTime": "2022-10-25T01:37:00.000-00:00"
+            },
+            {
+                "referenceGUID": "b3e75c2b-156d-315a-802e-dd12e137dcf8",
+                "dateTime": "2022-10-25T01:38:01.000-00:00",
+                "type": "ALARM",
+                "faultId": 827,
+                "instanceId": 3504,
+                "messageId": "BC_MESSAGE_SG_UNDER_50_MG_DL",
+                "sg": 51,
+                "pumpDeliverySuspendState": false,
+                "relativeOffset": -25999,
+                "alertSilenced": false,
+                "triggeredDateTime": "2022-10-25T01:31:12.000-00:00"
+            },
+            {
+                "referenceGUID": "0e009ba2-339a-316a-a183-825b1f623121",
+                "dateTime": "2022-10-25T03:56:11.000-00:00",
+                "type": "ALERT",
+                "faultId": 810,
+                "instanceId": 3507,
+                "messageId": "BC_MESSAGE_DELIVERY_STOPPED_SG_APPROACHILG_LOW_LIMIT_CHECK_BG",
+                "pumpDeliverySuspendState": false,
+                "relativeOffset": -17709,
+                "alertSilenced": false,
+                "triggeredDateTime": "2022-10-25T03:21:11.000-00:00"
+            },
+            {
+                "referenceGUID": "99912101-a724-3914-87d5-54b79ddca905",
+                "dateTime": "2022-10-25T08:24:55.000-00:00",
+                "type": "ALERT",
+                "faultId": 810,
+                "instanceId": 3509,
+                "messageId": "BC_MESSAGE_DELIVERY_STOPPED_SG_APPROACHILG_LOW_LIMIT_CHECK_BG",
+                "pumpDeliverySuspendState": false,
+                "relativeOffset": -1585,
+                "alertSilenced": false,
+                "triggeredDateTime": "2022-10-25T07:21:11.000-00:00"
+            },
+            {
+                "referenceGUID": "fb027d09-1613-3bde-85a0-b57e26fbff40",
+                "dateTime": "2022-10-25T08:24:58.000-00:00",
+                "type": "REMINDER",
+                "faultId": 869,
+                "instanceId": 3510,
+                "messageId": "BC_SID_CHECK_BG_AND_CALIBRATE_SENSOR_TO_RECEIVE",
+                "secondaryTime": "08:31",
+                "pumpDeliverySuspendState": false,
+                "pnpId": "1.1",
+                "relativeOffset": -1582,
+                "alertSilenced": false,
+                "triggeredDateTime": "2022-10-25T07:31:10.000-00:00"
+            },
+            {
+                "referenceGUID": "9bb3926a-f481-35ae-b2f3-df18b524d901",
+                "dateTime": "2022-10-25T08:34:18.000-00:00",
+                "type": "ALARM",
+                "faultId": 803,
+                "instanceId": 3512,
+                "messageId": "BC_SID_LOW_SG_INSULIN_DELIVERY_SUSPENDED_SINCE_X_CHECK_BG",
+                "secondaryTime": "07:21",
+                "sg": 63,
+                "pumpDeliverySuspendState": false,
+                "relativeOffset": -1022,
+                "alertSilenced": false,
+                "triggeredDateTime": "2022-10-25T08:31:11.000-00:00"
+            }
+        ]
+    },
+    "therapyAlgorithmState": {
+        "autoModeShieldState": "FEATURE_OFF",
+        "autoModeReadinessState": "NO_ACTION_REQUIRED",
+        "plgmLgsState": "SUSPEND_FIRED_PLGM",
+        "safeBasalDuration": 0,
+        "waitToCalibrateDuration": 0
+    },
+    "pumpBannerState": [
+        {
+            "type": "SUSPENDED_BEFORE_LOW"
+        }
+    ],
+    "basal": {
+        "activeBasalPattern": "BASAL1",
+        "basalRate": 0
+    },
+    "systemStatusMessage": "NO_ERROR_MESSAGE",
+    "averageSG": 110,
+    "belowHypoLimit": 15,
+    "aboveHyperLimit": 7,
+    "timeInRange": 78,
+    "pumpCommunicationState": true,
+    "gstCommunicationState": true,
+    "gstBatteryLevel": 77,
+    "lastConduitDateTime": "2022-10-25T08:52:38.008+02:00",
+    "maxAutoBasalRate": 0.3101,
+    "maxBolusAmount": 10,
+    "sensorDurationMinutes": 7339,
+    "timeToNextCalibrationMinutes": 699,
+    "clientTimeZoneName": "Central European Summer Time",
+    "sgBelowLimit": 50,
+    "averageSGFloat": 110.09375,
+    "calFreeSensor": false,
+    "finalCalibration": false
+}
