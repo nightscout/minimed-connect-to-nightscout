@@ -166,10 +166,12 @@ function requestLoop() {
           // does not do the same for created_at, so we need to de-dupe them here.
           let newDeviceStatuses = filterDeviceStatus(transformed.devicestatus);
           
-          newDeviceStatuses[0].pump = {
-            reservoir: data.reservoirRemainingUnits,
-            status: {
-              status: ' - Calibrate@' +new Date(new Date(newDeviceStatuses[0].created_at).valueOf()+data.timeToNextCalibrationMinutes*60*1000).toLocaleString()
+          if(newDeviceStatuses[0].created_at && data.timeToNextCalibrationMinutes) {
+            newDeviceStatuses[0].pump = {
+              reservoir: data.reservoirRemainingUnits,
+              status: {
+                status: ' - Calibrate@' +new Date(new Date(newDeviceStatuses[0].created_at).valueOf()+data.timeToNextCalibrationMinutes*60*1000).toLocaleString()
+              }
             }
           }
 
