@@ -34,7 +34,7 @@ var config = {
   maxRetryDuration: parseInt(readEnv('CARELINK_MAX_RETRY_DURATION', carelink.defaultMaxRetryDuration), 10),
   verbose: !readEnv('CARELINK_QUIET', true),
   deviceInterval: 5.1 * 60 * 1000,
-  maxNightscoutDiff: 150
+  maxNightscoutDiff: 180
 };
 
 if (!config.username) {
@@ -94,8 +94,10 @@ function filterMissingSgvs(minimedSgvs,nightscoutSgvs) {
       });
     } else {
       var matchingNightscoutSgv = matchingNightscoutSgvs[0];
-      matchCount++;
-      totalTimeDiff += matchingNightscoutSgv.date - minimedSgv.date;
+      if(matchingNightscoutSgv.device === "Leonneke &lt;3") {
+        matchCount++;
+        totalTimeDiff += matchingNightscoutSgv.date - minimedSgv.date;
+      }
     }
   });
 
@@ -157,7 +159,7 @@ function requestLoop() {
         // Otherwise we'll overwrite existing sgv entries and remove their trend data.
         let newSgvs = filterSgvs(transformed.entries);
 
-        nightscout.get(entriesUrl+'?find[device]=Leonneke%20%26lt%3B3&count='+(config.sgvLimit+5),function(err, response) {
+        nightscout.get(entriesUrl+'?count='+(config.sgvLimit+5),function(err, response) {
           const nightscoutSgvs = response.body;
 
           let missingSgvs = filterMissingSgvs(newSgvs,nightscoutSgvs);
