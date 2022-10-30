@@ -170,9 +170,9 @@ function requestLoop() {
           
           if(newDeviceStatuses && newDeviceStatuses.length > 0 && newDeviceStatuses[0].created_at && data.timeToNextCalibrationMinutes) {
             newDeviceStatuses[0].pump = {
-              reservoir: data.reservoirRemainingUnits,
+              reservoir: data.reservoirLevelPercent,
               status: {
-                status: ' - Calibrate@' +new Date(new Date(newDeviceStatuses[0].created_at).valueOf()+data.timeToNextCalibrationMinutes*60*1000).toLocaleString()
+                status: '% - Calibrate@' +new Date(new Date(newDeviceStatuses[0].created_at).valueOf()+data.timeToNextCalibrationMinutes*60*1000).toLocaleString()
               }
             }
           }
