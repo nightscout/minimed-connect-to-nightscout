@@ -167,7 +167,6 @@ function requestLoop() {
           // Nightscout's entries collection upserts based on date, but the devicestatus collection
           // does not do the same for created_at, so we need to de-dupe them here.
           let newDeviceStatuses = filterDeviceStatus(transformed.devicestatus);
-          newDeviceStatuses[0].device = 'Leonneke &lt;3';
 
           // Calculate interval by the device next upload time
           let interval = config.deviceInterval - (data.currentServerTime - data.lastMedicalDeviceDataUpdateServerTime);
