@@ -171,7 +171,7 @@ function requestLoop() {
             newDeviceStatuses[0].pump = {
               reservoir: data.reservoirRemainingUnits,
               status: {
-                status: '% - MaxAutoBasal=' +data.maxAutoBasalRate
+                status: ' - MaxAutoBasal=' +data.maxAutoBasalRate
               }
             }
           }
