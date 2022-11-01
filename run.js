@@ -167,9 +167,9 @@ function requestLoop() {
           // Nightscout's entries collection upserts based on date, but the devicestatus collection
           // does not do the same for created_at, so we need to de-dupe them here.
           let newDeviceStatuses = filterDeviceStatus(transformed.devicestatus);
-          if(newDeviceStatuses && newDeviceStatuses.length > 0 && newDeviceStatuses[0].created_at && data.timeToNextCalibrationMinutes) {
+          if(newDeviceStatuses && newDeviceStatuses.length > 0 && newDeviceStatuses[0].created_at) {
             newDeviceStatuses[0].pump = {
-              reservoir: data.reservoirLevelPercent,
+              reservoir: data.reservoirRemainingUnits,
               status: {
                 status: '% - MaxAutoBasal=' +data.maxAutoBasalRate
               }
