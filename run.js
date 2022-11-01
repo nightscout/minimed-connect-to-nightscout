@@ -147,11 +147,11 @@ function requestLoop() {
         console.log(err);
         setTimeout(requestLoop, config.deviceInterval);
       } else {
-        //var dataPath = '/Users/asopleo/workspace/minimed-connect-to-nightscout/carelink-data.json';
+        // var dataPath = '/Users/asopleo/workspace/minimed-connect-to-nightscout/carelink-data.json';
 
-        //var jsonData = JSON.stringify(data,undefined,4);
-        //deleteFileIfExists(dataPath);
-        //fs.writeFileSync(dataPath,jsonData);
+        // var jsonData = JSON.stringify(data,undefined,4);
+        // deleteFileIfExists(dataPath);
+        // fs.writeFileSync(dataPath,jsonData);
         let transformed = transform(data, config.sgvLimit);
         
         // Because of Nightscout's upsert semantics and the fact that CareLink provides trend
@@ -167,6 +167,14 @@ function requestLoop() {
           // Nightscout's entries collection upserts based on date, but the devicestatus collection
           // does not do the same for created_at, so we need to de-dupe them here.
           let newDeviceStatuses = filterDeviceStatus(transformed.devicestatus);
+          if(newDeviceStatuses && newDeviceStatuses.length > 0 && newDeviceStatuses[0].created_at && data.timeToNextCalibrationMinutes) {
+            newDeviceStatuses[0].pump = {
+              reservoir: data.reservoirLevelPercent,
+              status: {
+                status: '% - MaxAutoBasal=' +data.maxAutoBasalRate
+              }
+            }
+          }
 
           // Calculate interval by the device next upload time
           let interval = config.deviceInterval - (data.currentServerTime - data.lastMedicalDeviceDataUpdateServerTime);
