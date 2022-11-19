@@ -147,11 +147,11 @@ function requestLoop() {
         console.log(err);
         setTimeout(requestLoop, config.deviceInterval);
       } else {
-        var dataPath = '/Users/asopleo/workspace/minimed-connect-to-nightscout/carelink-data.json';
+        //var dataPath = '/Users/asopleo/workspace/minimed-connect-to-nightscout/carelink-data.json';
 
-        var jsonData = JSON.stringify(data,undefined,4);
-        deleteFileIfExists(dataPath);
-        fs.writeFileSync(dataPath,jsonData);
+        // var jsonData = JSON.stringify(data,undefined,4);
+        // deleteFileIfExists(dataPath);
+        // fs.writeFileSync(dataPath,jsonData);
         let transformed = transform(data, config.sgvLimit);
         
         // Because of Nightscout's upsert semantics and the fact that CareLink provides trend
