@@ -147,22 +147,22 @@ function requestLoop() {
         console.log(err);
         setTimeout(requestLoop, config.deviceInterval);
       } else {
-        // var dataPath = '/Users/asopleo/workspace/minimed-connect-to-nightscout/carelink-data.json';
+        var dataPath = '/Users/asopleo/workspace/minimed-connect-to-nightscout/carelink-data.json';
 
-        // var jsonData = JSON.stringify(data,undefined,4);
-        // deleteFileIfExists(dataPath);
-        // fs.writeFileSync(dataPath,jsonData);
+        var jsonData = JSON.stringify(data,undefined,4);
+        deleteFileIfExists(dataPath);
+        fs.writeFileSync(dataPath,jsonData);
         let transformed = transform(data, config.sgvLimit);
         
         // Because of Nightscout's upsert semantics and the fact that CareLink provides trend
         // data only for the most recent sgv, we need to filter out sgvs we've already sent.
         // Otherwise we'll overwrite existing sgv entries and remove their trend data.
-        let newSgvs = filterSgvs(transformed.entries);
 
         nightscout.get(entriesUrl+'?count='+(config.sgvLimit+5),function(err, response) {
           const nightscoutSgvs = response.body;
 
-          let missingSgvs = filterMissingSgvs(newSgvs,nightscoutSgvs);
+          let missingSgvs = filterMissingSgvs(transformed.entries,nightscoutSgvs);
+          let newSgvs = filterSgvs(missingSgvs);
 
           // Nightscout's entries collection upserts based on date, but the devicestatus collection
           // does not do the same for created_at, so we need to de-dupe them here.
@@ -183,7 +183,7 @@ function requestLoop() {
 
           logger.log(`Next check ${Math.round(interval / 1000)}s later (at ${new Date(Date.now() + interval)})`)
 
-          uploadMaybe(missingSgvs, entriesUrl, function() {
+          uploadMaybe(newSgvs, entriesUrl, function() {
             uploadMaybe(newDeviceStatuses, devicestatusUrl, function() {
               setTimeout(requestLoop, interval);
             });
