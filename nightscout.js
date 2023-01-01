@@ -2,13 +2,13 @@
 "use strict";
 
 var crypto = require('crypto'),
-  request = require('request');
+  axios = require('axios');
 
 var logger = require('./logger');
 
 var upload = module.exports.upload = function(entries, endpoint, secret, callback) {
   logger.log('POST ' + endpoint + ' ' + JSON.stringify(entries));
-  request.post(
+  axios.post(
     endpoint,
     {
       body: entries,
@@ -16,15 +16,11 @@ var upload = module.exports.upload = function(entries, endpoint, secret, callbac
       headers: {
         'api-secret': crypto.createHash('sha1').update(secret).digest('hex')
       }
-    },
-    function(err, response) {
-      if(err) {
-        callback(new Error("Error uploading to Nightscout: can't connect to Nightscout host"));
-      } else if(response.statusCode !== 200) {
-        callback(new Error("Error uploading to Nightscout: " + JSON.stringify(response)));
-      } else {
-        callback(null, response);
-      }
-    }
-  );
+  })
+  .then(function (response) {
+    callback(null, response);
+  })
+  .catch(function (err) {
+    callback(err);
+  });
 };
