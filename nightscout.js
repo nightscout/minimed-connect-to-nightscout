@@ -11,9 +11,9 @@ var upload = module.exports.upload = function(entries, endpoint, secret, callbac
   axios.post(
     endpoint,
     {
-      body: entries,
-      json: true,
+      data: entries,
       headers: {
+        'content-type': 'application/json',
         'api-secret': crypto.createHash('sha1').update(secret).digest('hex')
       }
   })
