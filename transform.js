@@ -38,9 +38,9 @@ var CARELINK_TREND_TO_NIGHTSCOUT_TREND = {
   }
 };
 
-function parsePumpTime(pumpTimeString, offset, medicalDeviceFamily) {
+function parsePumpTime(pumpTimeString, offset, offsetMilliseconds, medicalDeviceFamily) {
   if (process.env['MMCONNECT_SERVER'] === 'EU' || medicalDeviceFamily === 'GUARDIAN') {
-    return Date.parse(pumpTimeString);
+    return Date.parse(pumpTimeString) - offsetMilliseconds ; // FIX BY sirKitKat
   } else {
     return Date.parse(pumpTimeString + ' ' + offset);
   }
@@ -51,7 +51,7 @@ function timestampAsString(timestamp) {
 }
 
 function deviceName(data) {
-  return 'connect://' + data['medicalDeviceFamily'].toLowerCase();
+  return 'connect-' + data['medicalDeviceFamily'].toLowerCase();
 }
 
 var guessPumpOffset = (function () {
@@ -61,7 +61,7 @@ var guessPumpOffset = (function () {
   // always close to a whole number of hours, and can be used to guess the pump's timezone:
   // https://gist.github.com/mddub/f673570e6427c93784bf
   return function (data) {
-    var pumpTimeAsIfUTC = Date.parse(data['sMedicalDeviceTime'] + ' +0');
+    var pumpTimeAsIfUTC = Date.parse(data['sMedicalDeviceTime']);
     var serverTimeUTC = data['currentServerTime'];
     var hours = Math.round((pumpTimeAsIfUTC - serverTimeUTC) / (60 * 60 * 1000));
     var offset = (hours >= 0 ? '+' : '-') + (Math.abs(hours) < 10 ? '0' : '') + Math.abs(hours) + '00';
@@ -73,7 +73,18 @@ var guessPumpOffset = (function () {
   };
 })();
 
-function deviceStatusEntry(data, offset) {
+var guessPumpOffsetMilliseconds = (function () {
+  return function (data) {
+    var pumpTimeAsIfUTC = Date.parse(data['sMedicalDeviceTime']);
+    var serverTimeUTC = data['currentServerTime'];
+    var offsetMilliseconds = pumpTimeAsIfUTC - serverTimeUTC;
+	var offsetMilliseconds = Math.round(offsetMilliseconds / (60 * 60 * 1000))*(60 * 60 * 1000)
+	return offsetMilliseconds ;
+  };
+})();
+
+
+function deviceStatusEntry(data, offset, offsetMilliseconds) {
   if (data['medicalDeviceFamily'] === 'GUARDIAN') {
     return {
       'created_at': timestampAsString(data['lastMedicalDeviceDataUpdateServerTime']),
@@ -104,12 +115,12 @@ function deviceStatusEntry(data, offset) {
         'battery': {
           'percent': data['medicalDeviceBatteryLevelPercent'],
         },
-        'reservoir': data['reservoirAmount'],
+        'reservoir': data['reservoirRemainingUnits'],
         'iob': {
           'timestamp': timestampAsString(data['lastMedicalDeviceDataUpdateServerTime']),
           'bolusiob': _.get(data, 'activeInsulin.amount') >= 0 ? _.get(data, 'activeInsulin.amount') : undefined,
         },
-        'clock': timestampAsString(parsePumpTime(data['sMedicalDeviceTime'], offset, data['medicalDeviceFamily'])),
+        'clock': timestampAsString(parsePumpTime(data['sMedicalDeviceTime'], offset, offsetMilliseconds, data['medicalDeviceFamily'])),
         // TODO: add last alarm from data['lastAlarm']['code'] and data['lastAlarm']['datetime']
         // https://gist.github.com/mddub/a95dc120d9d1414a433d#file-minimed-connect-codes-js-L79
       },
@@ -128,7 +139,7 @@ function deviceStatusEntry(data, offset) {
   }
 }
 
-function sgvEntries(data, offset) {
+function sgvEntries(data, offset, offsetMilliseconds) {
   if (!data['sgs'] || !data['sgs'].length) {
     return [];
   }
@@ -136,7 +147,7 @@ function sgvEntries(data, offset) {
   var sgvs = data['sgs'].filter(function (entry) {
     return entry['kind'] === 'SG' && entry['sg'] !== 0;
   }).map(function (sgv) {
-    var timestamp = parsePumpTime(sgv['datetime'], offset, data['medicalDeviceFamily']);
+    var timestamp = parsePumpTime(sgv['datetime'], offset, offsetMilliseconds, data['medicalDeviceFamily']);
     return {
       'type': SENSOR_GLUCOSE_ENTRY_TYPE,
       'sgv': sgv['sg'],
@@ -167,12 +178,13 @@ module.exports = function (data, sgvLimit) {
   }
 
   var offset = guessPumpOffset(data);
+  var offsetMilliseconds = guessPumpOffsetMilliseconds(data);
   if (sgvLimit === undefined) {
     sgvLimit = Infinity;
   }
   return {
     // XXX: lower-case and singular for consistency with cgm-remote-monitor collection name
-    devicestatus: [deviceStatusEntry(data, offset)],
-    entries: _.takeRight(sgvEntries(data, offset), sgvLimit),
+    devicestatus: [deviceStatusEntry(data, offset, offsetMilliseconds)],
+    entries: _.takeRight(sgvEntries(data, offset, offsetMilliseconds), sgvLimit),
   };
 };
