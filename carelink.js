@@ -246,6 +246,9 @@ var Client = exports.Client = function (options) {
             dataRetrievalUrl = resp.data.blePereodicDataEndpoint;
           }
           if(dataRetrievalUrl) {
+                // HOTFIX
+                // https://github.com/nightscout/minimed-connect-to-nightscout/issues/39
+                dataRetrievalUrl = dataRetrievalUrl.replace('/carepartner/v6/display/message', '/carepartner/v5/display/message');
                 logger.log('GET data (as carepartner) ' + dataRetrievalUrl);
                 var body = {
                     username: options.username,
