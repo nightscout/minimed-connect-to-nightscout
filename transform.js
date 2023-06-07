@@ -40,7 +40,7 @@ var CARELINK_TREND_TO_NIGHTSCOUT_TREND = {
 
 function parsePumpTime(pumpTimeString, offset, medicalDeviceFamily) {
   if (process.env['MMCONNECT_SERVER'] === 'EU' || medicalDeviceFamily === 'GUARDIAN') {
-    return Date.parse(pumpTimeString);
+    return Date.parse(pumpTimeString) - offset*60*60*10;
   } else {
     return Date.parse(pumpTimeString + ' ' + offset);
   }
@@ -62,6 +62,9 @@ var guessPumpOffset = (function () {
   // https://gist.github.com/mddub/f673570e6427c93784bf
   return function (data) {
     var pumpTimeAsIfUTC = Date.parse(data['sMedicalDeviceTime'] + ' +0');
+    if (process.env['MMCONNECT_SERVER'] === 'EU' || medicalDeviceFamily === 'GUARDIAN') {
+      var pumpTimeAsIfUTC = Date.parse(data['sMedicalDeviceTime']);
+    }
     var serverTimeUTC = data['currentServerTime'];
     var hours = Math.round((pumpTimeAsIfUTC - serverTimeUTC) / (60 * 60 * 1000));
     var offset = (hours >= 0 ? '+' : '-') + (Math.abs(hours) < 10 ? '0' : '') + Math.abs(hours) + '00';
