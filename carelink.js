@@ -249,7 +249,8 @@ var Client = exports.Client = function (options) {
                 logger.log('GET data (as carepartner) ' + dataRetrievalUrl);
                 var body = {
                     username: options.username,
-                    role: "carepartner"
+                    role: "carepartner",
+                    patientId: options.patientId
                 };
                 return await axiosInstance.post(dataRetrievalUrl,body,{
                     
