@@ -32,6 +32,7 @@ var config = {
   maxRetryDuration: parseInt(readEnv('CARELINK_MAX_RETRY_DURATION', carelink.defaultMaxRetryDuration), 10),
   verbose: !readEnv('CARELINK_QUIET', true),
   deviceInterval: 5.1 * 60 * 1000,
+  patientId: readEnv('CARELINK_PATIENT'),
 };
 
 if (!config.username) {
@@ -43,7 +44,8 @@ if (!config.username) {
 var client = carelink.Client({
   username: config.username,
   password: config.password,
-  maxRetryDuration: config.maxRetryDuration
+  maxRetryDuration: config.maxRetryDuration,
+  patientId: config.patientId
 });
 var entriesUrl = (config.nsBaseUrl ? config.nsBaseUrl : 'https://' + config.nsHost) + '/api/v1/entries.json';
 var devicestatusUrl = (config.nsBaseUrl ? config.nsBaseUrl : 'https://' + config.nsHost) + '/api/v1/devicestatus.json';
