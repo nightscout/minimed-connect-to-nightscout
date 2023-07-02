@@ -167,13 +167,85 @@ function sgvEntries(data, offset, offsetMilliseconds) {
   return sgvs;
 }
 
-module.exports = function (data, sgvLimit) {
+function bgCheckEntries(data, offset, offsetMilliseconds) {
+  var allowedTypes = ["CALIBRATION","BG_READING","BG"];
+
+  if (!data['markers'] || !data['markers'].length || data['medicalDeviceFamily'] !== "NGP") {
+    return [];
+  }
+
+  return data['markers'].filter(function (marker) {
+      return allowedTypes.indexOf(marker['type']) >= 0 && marker['value'] && marker['value'] != 0;
+    }).map(function (marker) {
+        //return marker
+        var timestamp = parsePumpTime(marker['dateTime'], offset, offsetMilliseconds, data['medicalDeviceFamily']);
+        return {
+          'eventType': "BG Check",
+          'created_at': timestamp,
+          'dateString': timestampAsString(timestamp),
+          'dateTime': marker['dateTime'],
+          'glucose': marker['value'],
+          "glucoseType": "Finger"
+        };
+    }).sort(function(a,b) { return a.date - b.date; });
+}
+
+function treatmentEntries(data, offset, offsetMilliseconds) {
+  var allowedTypes = ["INSULIN","MEAL"];
+
+  if (!data['markers'] || !data['markers'].length || data['medicalDeviceFamily'] !== "NGP") {
+    return [];
+  }
+
+  var treatments = data['markers'].filter(function (marker) {
+      return allowedTypes.indexOf(marker['type']) >= 0;
+    }).map(function (marker) {
+        //return marker
+        var timestamp = parsePumpTime(marker['dateTime'], offset, offsetMilliseconds, data['medicalDeviceFamily']);
+        return {
+          'eventType': marker['type'],
+          'created_at': timestamp,
+          'dateString': timestampAsString(timestamp),
+          'dateTime': marker['dateTime'],
+          'carbs': marker['amount'] || 0,
+          'insulin': marker['deliveredExtendedAmount'] != null && marker['deliveredFastAmount'] != null ? marker.deliveredExtendedAmount + marker.deliveredFastAmount : 0
+        };
+    }).sort(function(a,b) { return a.date - b.date; });
+
+    return mergeInsulinWithMealTreatments(treatments);
+}
+
+function mergeInsulinWithMealTreatments(treatments) {
+  treatments.forEach((treatment) => {
+    if(treatment.eventType === "INSULIN") {
+      var matchingMeal = treatments.find((candidate) => {
+        return candidate.dateTime === treatment.dateTime && candidate.eventType === "MEAL";
+      });
+      if(matchingMeal) {
+        treatment.carbs = matchingMeal.carbs;
+        matchingMeal.carbs = 0;
+        matchingMeal.insulin = 0;
+        // Set carbs and insulin for a meal to 0 when it's merged so we can delete these later
+      }
+    }
+  });
+
+  treatments = treatments.filter((treatment) => { 
+    return treatment.carbs != 0 || treatment.insulin != 0;
+  });
+
+  return treatments;
+}
+
+module.exports = function (data, sgvLimit, treatmentLimit, bgCheckLimit) {
   var recency = (data['currentServerTime'] - data['lastMedicalDeviceDataUpdateServerTime']) / (60 * 1000);
   if (recency > STALE_DATA_THRESHOLD_MINUTES) {
     logger.log('Stale CareLink data: ' + recency.toFixed(2) + ' minutes old');
     return {
       devicestatus: [],
       entries: [],
+      treatments: [],
+      bgCheckEntries:[]
     };
   }
 
@@ -186,5 +258,7 @@ module.exports = function (data, sgvLimit) {
     // XXX: lower-case and singular for consistency with cgm-remote-monitor collection name
     devicestatus: [deviceStatusEntry(data, offset, offsetMilliseconds)],
     entries: _.takeRight(sgvEntries(data, offset, offsetMilliseconds), sgvLimit),
+    treatments: _.takeRight(treatmentEntries(data, offset, offsetMilliseconds),treatmentLimit),
+    bgCheckEntries: _.takeRight(bgCheckEntries(data, offset, offsetMilliseconds),bgCheckLimit),
   };
 };
