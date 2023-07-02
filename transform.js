@@ -187,7 +187,7 @@ function bgCheckEntries(data, offset, offsetMilliseconds) {
           'glucose': marker['value'],
           "glucoseType": "Finger"
         };
-    }).sort(function(a,b) { return a.date - b.date; });
+    }).sort(function(a,b) { return a['created_at'] - b['created_at']; });
 }
 
 function treatmentEntries(data, offset, offsetMilliseconds) {
@@ -203,28 +203,28 @@ function treatmentEntries(data, offset, offsetMilliseconds) {
         //return marker
         var timestamp = parsePumpTime(marker['dateTime'], offset, offsetMilliseconds, data['medicalDeviceFamily']);
         return {
-          'eventType': marker['type'],
+          'eventType': marker['type'].charAt(0).toLocaleUpperCase() + marker['type'].toLocaleLowerCase().slice(1),
           'created_at': timestamp,
           'dateString': timestampAsString(timestamp),
           'dateTime': marker['dateTime'],
           'carbs': marker['amount'] || 0,
           'insulin': marker['deliveredExtendedAmount'] != null && marker['deliveredFastAmount'] != null ? marker.deliveredExtendedAmount + marker.deliveredFastAmount : 0
         };
-    }).sort(function(a,b) { return a.date - b.date; });
+    }).sort(function(a,b) { return a['created_at'] - b['created_at']; });
 
     return mergeInsulinWithMealTreatments(treatments);
 }
 
 function mergeInsulinWithMealTreatments(treatments) {
   treatments.forEach((treatment) => {
-    if(treatment.eventType === "INSULIN") {
-      var matchingMeal = treatments.find((candidate) => {
-        return candidate.dateTime === treatment.dateTime && candidate.eventType === "MEAL";
+    if(treatment.eventType?.toLocaleUpperCase() === "MEAL") {
+      var matchingInsulin = treatments.find((candidate) => {
+        return candidate.dateTime === treatment.dateTime && candidate.eventType?.toLocaleUpperCase() === "INSULIN";
       });
-      if(matchingMeal) {
-        treatment.carbs = matchingMeal.carbs;
-        matchingMeal.carbs = 0;
-        matchingMeal.insulin = 0;
+      if(matchingInsulin) {
+        treatment.insulin = matchingInsulin.insulin;
+        matchingInsulin.carbs = 0;
+        matchingInsulin.insulin = 0;
         // Set carbs and insulin for a meal to 0 when it's merged so we can delete these later
       }
     }
