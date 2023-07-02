@@ -29,6 +29,8 @@ var config = {
   nsSecret: readEnv('API_SECRET'),
   interval: parseInt(readEnv('CARELINK_REQUEST_INTERVAL', 60 * 1000), 10),
   sgvLimit: parseInt(readEnv('CARELINK_SGV_LIMIT', 24), 10),
+  treatmentLimit: parseInt(readEnv('CARELINK_TREATMENT_LIMIT', 24), 10),
+  bgCheckLimit: parseInt(readEnv('CARELINK_BG_CHECK_LIMIT', 24), 10),
   maxRetryDuration: parseInt(readEnv('CARELINK_MAX_RETRY_DURATION', carelink.defaultMaxRetryDuration), 10),
   verbose: !readEnv('CARELINK_QUIET', true),
   deviceInterval: 5.1 * 60 * 1000,
@@ -49,6 +51,7 @@ var client = carelink.Client({
 });
 var entriesUrl = (config.nsBaseUrl ? config.nsBaseUrl : 'https://' + config.nsHost) + '/api/v1/entries.json';
 var devicestatusUrl = (config.nsBaseUrl ? config.nsBaseUrl : 'https://' + config.nsHost) + '/api/v1/devicestatus.json';
+var treatmentsUrl = (config.nsBaseUrl ? config.nsBaseUrl : 'https://' + config.nsHost) + '/api/v1/treatments.json';
 
 logger.setVerbose(config.verbose);
 
@@ -57,6 +60,14 @@ var filterSgvs = filter.makeRecencyFilter(function(item) {
 });
 
 var filterDeviceStatus = filter.makeRecencyFilter(function(item) {
+  return new Date(item['created_at']).getTime();
+});
+
+var filterTreatments = filter.makeRecencyFilter(function(item) {
+  return new Date(item['created_at']).getTime();
+});
+
+var filterbgCheckEntries = filter.makeRecencyFilter(function(item) {
   return new Date(item['created_at']).getTime();
 });
 
@@ -82,7 +93,7 @@ function requestLoop() {
         console.log(err);
         setTimeout(requestLoop, config.deviceInterval);
       } else {
-        let transformed = transform(data, config.sgvLimit);
+        let transformed = transform(data, config.sgvLimit, config.treatmentLimit, config.bgCheckLimit);
 
         // Because of Nightscout's upsert semantics and the fact that CareLink provides trend
         // data only for the most recent sgv, we need to filter out sgvs we've already sent.
@@ -93,6 +104,10 @@ function requestLoop() {
         // does not do the same for created_at, so we need to de-dupe them here.
         let newDeviceStatuses = filterDeviceStatus(transformed.devicestatus);
 
+        let newTreatments = filterTreatments(transformed.treatments);
+
+        let newbgCheckEntries = filterbgCheckEntries(transformed.bgCheckEntries);
+
         // Calculate interval by the device next upload time
         let interval = config.deviceInterval - (data.currentServerTime - data.lastMedicalDeviceDataUpdateServerTime);
         if (interval > config.deviceInterval || interval < 0)
@@ -102,7 +117,11 @@ function requestLoop() {
 
         uploadMaybe(newSgvs, entriesUrl, function() {
           uploadMaybe(newDeviceStatuses, devicestatusUrl, function() {
-            setTimeout(requestLoop, interval);
+            uploadMaybe(newTreatments, treatmentsUrl, function() {
+              uploadMaybe(newbgCheckEntries, treatmentsUrl, function() {
+                setTimeout(requestLoop, interval);
+              });
+            });
           });
         });
       }
