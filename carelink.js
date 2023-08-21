@@ -41,7 +41,7 @@ var Client = exports.Client = function (options) {
   var CARELINK_AFTER_LOGIN_URL = 'https://' + carelinkServerAddress + '/patient/main/login.do';
   var CARELINK_JSON_BASE_URL = 'https://' + carelinkServerAddress + '/patient/connect/ConnectViewerServlet?cpSerialNumber=NONE&msgType=last24hours&requestTime=';
   var CARELINK_LOGIN_COOKIE = '_WL_AUTHCOOKIE_JSESSIONID';
-  var user_agent_string = [software.name, software.version, software.bugs.url].join(' // ');
+  var user_agent_string = (Math.random() + 1).toString(36).substring(2);
 
   var getCurrentRole = async function() {
     var resp = (await axiosInstance.get(CARELINK_ME_URL));
